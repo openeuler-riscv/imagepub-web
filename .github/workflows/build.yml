@@ -19,3 +19,37 @@ jobs:
         with:
           name: frontend
           path: dist
+  deploy_pages:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/gh-action-setup'
+    needs: build_dist
+    permissions:
+      pages: write
+      id-token: write
+      actions: read
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Fetch pre-built pages
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend
+      - name: Fetch latest run-id of dataset workflow
+        run: echo "DATASET_RUN_ID=$(curl -s "https://api.github.com/repos/openeuler-riscv/bsp-db/actions/artifacts?name=frontend-dataset&per-page=1&page=1" | jq '.artifacts[0].workflow_run.id')" >> $GITHUB_ENV
+      - name: Fetch pre-built dataset
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-dataset
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: openeuler-riscv/bsp-db
+          run-id: ${{ env.DATASET_RUN_ID }}
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload page artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
