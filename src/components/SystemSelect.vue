@@ -1,18 +1,18 @@
 <script setup>
 import "github-markdown-css";
 import { Marked } from "marked";
-import { markedHighlight } from "marked-highlight"
-import hljs from 'highlight.js'
-import 'highlight.js/styles/atom-one-dark.css' 
-const marked=new Marked(
+import { markedHighlight } from "marked-highlight";
+import hljs from "highlight.js";
+import "highlight.js/styles/atom-one-dark.css";
+const marked = new Marked(
   markedHighlight({
-    langPrefix: 'hljs language-',
+    langPrefix: "hljs language-",
     highlight(code, lang) {
-    const language = hljs.getLanguage(lang) ? lang : 'shell'
-    return hljs.highlight(code, { language }).value
-  }
+      const language = hljs.getLanguage(lang) ? lang : "shell";
+      return hljs.highlight(code, { language }).value;
+    }
   })
-)
+);
 
 import {
   ref,
@@ -114,7 +114,7 @@ const handleDownload = async index => {
 };
 
 const kernelOptions = computed(() => {
-  const allImageSuites = props.item.imagesuites
+  const allImageSuites = props.item.imagesuites;
   const allKernels = allImageSuites.map(suite => ({
     value: `${suite.kernel.type}-${suite.kernel.branch}`,
     label: `${suite.kernel.type}-${suite.kernel.branch}`,
@@ -133,8 +133,8 @@ const kernelOptions = computed(() => {
 
 const packageOptions = computed(() => {
   if (!props.item) return [];
-  const allImageSuites = props.item.imagesuites
-  console.log(allImageSuites,"我啊all")
+  const allImageSuites = props.item.imagesuites;
+  console.log(allImageSuites, "我啊all");
   return Array.from(
     new Set(
       allImageSuites.map(suite =>
@@ -190,7 +190,7 @@ const handleCloseDialog = () => {
 
 const loadDocs = async () => {
   const docs = props.item.imagesuites[0].docs;
- 
+
   if (docs && docs.length > 0) {
     try {
       const docPath = `/${docs[0]}`;
@@ -207,7 +207,7 @@ const loadDocs = async () => {
           return `![${alt}](${basePath}/${imgPath})`;
         }
       );
- parsedMarkdown.value = marked.parse(markdown);
+      parsedMarkdown.value = marked.parse(markdown);
       helpMd.value = true;
     } catch (error) {
       console.error("加载文档失败：", error);
@@ -249,133 +249,140 @@ const getFileName = url => {
 
 <template>
   <div class="system-select">
-    <div class="select-title">
-      <div class="title-text">{{ props.activeTab }} {{ props.item.name }}</div>
-    </div>
-    <div class="select-content">
-      <div class="select-drop">
-        <div class="select-row">
-          <div class="select-label">内核版本:</div>
-          <div class="select-box">
-            <div class="select-wrapper">
-              <div class="custom-select" @click.stop="toggleDropdown('kernel')">
-                <div class="selected-value">
-                  {{
-                    kernelOptions.find(opt => opt.value === selectedKernel)
-                      ?.label || kernelOptions[0].label
-                  }}
-                  <span
-                    v-if="
-                      kernelOptions.find(opt => opt.value === selectedKernel)
-                        ?.hasKernelSource
-                    "
-                    class="kernel-source-tag"
-                    >内核同源</span
-                  >
-                </div>
-                <img
-                  src="../assets/icons/board/Group 85@3x.svg"
-                  alt="dropdown"
-                  class="dropdown-icon"
-                  :class="{ rotated: isDropdownOpen }"
-                />
-              </div>
-              <div v-show="isDropdownOpen" class="dropdown-menu">
+    <div class="sys-wrapper">
+      <div class="select-title">
+        <div class="title-text">
+          {{ props.activeTab }} {{ props.item.name }}
+        </div>
+      </div>
+      <div class="select-content">
+        <div class="select-drop">
+          <div class="select-row">
+            <div class="select-label">内核版本:</div>
+            <div class="select-box">
+              <div class="select-wrapper">
                 <div
-                  v-for="option in kernelOptions"
-                  :key="option.value"
-                  class="dropdown-item"
-                  :class="{ selected: option.value === currentHoverItem }"
-                  @mouseenter="currentHoverItem = option.value"
-                  @mouseleave="currentHoverItem = null"
-                  @click="handleSelect(option)"
+                  class="custom-select"
+                  @click.stop="toggleDropdown('kernel')"
                 >
-                  <div class="option-content">
-                    <span class="option-label">{{ option.label }}</span>
-
+                  <div class="selected-value">
+                    {{
+                      kernelOptions.find(opt => opt.value === selectedKernel)
+                        ?.label || kernelOptions[0].label
+                    }}
                     <span
-                      v-if="option.hasKernelSource"
+                      v-if="
+                        kernelOptions.find(opt => opt.value === selectedKernel)
+                          ?.hasKernelSource
+                      "
                       class="kernel-source-tag"
                       >内核同源</span
                     >
                   </div>
+                  <img
+                    src="../assets/icons/board/Group 85@3x.svg"
+                    alt="dropdown"
+                    class="dropdown-icon"
+                    :class="{ rotated: isDropdownOpen }"
+                  />
+                </div>
+                <div v-show="isDropdownOpen" class="dropdown-menu">
+                  <div
+                    v-for="option in kernelOptions"
+                    :key="option.value"
+                    class="dropdown-item"
+                    :class="{ selected: option.value === currentHoverItem }"
+                    @mouseenter="currentHoverItem = option.value"
+                    @mouseleave="currentHoverItem = null"
+                    @click="handleSelect(option)"
+                  >
+                    <div class="option-content">
+                      <span class="option-label">{{ option.label }}</span>
+
+                      <span
+                        v-if="option.hasKernelSource"
+                        class="kernel-source-tag"
+                        >内核同源</span
+                      >
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="select-row">
-          <div class="select-label">软件包场景:</div>
-          <div class="select-box">
-            <div class="select-wrapper">
-              <div
-                class="custom-select"
-                @click.stop="toggleDropdown('package')"
-              >
-                <div class="selected-value">
-                  {{
-                    packageOptions.find(opt => opt.value === selectedPackage)
-                      ?.label || packageOptions[0].label
-                  }}
-                </div>
-                <img
-                  src="../assets/icons/board/Group 85@3x.svg"
-                  alt="dropdown"
-                  class="dropdown-icon"
-                  :class="{ rotated: isPackageDropdownOpen }"
-                />
-              </div>
-              <div v-show="isPackageDropdownOpen" class="dropdown-menu">
+          <div class="select-row">
+            <div class="select-label">软件包场景:</div>
+            <div class="select-box">
+              <div class="select-wrapper">
                 <div
-                  v-for="option in packageOptions"
-                  :key="option.value"
-                  class="dropdown-item"
-                  :class="{
-                    selected: option.value === currentPackageHoverItem
-                  }"
-                  @mouseenter="currentPackageHoverItem = option.value"
-                  @mouseleave="currentPackageHoverItem = null"
-                  @click="handlePackageSelect(option)"
+                  class="custom-select"
+                  @click.stop="toggleDropdown('package')"
                 >
-                  <div class="option-content">
-                    <span class="option-label">{{ option.label }}</span>
+                  <div class="selected-value">
+                    {{
+                      packageOptions.find(opt => opt.value === selectedPackage)
+                        ?.label || packageOptions[0].label
+                    }}
+                  </div>
+                  <img
+                    src="../assets/icons/board/Group 85@3x.svg"
+                    alt="dropdown"
+                    class="dropdown-icon"
+                    :class="{ rotated: isPackageDropdownOpen }"
+                  />
+                </div>
+                <div v-show="isPackageDropdownOpen" class="dropdown-menu">
+                  <div
+                    v-for="option in packageOptions"
+                    :key="option.value"
+                    class="dropdown-item"
+                    :class="{
+                      selected: option.value === currentPackageHoverItem
+                    }"
+                    @mouseenter="currentPackageHoverItem = option.value"
+                    @mouseleave="currentPackageHoverItem = null"
+                    @click="handlePackageSelect(option)"
+                  >
+                    <div class="option-content">
+                      <span class="option-label">{{ option.label }}</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div id="file-list">
-        <a
-          class="file-item"
-          v-for="(item, index) in currentFiles"
-          :key="index"
-          :class="{ active: selectedItem === index }"
-          @click="handleFileClick(index)"
-          :href="item.url"
-        >
-          <div class="file-name">{{ getFileName(item.url) }}</div>
-          <div class="file-info">
-            <span class="file-size"></span>
-            <span class="download-btn" @click.stop="handleDownload(index)">
-              点击下载
-            </span>
-          </div>
-        </a>
-      </div>
-
-      <div class="button-area">
-        <div class="help-btn">
-          <div class="btn-border" @click="handleHelpClick">查看帮助文档</div>
+        <div id="file-list">
+          <a
+            class="file-item"
+            v-for="(item, index) in currentFiles"
+            :key="index"
+            :class="{ active: selectedItem === index }"
+            @click="handleFileClick(index)"
+            :href="item.url"
+          >
+            <div class="file-name">{{ getFileName(item.url) }}</div>
+            <div class="file-info">
+              <span class="file-size"></span>
+              <span class="download-btn" @click.stop="handleDownload(index)">
+                点击下载
+              </span>
+            </div>
+          </a>
         </div>
-        <div class="pagination">
-          <span class="page-indicator">{{ pageIndicator }}</span>
-          <button class="prev-btn" @click="handlePrevClick">←</button>
 
-          <button class="next-btn" @click="handleNextClick">→</button>
+        <div class="button-area">
+          <div class="help-btn">
+            <div class="btn-border" @click="handleHelpClick">查看帮助文档</div>
+          </div>
+          <div class="pagination">
+            <span class="page-indicator">{{ pageIndicator }}</span>
+            <button class="prev-btn" @click="handlePrevClick">←</button>
+
+            <button class="next-btn" @click="handleNextClick">→</button>
+          </div>
         </div>
       </div>
     </div>
@@ -387,48 +394,50 @@ const getFileName = url => {
     @click.self="handleCloseDialog"
   >
     <div class="dialog-content">
-      <DesriName :name="props.activeTab + ' ' + props.item.name" />
-      <div class="selectedGroup">
-        <div class="version">
-          <div class="label">内核版本：</div>
-          <div class="value">{{ selectedKernel }}</div>
-        </div>
-        <div class="package">
-          <div class="label">软件包场景：</div>
-          <div class="value">{{ selectedPackage }}</div>
-        </div>
-      </div>
-      <div id="file-list">
-        <a
-          class="file-item"
-          v-for="(item, index) in currentFiles"
-          :key="index"
-          @click="handleFileClick(index)"
-          :href="item.url"
-        >
-          <div class="file-name">{{ getFileName(item.url) }}</div>
-          <div class="file-info">
-            <span class="download-btn" @click.stop="handleDownload(index)">
-              点击下载
-            </span>
+      <div class="dialog-wrapper">
+        <DesriName :name="props.activeTab + ' ' + props.item.name" />
+        <div class="selectedGroup">
+          <div class="version">
+            <div class="label">内核版本：</div>
+            <div class="value">{{ selectedKernel }}</div>
           </div>
-        </a>
-      </div>
-
-      <div class="upload-area">
-        <div class="upload-text" v-if="helpMd">
-          <div class="markdown-body" v-html="parsedMarkdown"></div>
+          <div class="package">
+            <div class="label">软件包场景：</div>
+            <div class="value">{{ selectedPackage }}</div>
+          </div>
         </div>
-        <div v-else>暂无文档</div>
-      </div>
-      <div class="description">
-        <div class="desc-title">板卡说明：</div>
-        <div class="desc-content">
-          {{
-            props.item.imagesuites[currentIndex.value]?.comment
-              ? props.item.imagesuites[currentIndex.value].comment
-              : "暂无说明"
-          }}
+        <div id="file-list">
+          <a
+            class="file-item"
+            v-for="(item, index) in currentFiles"
+            :key="index"
+            @click="handleFileClick(index)"
+            :href="item.url"
+          >
+            <div class="file-name">{{ getFileName(item.url) }}</div>
+            <div class="file-info">
+              <span class="download-btn" @click.stop="handleDownload(index)">
+                点击下载
+              </span>
+            </div>
+          </a>
+        </div>
+
+        <div class="upload-area">
+          <div class="upload-text" v-if="helpMd">
+            <div class="markdown-body" v-html="parsedMarkdown"></div>
+          </div>
+          <div v-else>暂无文档</div>
+        </div>
+        <div class="description">
+          <div class="desc-title">板卡说明：</div>
+          <div class="desc-content">
+            {{
+              props.item.imagesuites[currentIndex.value]?.comment
+                ? props.item.imagesuites[currentIndex.value].comment
+                : "暂无说明"
+            }}
+          </div>
         </div>
       </div>
     </div>
@@ -448,17 +457,20 @@ $border-color: #f1faff;
   background: #ffffff;
   border-radius: 20px;
   border: 1px solid #f1faff;
-  padding: 32px;
-  max-height: 348px;
-  overflow-y: auto;
-  &::-webkit-scrollbar {
+  padding: 32px 0 32px 32px;
+
+  .sys-wrapper {
+    max-height: 348px;
+    overflow-y: auto;
+    padding-right: 16px;
+    box-sizing: border-box;
+    &::-webkit-scrollbar {
       width: 12px;
       background: transparent;
     }
 
     &::-webkit-scrollbar-track {
       background: transparent;
-      margin: 10px 0;
     }
 
     &::-webkit-scrollbar-thumb {
@@ -467,245 +479,245 @@ $border-color: #f1faff;
       border: 2px solid #ffffff;
       background-clip: padding-box;
     }
-  .select-title {
-    display: flex;
-    align-items: center;
-    margin-bottom: 16px;
-
-    .title-text {
-      font-size: 20px;
-      color: #333;
-      font-weight: 500;
-      margin-right: 16px;
-    }
-
-    .title-line {
-      flex: 1;
-      height: 1px;
-      background: #e5e5e5;
-    }
-  }
-
-  .select-content {
-    .select-drop {
+    .select-title {
       display: flex;
-      gap: 16px;
+      align-items: center;
+      margin-bottom: 16px;
 
-      .select-row {
+      .title-text {
+        font-size: 20px;
+        color: #333;
+        font-weight: 500;
+        margin-right: 16px;
+      }
+
+      .title-line {
+        flex: 1;
+        height: 1px;
+        background: #e5e5e5;
+      }
+    }
+
+    .select-content {
+      .select-drop {
         display: flex;
-        flex-direction: column;
+        gap: 16px;
 
-        .select-label {
-          min-width: 128px;
-          font-size: 16px;
-          color: #666;
-        }
-
-        .select-box {
-          position: relative;
+        .select-row {
           display: flex;
-          align-items: center;
-          margin-top: 10px;
+          flex-direction: column;
 
-          .select-wrapper {
+          .select-label {
+            min-width: 128px;
+            font-size: 16px;
+            color: #666;
+          }
+
+          .select-box {
             position: relative;
             display: flex;
             align-items: center;
+            margin-top: 10px;
 
-            .kernel-source-tag {
-              display: inline-block;
-              padding: 3px 10px;
-              background-color: #3459b8;
-              color: #ffffff;
-              border-radius: 6px;
-              font-size: 13px;
-              margin-left: 10px;
-            }
-          }
+            .select-wrapper {
+              position: relative;
+              display: flex;
+              align-items: center;
 
-          select {
-            min-width: 224px;
-            width: auto;
-            height: 33px;
-            border: 1px solid #e5e5e5;
-            border-radius: 8px;
-            padding: 0 64px 0 16px;
-            font-size: 16px;
-            color: #333;
-            outline: none;
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            background: transparent;
-            box-sizing: border-box;
-            cursor: pointer;
-
-            &:focus {
-              border-color: $secondary-blue;
-            }
-
-            option {
-              padding: 16px;
-              background: #ffffff;
-
-              &:checked {
-                background: #e6f7ff;
-                color: #333;
-              }
-
-              &:hover {
-                background: #e6f7ff;
+              .kernel-source-tag {
+                display: inline-block;
+                padding: 3px 10px;
+                background-color: #3459b8;
+                color: #ffffff;
+                border-radius: 6px;
+                font-size: 13px;
+                margin-left: 10px;
               }
             }
-          }
 
-          .dropdown-icon {
-            position: absolute;
-            right: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 19px;
-            height: 19px;
-            pointer-events: none;
-            transition: transform 0.3s ease;
+            select {
+              min-width: 224px;
+              width: auto;
+              height: 33px;
+              border: 1px solid #e5e5e5;
+              border-radius: 8px;
+              padding: 0 64px 0 16px;
+              font-size: 16px;
+              color: #333;
+              outline: none;
+              appearance: none;
+              -webkit-appearance: none;
+              -moz-appearance: none;
+              background: transparent;
+              box-sizing: border-box;
+              cursor: pointer;
 
-            &.rotated {
-              transform: translateY(-50%) rotate(180deg);
+              &:focus {
+                border-color: $secondary-blue;
+              }
+
+              option {
+                padding: 16px;
+                background: #ffffff;
+
+                &:checked {
+                  background: #e6f7ff;
+                  color: #333;
+                }
+
+                &:hover {
+                  background: #e6f7ff;
+                }
+              }
+            }
+
+            .dropdown-icon {
+              position: absolute;
+              right: 16px;
+              top: 50%;
+              transform: translateY(-50%);
+              width: 19px;
+              height: 19px;
+              pointer-events: none;
+              transition: transform 0.3s ease;
+
+              &.rotated {
+                transform: translateY(-50%) rotate(180deg);
+              }
             }
           }
         }
       }
-    }
-    #file-list {
-  margin-top: 16px;
-  padding-right: 16px;
-  a {
-    text-decoration: none;
-  }
+      #file-list {
+        margin-top: 16px;
+        padding-right: 16px;
+        a {
+          text-decoration: none;
+        }
 
-
-  .file-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #f5f5f5;
-    margin-top: 6px;
-    border-radius: 6px;
-    padding: 13px 19px;
-    box-sizing: border-box;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:first-child {
-      margin-top: 0;
-    }
-
-    .file-name {
-      font-size: 16px;
-      color: #333;
-      flex: 1;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .file-size {
-      font-size: 16px;
-      color: #666;
-      margin-left: 32px;
-    }
-
-    .file-info {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-
-      .download-btn {
-        display: none;
-        color: white;
-        font-size: 16px;
-        cursor: pointer;
-        white-space: nowrap;
-      }
-    }
-
-    &:hover {
-      background-color: #466edb;
-      color: white;
-
-      .file-name,
-      .file-size {
-        color: white;
-      }
-
-      .download-btn {
-        display: inline-block;
-      }
-    }
-  }
-}
-    .button-area {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 24px;
-
-      .pagination {
-        display: flex;
-        justify-content: flex-end;
-        align-items: flex-end;
-        gap: 16px;
-
-        button {
-          width: 56px;
-          height: 40px;
-          border: 2px solid $primary-blue;
-          border-radius: 8px;
-          background: #ffffff;
-          cursor: pointer;
+        .file-item {
           display: flex;
+          justify-content: space-between;
           align-items: center;
-          justify-content: center;
-          padding: 6px;
-          color: $primary-blue;
-          font-size: 32px;
-          font-weight: 600;
-
-          &:hover {
-            border-color: $secondary-blue;
-            color: $secondary-blue;
-          }
-        }
-
-        .page-indicator {
+          background-color: #f5f5f5;
+          margin-top: 6px;
+          border-radius: 6px;
+          padding: 13px 19px;
+          box-sizing: border-box;
           font-size: 16px;
-          color: #666;
-
-          min-width: 32px;
-          text-align: right;
-          height: 32px;
-          line-height: 32px;
-        }
-      }
-
-      .help-btn {
-        margin-top: 3px;
-
-        .btn-border {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          width: 180px;
-          height: 40px;
-          border: 2px solid $primary-blue;
-          border-radius: 10px;
-          color: $primary-blue;
-          font-size: 20px;
           cursor: pointer;
           transition: all 0.3s ease;
 
+          &:first-child {
+            margin-top: 0;
+          }
+
+          .file-name {
+            font-size: 16px;
+            color: #333;
+            flex: 1;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          .file-size {
+            font-size: 16px;
+            color: #666;
+            margin-left: 32px;
+          }
+
+          .file-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+
+            .download-btn {
+              display: none;
+              color: white;
+              font-size: 16px;
+              cursor: pointer;
+              white-space: nowrap;
+            }
+          }
+
           &:hover {
-            background: rgba(1, 47, 166, 0.1);
+            background-color: #466edb;
+            color: white;
+
+            .file-name,
+            .file-size {
+              color: white;
+            }
+
+            .download-btn {
+              display: inline-block;
+            }
+          }
+        }
+      }
+      .button-area {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 24px;
+
+        .pagination {
+          display: flex;
+          justify-content: flex-end;
+          align-items: flex-end;
+          gap: 16px;
+
+          button {
+            width: 56px;
+            height: 40px;
+            border: 2px solid $primary-blue;
+            border-radius: 8px;
+            background: #ffffff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+            color: $primary-blue;
+            font-size: 32px;
+            font-weight: 600;
+
+            &:hover {
+              border-color: $secondary-blue;
+              color: $secondary-blue;
+            }
+          }
+
+          .page-indicator {
+            font-size: 16px;
+            color: #666;
+
+            min-width: 32px;
+            text-align: right;
+            height: 32px;
+            line-height: 32px;
+          }
+        }
+
+        .help-btn {
+          margin-top: 3px;
+
+          .btn-border {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 180px;
+            height: 40px;
+            border: 2px solid $primary-blue;
+            border-radius: 10px;
+            color: $primary-blue;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            &:hover {
+              background: rgba(1, 47, 166, 0.1);
+            }
           }
         }
       }
@@ -738,101 +750,22 @@ select:focus {
 
   .dialog-content {
     width: 60em;
-    max-height: 95%;
+
     background: #ffffff;
     border-radius: 20px;
     box-shadow: 0 4.16px 8px rgba(0, 0, 0, 0.15);
     position: relative;
     animation: dialogFadeIn 0.3s ease;
-    padding: 0 48px 24px 48px;
-    overflow-y: auto;
-    scrollbar-width: thin;
+    padding: 24px 0 24px 48px;
+
+    .dialog-wrapper{
+      max-height: 90vh;
+      overflow-y: auto;
+      padding-right: 48px;
+      box-sizing: border-box;
+      scrollbar-width: thin;
     scrollbar-color: #e5e5e5 transparent;
-    #file-list {
-  margin-top: 16px;
-  padding-right: 16px;
-  max-height: 213px;
-  overflow-y: auto;
-  a {
-    text-decoration: none;
-  }
-  &::-webkit-scrollbar {
-    width: 8px;
-    border-radius: 20px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #e5e5e5;
-    border-radius: 4px;
-  }
-
-  .file-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #f5f5f5;
-    margin-top: 6px;
-    border-radius: 6px;
-    padding: 13px 19px;
-    box-sizing: border-box;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:first-child {
-      margin-top: 0;
-    }
-
-    .file-name {
-      font-size: 16px;
-      color: #333;
-      flex: 1;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .file-size {
-      font-size: 16px;
-      color: #666;
-      margin-left: 32px;
-    }
-
-    .file-info {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-
-      .download-btn {
-        display: none;
-        color: white;
-        font-size: 16px;
-        cursor: pointer;
-        white-space: nowrap;
-      }
-    }
-
-    &:hover {
-      background-color: #466edb;
-      color: white;
-
-      .file-name,
-      .file-size {
-        color: white;
-      }
-
-      .download-btn {
-        display: inline-block;
-      }
-    }
-  }
-}
-
-    &::-webkit-scrollbar {
-      width: 8px;
+      &::-webkit-scrollbar {
       background: transparent;
     }
 
@@ -847,6 +780,90 @@ select:focus {
       border: 2px solid #ffffff;
       background-clip: padding-box;
     }
+      #file-list {
+      margin-top: 16px;
+      padding-right: 16px;
+      max-height: 213px;
+      overflow-y: auto;
+      a {
+        text-decoration: none;
+      }
+      &::-webkit-scrollbar {
+        width: 8px;
+        border-radius: 20px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #e5e5e5;
+        border-radius: 4px;
+      }
+
+      .file-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #f5f5f5;
+        margin-top: 6px;
+        border-radius: 6px;
+        padding: 13px 19px;
+        box-sizing: border-box;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:first-child {
+          margin-top: 0;
+        }
+
+        .file-name {
+          font-size: 16px;
+          color: #333;
+          flex: 1;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .file-size {
+          font-size: 16px;
+          color: #666;
+          margin-left: 32px;
+        }
+
+        .file-info {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+
+          .download-btn {
+            display: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            white-space: nowrap;
+          }
+        }
+
+        &:hover {
+          background-color: #466edb;
+          color: white;
+
+          .file-name,
+          .file-size {
+            color: white;
+          }
+
+          .download-btn {
+            display: inline-block;
+          }
+        }
+      }
+    }
+
+   
 
     .selectedGroup {
       display: flex;
@@ -933,6 +950,7 @@ select:focus {
         font-size: 16px;
         color: #333333;
       }
+    }
     }
   }
 }
@@ -1024,7 +1042,6 @@ select:focus {
   box-sizing: border-box;
 }
 
-
 :deep(.markdown-body) {
   h1,
   h2,
@@ -1053,7 +1070,7 @@ select:focus {
     border-radius: 6px;
     overflow-x: auto;
   }
-  ul{
+  ul {
     list-style-type: disc;
   }
 }
