@@ -114,7 +114,7 @@ const handleDownload = async index => {
 };
 
 const kernelOptions = computed(() => {
-  const allImageSuites = props.itemList.flatMap(item => item.imagesuites || []);
+  const allImageSuites = props.item.imagesuites
   const allKernels = allImageSuites.map(suite => ({
     value: `${suite.kernel.type}-${suite.kernel.branch}`,
     label: `${suite.kernel.type}-${suite.kernel.branch}`,
@@ -132,8 +132,9 @@ const kernelOptions = computed(() => {
 });
 
 const packageOptions = computed(() => {
-  if (!props.itemList) return [];
-  const allImageSuites = props.itemList.flatMap(item => item.imagesuites || []);
+  if (!props.item) return [];
+  const allImageSuites = props.item.imagesuites
+  console.log(allImageSuites,"我啊all")
   return Array.from(
     new Set(
       allImageSuites.map(suite =>
@@ -261,7 +262,7 @@ const getFileName = url => {
                 <div class="selected-value">
                   {{
                     kernelOptions.find(opt => opt.value === selectedKernel)
-                      ?.label
+                      ?.label || kernelOptions[0].label
                   }}
                   <span
                     v-if="
@@ -315,7 +316,7 @@ const getFileName = url => {
                 <div class="selected-value">
                   {{
                     packageOptions.find(opt => opt.value === selectedPackage)
-                      ?.label
+                      ?.label || packageOptions[0].label
                   }}
                 </div>
                 <img
