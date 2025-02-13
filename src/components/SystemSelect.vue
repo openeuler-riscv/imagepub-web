@@ -114,7 +114,7 @@ const handleDownload = async index => {
 };
 
 const kernelOptions = computed(() => {
-  const allImageSuites = props.itemList.flatMap(item => item.imagesuites || []);
+  const allImageSuites = props.item.imagesuites
   const allKernels = allImageSuites.map(suite => ({
     value: `${suite.kernel.type}-${suite.kernel.branch}`,
     label: `${suite.kernel.type}-${suite.kernel.branch}`,
@@ -132,8 +132,9 @@ const kernelOptions = computed(() => {
 });
 
 const packageOptions = computed(() => {
-  if (!props.itemList) return [];
-  const allImageSuites = props.itemList.flatMap(item => item.imagesuites || []);
+  if (!props.item) return [];
+  const allImageSuites = props.item.imagesuites
+  console.log(allImageSuites,"我啊all")
   return Array.from(
     new Set(
       allImageSuites.map(suite =>
@@ -261,7 +262,7 @@ const getFileName = url => {
                 <div class="selected-value">
                   {{
                     kernelOptions.find(opt => opt.value === selectedKernel)
-                      ?.label
+                      ?.label || kernelOptions[0].label
                   }}
                   <span
                     v-if="
@@ -315,7 +316,7 @@ const getFileName = url => {
                 <div class="selected-value">
                   {{
                     packageOptions.find(opt => opt.value === selectedPackage)
-                      ?.label
+                      ?.label || packageOptions[0].label
                   }}
                 </div>
                 <img
@@ -448,7 +449,24 @@ $border-color: #f1faff;
   border-radius: 20px;
   border: 1px solid #f1faff;
   padding: 32px;
+  max-height: 348px;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+      width: 12px;
+      background: transparent;
+    }
 
+    &::-webkit-scrollbar-track {
+      background: transparent;
+      margin: 10px 0;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #e5e5e5;
+      border-radius: 4px;
+      border: 2px solid #ffffff;
+      background-clip: padding-box;
+    }
   .select-title {
     display: flex;
     align-items: center;
@@ -558,7 +576,74 @@ $border-color: #f1faff;
         }
       }
     }
+    #file-list {
+  margin-top: 16px;
+  padding-right: 16px;
+  a {
+    text-decoration: none;
+  }
 
+
+  .file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f5f5f5;
+    margin-top: 6px;
+    border-radius: 6px;
+    padding: 13px 19px;
+    box-sizing: border-box;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    .file-name {
+      font-size: 16px;
+      color: #333;
+      flex: 1;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .file-size {
+      font-size: 16px;
+      color: #666;
+      margin-left: 32px;
+    }
+
+    .file-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      .download-btn {
+        display: none;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+    }
+
+    &:hover {
+      background-color: #466edb;
+      color: white;
+
+      .file-name,
+      .file-size {
+        color: white;
+      }
+
+      .download-btn {
+        display: inline-block;
+      }
+    }
+  }
+}
     .button-area {
       display: flex;
       justify-content: space-between;
@@ -663,6 +748,88 @@ select:focus {
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #e5e5e5 transparent;
+    #file-list {
+  margin-top: 16px;
+  padding-right: 16px;
+  max-height: 213px;
+  overflow-y: auto;
+  a {
+    text-decoration: none;
+  }
+  &::-webkit-scrollbar {
+    width: 8px;
+    border-radius: 20px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #e5e5e5;
+    border-radius: 4px;
+  }
+
+  .file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f5f5f5;
+    margin-top: 6px;
+    border-radius: 6px;
+    padding: 13px 19px;
+    box-sizing: border-box;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    .file-name {
+      font-size: 16px;
+      color: #333;
+      flex: 1;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .file-size {
+      font-size: 16px;
+      color: #666;
+      margin-left: 32px;
+    }
+
+    .file-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      .download-btn {
+        display: none;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+    }
+
+    &:hover {
+      background-color: #466edb;
+      color: white;
+
+      .file-name,
+      .file-size {
+        color: white;
+      }
+
+      .download-btn {
+        display: inline-block;
+      }
+    }
+  }
+}
 
     &::-webkit-scrollbar {
       width: 8px;
@@ -857,88 +1024,6 @@ select:focus {
   box-sizing: border-box;
 }
 
-#file-list {
-  margin-top: 16px;
-  max-height: 100px;
-  overflow-y: auto;
-  padding-right: 16px;
-  a {
-    text-decoration: none;
-  }
-  &::-webkit-scrollbar {
-    width: 8px;
-    border-radius: 20px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #e5e5e5;
-    border-radius: 4px;
-  }
-
-  .file-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #f5f5f5;
-    margin-top: 6px;
-    border-radius: 6px;
-    padding: 13px 19px;
-    box-sizing: border-box;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:first-child {
-      margin-top: 0;
-    }
-
-    .file-name {
-      font-size: 16px;
-      color: #333;
-      flex: 1;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .file-size {
-      font-size: 16px;
-      color: #666;
-      margin-left: 32px;
-    }
-
-    .file-info {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-
-      .download-btn {
-        display: none;
-        color: white;
-        font-size: 16px;
-        cursor: pointer;
-        white-space: nowrap;
-      }
-    }
-
-    &:hover {
-      background-color: #466edb;
-      color: white;
-
-      .file-name,
-      .file-size {
-        color: white;
-      }
-
-      .download-btn {
-        display: inline-block;
-      }
-    }
-  }
-}
 
 :deep(.markdown-body) {
   h1,
