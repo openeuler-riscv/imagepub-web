@@ -21,7 +21,7 @@ const props = defineProps({
   justify-content: space-between;
   align-items: center;
   font-size: 16px;
-  margin-top: 24px;
+
 
   .blueBlock {
     width: 4px;

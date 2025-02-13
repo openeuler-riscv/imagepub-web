@@ -81,7 +81,7 @@ const handleInputBlur = () => {
     if (!searchKeyword.value) {
       showSuggestions.value = false;
       isSearched.value = false;
-      searchInputRef.value= "";
+      searchInputRef.value = "";
     }
   }, 200);
 };
@@ -146,21 +146,24 @@ const closeAllOptions = () => {
   showOptions.value = {};
 };
 
-const randomPlaceholder = ref('');
-const lastPlaceholder = ref('');
+const randomPlaceholder = ref("");
+const lastPlaceholder = ref("");
 const placeholderTimer = ref(null);
 
 const getRandomProduct = () => {
   if (!productList.value || productList.value.length === 0) {
-    return '';
+    return "";
   }
-  
+
   let newPlaceholder;
   do {
     const randomIndex = Math.floor(Math.random() * productList.value.length);
     newPlaceholder = productList.value[randomIndex].name;
-  } while (newPlaceholder === lastPlaceholder.value && productList.value.length > 1);
-  
+  } while (
+    newPlaceholder === lastPlaceholder.value &&
+    productList.value.length > 1
+  );
+
   lastPlaceholder.value = newPlaceholder;
   return newPlaceholder;
 };
@@ -302,7 +305,7 @@ watch(
             <div id="content">{{ boardDetail?.vendor?.name }}</div>
           </div>
           <div id="board-block">
-            <div id="title">SoC型号：</div>
+            <div id="title">Soc型号称：</div>
             <div id="content">{{ boardDetail?.soc?.name }}</div>
           </div>
           <div id="board-block">
@@ -388,7 +391,7 @@ $border-color: #f1faff;
   display: flex;
   justify-content: center;
   position: relative;
-  width:100%;
+  width: 100%;
   .top-bar {
     margin: 25px 0 auto;
     width: 90%;
@@ -407,8 +410,7 @@ $border-color: #f1faff;
     padding-right: 10px;
     box-sizing: border-box;
     box-shadow: 0 3px 2px 0 rgba(1, 47, 166, 0.02),
-      0 7px 5px 0 rgba(1, 47, 166, 0.03),
-      0 12px 10px 0 rgba(1, 47, 166, 0.04),
+      0 7px 5px 0 rgba(1, 47, 166, 0.03), 0 12px 10px 0 rgba(1, 47, 166, 0.04),
       0 22px 18px 0 rgba(1, 47, 166, 0.04);
 
     .circle-img {
@@ -439,12 +441,12 @@ $border-color: #f1faff;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       color: $secondary-blue;
       background: rgba(74, 119, 202, 0.05);
-      
+
       .back {
         display: flex;
         align-items: center;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        
+
         img {
           width: 24px;
           height: 24px;
@@ -460,7 +462,7 @@ $border-color: #f1faff;
 
         .back {
           transform: translateX(-4px);
-          
+
           img {
             transform: scale(1.1);
           }
@@ -640,12 +642,11 @@ $border-color: #f1faff;
   width: 90%;
   display: flex;
 
-  margin-top: 20px ;
+  margin-top: 20px;
   margin-bottom: 40px;
   background-color: #fff;
   box-shadow: 0 3px 2px 0 rgba(1, 47, 166, 0.02),
-    0 7px 5px 0 rgba(1, 47, 166, 0.03),
-    0 12px 10px 0 rgba(1, 47, 166, 0.04),
+    0 7px 5px 0 rgba(1, 47, 166, 0.03), 0 12px 10px 0 rgba(1, 47, 166, 0.04),
     0 22px 18px 0 rgba(1, 47, 166, 0.04);
   border-radius: 20px;
   border: 1px solid #f1faff;
@@ -703,18 +704,21 @@ $border-color: #f1faff;
     padding: 20px;
     height: 100%;
     box-sizing: border-box;
-    .board-info{
-      .info-detail {
-      display: flex;
-      margin-top: 12px;
- 
-    }
-    }
 
+    .board-info {
+      margin-top: 24px;
+      .info-detail {
+        display: flex;
+        margin-top: 12px;
+      }
+    }
+    .ram {
+      margin-top: 24px;
+    }
     .port {
+      margin-top: 24px;
       display: flex;
       flex-wrap: wrap;
-
     }
   }
 }
@@ -742,8 +746,8 @@ $border-color: #f1faff;
   display: flex;
   gap: 40px;
   margin-right: auto;
-  width:90%;
-  margin:0 auto;
+  width: 90%;
+  margin: 0 auto;
   .tab-item {
     padding-bottom: 8px;
     font-size: 18px;
@@ -773,5 +777,4 @@ $border-color: #f1faff;
     }
   }
 }
-
 </style>
