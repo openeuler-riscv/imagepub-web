@@ -132,32 +132,6 @@ const getMenuTitle = computed(() => menuId => {
   return dropMenu.value.find(item => item.id === menuId)?.name;
 });
 
-const getTruncatedTitle = computed(() => menuId => {
-  const title = getMenuTitle.value(menuId);
-  const span = document.createElement("span");
-  span.style.font = "500 24px PingFang SC-Regular";
-  document.body.appendChild(span);
-  span.textContent = title;
-  const fullWidth = span.offsetWidth;
-  if (fullWidth <= 120) {
-    document.body.removeChild(span);
-    return title;
-  }
-  span.textContent = "...";
-  let truncatedText = title;
-  while (truncatedText.length > 0) {
-    span.textContent = truncatedText + "...";
-    if (span.offsetWidth <= 120) {
-      document.body.removeChild(span);
-      return truncatedText + "...";
-    }
-    truncatedText = truncatedText.slice(0, -1);
-  }
-
-  document.body.removeChild(span);
-  return "...";
-});
-
 const handleSearchInput = e => {
   searchKeyword.value = e.target.value;
   if (!searchKeyword.value) {
@@ -457,7 +431,7 @@ onMounted(async () => {
             active: showOptions[item.id]
           }"
         >
-          <span class="menu-text">{{ getTruncatedTitle(item.id) }}</span>
+          <span class="menu-text">{{ getMenuTitle(item.id) }}</span>
           <div class="menu-img" :class="{ rotate: showOptions[item.id] }">
             <img src="@/assets/icons/home/Group 5.png" alt="" />
           </div>
@@ -781,16 +755,18 @@ $border-color: #f1faff;
   display: flex;
   margin: 0 auto;
   justify-content: center;
-  width: 80%;
+  min-width: 80%;
+
   ul {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    width: auto;
+    width:20%;
     height: 48px;
     flex: 1;
     position: relative;
+
     .menu-title {
       display: flex;
       align-items: center;
@@ -805,7 +781,13 @@ $border-color: #f1faff;
         max-width: 120px;
         white-space: nowrap;
         text-overflow: ellipsis;
+        overflow: hidden;
         display: inline-block;
+
+        @media screen and (min-width: 1440px) {
+          max-width: none;
+          overflow: visible;
+        }
       }
 
       &.selected-title {
