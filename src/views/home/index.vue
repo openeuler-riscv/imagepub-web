@@ -20,9 +20,9 @@ const isSticky = ref(false);
 const showSearchInput = ref(false);
 const showBackToTop = ref(false);
 const productList = ref([]);
-const randomPlaceholder = ref('');
+const randomPlaceholder = ref("");
 const placeholderTimer = ref(null);
-const lastPlaceholder = ref('');
+const lastPlaceholder = ref("");
 
 const nameMapping = {
   soc: "SoC型号",
@@ -63,7 +63,12 @@ const searchSuggestions = computed(() => {
     .filter(
       item =>
         item.name.toLowerCase().includes(searchKeyword.value.toLowerCase()) ||
-        item.vendor.toLowerCase().includes(searchKeyword.value.toLowerCase())
+        item.vendor.toLowerCase().includes(searchKeyword.value.toLowerCase()) ||
+        (item.soc &&
+          item.soc.name &&
+          item.soc.name
+            .toLowerCase()
+            .includes(searchKeyword.value.toLowerCase()))
     )
     .slice(0, 5);
 });
@@ -104,7 +109,10 @@ const filteredProductList = computed(() => {
     filtered = filtered.filter(
       product =>
         product.name.toLowerCase().includes(keyword) ||
-        product.vendor.toLowerCase().includes(keyword)
+        product.vendor.toLowerCase().includes(keyword) ||
+        (product.soc &&
+          product.soc.name &&
+          product.soc.name.toLowerCase().includes(keyword))
     );
   }
 
@@ -113,6 +121,12 @@ const filteredProductList = computed(() => {
 
 const getMenuTitle = computed(() => menuId => {
   if (selectedOptions.value[menuId]) {
+    if (
+      typeof selectedOptions.value[menuId] === "object" &&
+      selectedOptions.value[menuId].vendor
+    ) {
+      return `${selectedOptions.value[menuId].vendor} ${selectedOptions.value[menuId].name}`;
+    }
     return selectedOptions.value[menuId];
   }
   return dropMenu.value.find(item => item.id === menuId)?.name;
@@ -122,23 +136,26 @@ const getTruncatedTitle = computed(() => menuId => {
   const title = getMenuTitle.value(menuId);
   const span = document.createElement("span");
   span.style.font = "500 24px PingFang SC-Regular";
-  span.textContent = title;
   document.body.appendChild(span);
-  const width = span.offsetWidth;
-  document.body.removeChild(span);
-
-  if (width <= 120) return title;
-
+  span.textContent = title;
+  const fullWidth = span.offsetWidth;
+  if (fullWidth <= 120) {
+    document.body.removeChild(span);
+    return title;
+  }
   span.textContent = "...";
-
   let truncatedText = title;
   while (truncatedText.length > 0) {
     span.textContent = truncatedText + "...";
-    if (span.offsetWidth <= 120) break;
+    if (span.offsetWidth <= 120) {
+      document.body.removeChild(span);
+      return truncatedText + "...";
+    }
     truncatedText = truncatedText.slice(0, -1);
   }
 
-  return truncatedText + "...";
+  document.body.removeChild(span);
+  return "...";
 });
 
 const handleSearchInput = e => {
@@ -191,7 +208,15 @@ const handleInputBlur = () => {
 };
 
 const handleSuggestionClick = item => {
-  searchKeyword.value = item.name;
+  if (
+    item.soc &&
+    item.soc.name &&
+    item.soc.name.toLowerCase().includes(searchKeyword.value.toLowerCase())
+  ) {
+    searchKeyword.value = item.soc.name;
+  } else {
+    searchKeyword.value = item.name;
+  }
   showSuggestions.value = false;
 };
 
@@ -238,7 +263,7 @@ const viewportWidth = ref(0);
 const isdummy = ref(false);
 const changeViewportWidth = () => {
   viewportWidth.value = document.body.scrollWidth;
-  changeIsDummy(viewportWidth.value)
+  changeIsDummy(viewportWidth.value);
 };
 
 onUnmounted(() => {
@@ -249,13 +274,13 @@ onUnmounted(() => {
 });
 watch(viewportWidth, newValue => {
   console.log(newValue, "viewportWidth变化了");
-  changeIsDummy(newValue)
+  changeIsDummy(newValue);
 });
-watch(filteredProductList,newValue=>{
-  console.log(newValue.length,'我是筛选数目')
-  changeIsDummy(viewportWidth.value)
-})
-const changeIsDummy=(value)=>{
+watch(filteredProductList, newValue => {
+  console.log(newValue.length, "我是筛选数目");
+  changeIsDummy(viewportWidth.value);
+});
+const changeIsDummy = value => {
   if (Math.floor((value + 16) / 256) > filteredProductList.value.length) {
     isdummy.value = false;
     let elements = document.querySelectorAll(".dummy-wrapper");
@@ -271,8 +296,8 @@ const changeIsDummy=(value)=>{
       element.style.display = "block";
     });
   }
-}
-const fetchProductList=async()=>{
+};
+const fetchProductList = async () => {
   try {
     const response = await getProductList();
     productList.value = response.data;
@@ -280,20 +305,22 @@ const fetchProductList=async()=>{
   } catch (error) {
     console.error("获取产品列表失败:", error);
   }
-
-}
+};
 
 const getRandomProduct = () => {
   if (!productList.value || productList.value.length === 0) {
-    return '';
+    return "";
   }
-  
+
   let newPlaceholder;
   do {
     const randomIndex = Math.floor(Math.random() * productList.value.length);
     newPlaceholder = productList.value[randomIndex].name;
-  } while (newPlaceholder === lastPlaceholder.value && productList.value.length > 1);
-  
+  } while (
+    newPlaceholder === lastPlaceholder.value &&
+    productList.value.length > 1
+  );
+
   lastPlaceholder.value = newPlaceholder;
   return newPlaceholder;
 };
@@ -389,7 +416,7 @@ onMounted(async () => {
             src="@/assets/icons/home/Group 2.png"
             alt=""
           />
-          <button v-else class="search-text" type="button" >搜 索</button>
+          <button v-else class="search-text" type="button">搜 索</button>
         </div>
 
         <div
@@ -403,7 +430,17 @@ onMounted(async () => {
             @click="handleSuggestionClick(item)"
           >
             <div class="suggestion-content">
-              <div class="suggestion-name">{{ item.name }}</div>
+              <div class="suggestion-name">
+                {{
+                  item.soc &&
+                  item.soc.name &&
+                  item.soc.name
+                    .toLowerCase()
+                    .includes(searchKeyword.toLowerCase())
+                    ? item.soc.name
+                    : item.name
+                }}
+              </div>
             </div>
           </div>
         </div>
@@ -442,7 +479,9 @@ onMounted(async () => {
           @click="handleOptionSelect(item.id, option, $event)"
         >
           <span class="selector"></span>
-          <span id="option-name">{{ option }}</span>
+          <span id="option-name">{{
+            option.vendor ? option.vendor + " " + option.name : option
+          }}</span>
         </li>
       </div>
     </ul>
@@ -765,7 +804,6 @@ $border-color: #f1faff;
       .menu-text {
         max-width: 120px;
         white-space: nowrap;
-        overflow: hidden;
         text-overflow: ellipsis;
         display: inline-block;
       }
@@ -799,8 +837,7 @@ $border-color: #f1faff;
     .options {
       position: absolute;
       top: 100%;
-      width: 100%;
-      width: 240px;
+      min-width: 16em;
       height: auto;
       padding: 16px 0;
       box-sizing: border-box;
@@ -819,7 +856,13 @@ $border-color: #f1faff;
         font-size: 20px;
         color: #666666;
         transition: all 0.3s ease;
-        word-break: break-all;
+        white-space: nowrap;
+
+        #option-name {
+          flex: 0 1 auto;
+          white-space: nowrap;
+          overflow: visible;
+        }
 
         .selector {
           flex-shrink: 0;
@@ -840,13 +883,6 @@ $border-color: #f1faff;
             left: 50%;
             transform: translate(-50%, -50%);
           }
-        }
-
-        #option-name {
-          flex: 1;
-          word-wrap: break-word;
-          min-width: 0;
-          line-height: 1.4;
         }
 
         &:hover {
