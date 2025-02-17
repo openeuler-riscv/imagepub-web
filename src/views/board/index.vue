@@ -305,7 +305,7 @@ watch(
             <div id="content">{{ boardDetail?.vendor?.name }}</div>
           </div>
           <div id="board-block">
-            <div id="title">Soc型号称：</div>
+            <div id="title">Soc型号：</div>
             <div id="content">{{ boardDetail?.soc?.name }}</div>
           </div>
           <div id="board-block">

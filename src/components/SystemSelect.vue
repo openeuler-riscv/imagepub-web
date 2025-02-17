@@ -140,8 +140,8 @@ const packageOptions = computed(() => {
     new Set(
       allImageSuites.map(suite =>
         JSON.stringify({
-          value: suite.userspace,
-          label: suite.userspace
+          value: String(suite.features).split(',').join(' + '),
+          label:  String(suite.features).split(',').join(' + ')
         })
       )
     )
@@ -234,6 +234,7 @@ const closeDropdowns = e => {
 onMounted(() => {
   loadDocs();
   document.addEventListener("click", closeDropdowns);
+  console.log(packageOptions.value,'我是选项')
 });
 
 onUnmounted(() => {
@@ -312,8 +313,8 @@ const getFileName = url => {
             </div>
           </div>
 
-          <div class="select-row">
-            <div class="select-label">软件包场景:</div>
+          <div class="select-row" v-show="packageOptions[0].value!==''">
+            <div class="select-label">镜像特性:</div>
             <div class="select-box">
               <div class="select-wrapper">
                 <div
@@ -403,7 +404,7 @@ const getFileName = url => {
             <div class="value">{{ selectedKernel }}</div>
           </div>
           <div class="package">
-            <div class="label">软件包场景：</div>
+            <div class="label">镜像特性：</div>
             <div class="value">{{ selectedPackage }}</div>
           </div>
         </div>
