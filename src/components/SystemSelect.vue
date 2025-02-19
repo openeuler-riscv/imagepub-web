@@ -68,15 +68,26 @@ watch(
   newVal => {
     if (newVal) {
       loadDocs();
+      selectedKernel.value = kernelOptions.value[0]?.value || "";
+      selectedPackage.value = packageOptions.value[0]?.value || "";
     }
   },
   { deep: true }
 );
 
 const selectedItem = ref(null);
+const currentImageSuite = computed(() => {
+  if (!props.item?.imagesuites) return null;
+  
+  return props.item.imagesuites.find(suite => {
+    const kernelMatch = `${suite.kernel.type}-${suite.kernel.branch}` === selectedKernel.value;
+    const packageMatch = String(suite.features).split(',').join(' + ') === selectedPackage.value;
+    return kernelMatch && packageMatch;
+  });
+});
+
 const currentFiles = computed(() => {
-  if (!props.item?.imagesuites?.[0]?.files) return [];
-  return props.item.imagesuites[0].files;
+  return currentImageSuite.value?.files || [];
 });
 
 const handleFileClick = async index => {
@@ -135,7 +146,6 @@ const kernelOptions = computed(() => {
 const packageOptions = computed(() => {
   if (!props.item) return [];
   const allImageSuites = props.item.imagesuites;
-  console.log(allImageSuites, "我啊all");
   return Array.from(
     new Set(
       allImageSuites.map(suite =>
@@ -159,12 +169,16 @@ const handleSelect = option => {
   selectedKernel.value = option.value;
   currentHoverItem.value = null;
   isDropdownOpen.value = false;
+  selectedItem.value = null;
+  loadDocs();
 };
 
 const handlePackageSelect = option => {
   selectedPackage.value = option.value;
   currentPackageHoverItem.value = null;
   isPackageDropdownOpen.value = false;
+  selectedItem.value = null;
+  loadDocs();
 };
 
 const toggleDropdown = dropdownType => {
@@ -190,7 +204,8 @@ const handleCloseDialog = () => {
 };
 
 const loadDocs = async () => {
-  const docs = props.item.imagesuites[0].docs;
+  const currentSuite = currentImageSuite.value;
+  const docs = currentSuite?.docs;
 
   if (docs && docs.length > 0) {
     try {
@@ -934,7 +949,7 @@ select:focus {
       .upload-text {
         max-height: 100%;
         width: 100%;
-        overflow-y: auto;
+  
       }
     }
 
