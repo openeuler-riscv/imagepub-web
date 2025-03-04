@@ -35,19 +35,33 @@ const nameMapping = {
 const dropMenu = computed(() => {
   const keys = ["soc", "isa", "kernel", "features", "status"];
   return keys.map((key, index) => {
-    const items = [
-      ...new Set(
-        productList.value
-          .map(board => {
-            if (Array.isArray(board[key])) {
-              return board[key];
-            }
-            return [board[key]];
-          })
-          .flat()
-          .filter(item => item)
-      )
-    ];
+    let items;
+    if (key === "soc") {
+      items = Array.from(
+        new Map(
+          productList.value
+            .filter(board => board[key])
+            .map(board => [
+              board[key].name,
+              board[key]
+            ])
+        ).values()
+      );
+    } else {
+      items = [
+        ...new Set(
+          productList.value
+            .map(board => {
+              if (Array.isArray(board[key])) {
+                return board[key];
+              }
+              return [board[key]];
+            })
+            .flat()
+            .filter(item => item)
+        )
+      ];
+    }
 
     return {
       id: index + 1,
@@ -59,18 +73,57 @@ const dropMenu = computed(() => {
 
 const searchSuggestions = computed(() => {
   if (!searchKeyword.value) return [];
-  return productList.value
-    .filter(
-      item =>
-        item.name.toLowerCase().includes(searchKeyword.value.toLowerCase()) ||
-        item.vendor.toLowerCase().includes(searchKeyword.value.toLowerCase()) ||
-        (item.soc &&
-          item.soc.name &&
-          item.soc.name
-            .toLowerCase()
-            .includes(searchKeyword.value.toLowerCase()))
-    )
-    .slice(0, 5);
+  
+  const addedSuggestions = new Set();
+  const suggestions = [];
+
+  productList.value.forEach(item => {
+    const keyword = searchKeyword.value.toLowerCase();
+    let suggestion = null;
+
+    if (item.soc && 
+        item.soc.name && 
+        item.soc.name.toLowerCase().includes(keyword)) {
+      const socSuggestion = `${item.soc.vendor} ${item.soc.name}`;
+      if (!addedSuggestions.has(socSuggestion)) {
+        suggestion = {
+          ...item,
+          displayName: socSuggestion,
+          type: 'soc'
+        };
+        addedSuggestions.add(socSuggestion);
+      }
+    }
+
+    else if (item.name.toLowerCase().includes(keyword)) {
+      const nameSuggestion = `${item.vendor} ${item.name}`;
+      if (!addedSuggestions.has(nameSuggestion)) {
+        suggestion = {
+          ...item,
+          displayName: nameSuggestion,
+          type: 'product'
+        };
+        addedSuggestions.add(nameSuggestion);
+      }
+    }
+
+    else if (item.vendor.toLowerCase().includes(keyword)) {
+      if (!addedSuggestions.has(item.vendor)) {
+        suggestion = {
+          ...item,
+          displayName: item.vendor,
+          type: 'vendor'
+        };
+        addedSuggestions.add(item.vendor);
+      }
+    }
+
+    if (suggestion) {
+      suggestions.push(suggestion);
+    }
+  });
+
+  return suggestions.slice(0, 5);
 });
 
 const getFilteredByOptions = computed(() => {
@@ -89,6 +142,9 @@ const getFilteredByOptions = computed(() => {
         if (!key) return true;
 
         const productValue = product[key];
+        if (key === 'soc') {
+          return productValue.name === selectedValue.name;
+        }
         if (Array.isArray(productValue)) {
           return productValue.includes(selectedValue);
         }
@@ -182,12 +238,10 @@ const handleInputBlur = () => {
 };
 
 const handleSuggestionClick = item => {
-  if (
-    item.soc &&
-    item.soc.name &&
-    item.soc.name.toLowerCase().includes(searchKeyword.value.toLowerCase())
-  ) {
+  if (item.type === 'soc') {
     searchKeyword.value = item.soc.name;
+  } else if (item.type === 'vendor') {
+    searchKeyword.value = item.vendor;
   } else {
     searchKeyword.value = item.name;
   }
@@ -404,17 +458,7 @@ onMounted(async () => {
             @click="handleSuggestionClick(item)"
           >
             <div class="suggestion-content">
-              <div class="suggestion-name">
-                {{
-                  item.soc &&
-                  item.soc.name &&
-                  item.soc.name
-                    .toLowerCase()
-                    .includes(searchKeyword.toLowerCase())
-                    ? item.soc.name
-                    : item.name
-                }}
-              </div>
+              <div class="suggestion-name">{{ item.displayName }}</div>
             </div>
           </div>
         </div>
