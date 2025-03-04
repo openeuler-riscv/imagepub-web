@@ -1,5 +1,5 @@
 <template>
-  <div class="product-item" @click="handleClick">
+  <div class="product-item" @click="handleClick" :style="perProductStyle">
     <div class="product-item-img">
       <img :src="productImage" alt="product image" />
       <div class="product-item-tag" v-if="isKernel">内核同源</div>
@@ -36,6 +36,11 @@ import defaultImage from "../assets/images/product_default.png";
 const productImage = computed(() => {
   if (!props.info.thumbnail) return defaultImage;
   return `/${props.info.thumbnail}`;
+});
+
+const perProductStyle = computed(() => {
+  if (props.info.status !== "SUPPORTED") return { "opacity": 0.4 };
+  return {};
 });
 </script>
 
