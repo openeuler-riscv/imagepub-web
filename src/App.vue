@@ -1,15 +1,13 @@
 <template>
-  <router-view />
+    <ElButton type="primary"> primary</ElButton>
+    <router-view></router-view>
+
 </template>
 
-<script>
-export default {
-  name: "App"
-};
+<script setup>
+import {ElButton} from "element-plus";
 </script>
 
-<style>
-
-
+<style scoped>
 
 </style>
