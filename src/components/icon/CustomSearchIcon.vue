@@ -1,6 +1,6 @@
 <template>
   <img
-      src="@/assets/icons/home/Group 2.png"
+      src="../../assets/icons/home/Group%202.png"
       alt=""
       style="width: 3vh;height: 3vh;margin: 10px"
 

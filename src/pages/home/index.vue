@@ -10,7 +10,7 @@
                     placeholder="板卡信息"
                     size="large"
                     style="width: 100%;height: 100%;"
-                    :prefix-icon="CustomerPrefixIcon"
+                    :prefix-icon="CustomPrefixIcon"
                     :suffix-icon="CustomSearchIcon"
           >
           </el-input>
@@ -25,7 +25,7 @@
           <el-button style="width: 90%">
             SoC型号
             <el-icon class="el-icon--right">
-              <CustomerDropIcon/>
+              <CustomDropIcon/>
             </el-icon>
           </el-button>
           <template #dropdown>
@@ -44,7 +44,7 @@
           <el-button style="width: 90%">
             系统特性
             <el-icon class="el-icon--right">
-              <CustomerDropIcon/>
+              <CustomDropIcon/>
             </el-icon>
           </el-button>
           <template #dropdown>
@@ -60,7 +60,8 @@
       </div>
       <div class="bottom-container">
         <div class="product-container">
-          <el-card v-for="(product, index) in productList" :key="index" class="product-card">
+          <el-card v-for="(product, index) in productList" :key="index" class="product-card"
+                   @click="openProduct(product)">
             <template #header>{{ product.name }} {{ product.vendor }}</template>
             <el-image :src="product.thumbnail" fit="cover"/>
           </el-card>
@@ -70,15 +71,15 @@
   </div>
 </template>
 
-
 <script setup>
 import {onMounted, ref, nextTick, getCurrentInstance} from 'vue'
-import logo from '@/assets/logo/Frame 1@3x.svg';
-import CustomerPrefixIcon from "@/components/CustomerPrefixIcon.vue";
-import CustomSearchIcon from "@/components/CustomSearchIcon.vue";
+import logo from '@/assets/logo/Frame1@3x.svg';
+import CustomPrefixIcon from "@/components/icon/CustomPrefixIcon.vue";
+import CustomSearchIcon from "@/components/icon/CustomSearchIcon.vue";
 import {getProductList} from "@/api/get-json";
 import {ElMessage} from 'element-plus'
-import CustomerDropIcon from "@/components/CustomerDropIcon.vue";
+import CustomDropIcon from "@/components/icon/CustomDropIcon.vue";
+import {useRouter} from "vue-router";
 
 const searchCondition = {
   searchValue: "",
@@ -87,6 +88,7 @@ const searchCondition = {
 }
 
 const productList = ref([]);
+const router = useRouter();
 const socSearch = (command) => {
   searchCondition.searchValue = command;
 }
@@ -102,11 +104,16 @@ const fetchProductList = async () => {
     ElMessage('获取产品列表失败:', error.message);
   }
 };
-
+const openProduct = (product) => {
+  router.push({
+    path: '/board', query: {
+      productUri: product.uri
+    }
+  });
+};
 onMounted(async () => {
   await fetchProductList();
 })
-
 </script>
 
 <style scoped lang="scss">
@@ -153,7 +160,6 @@ onMounted(async () => {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-
     .product-card {
       border-radius: 10px;
     }
@@ -193,6 +199,4 @@ onMounted(async () => {
     width: 10vw;
   }
 }
-
-
 </style>
