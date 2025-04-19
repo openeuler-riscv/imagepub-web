@@ -86,10 +86,10 @@
     <el-card class="box-card">
     <!-- 顶部操作系统与版本 -->
     <div class="top-selects">
-      <el-select v-model="os" placeholder="选择系统">
+      <el-select v-model="os" placeholder="选择系统" class="select-box">
         <el-option label="openEuler" value="openEuler" />
       </el-select>
-      <el-select v-model="version" placeholder="选择版本">
+      <el-select v-model="version" placeholder="选择版本" class="select-box">
         <el-option
           v-for="ver in boardImageData?.os?.[os] || []"
           :key="ver.name"

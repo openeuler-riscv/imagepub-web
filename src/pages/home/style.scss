@@ -26,11 +26,13 @@
     font-size: 12px;
   }
 }
+
 .filter-tags {
   display: flex;
   gap: 12px;
   justify-content: center;
   margin: 12px 0;
+
   :deep(.el-tag) {
     padding: 10px 20px;
     font-size: 16px;
@@ -68,6 +70,7 @@
 .product-vendor {
   margin: 0;
 }
+
 .home-container {
   width: 100%;
   height: 100%;
@@ -110,33 +113,36 @@
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+
     .product-card {
       border-radius: 10px;
       display: flex;
       flex-direction: column;
       height: 300px; // 可按需调整卡片高度
     }
-  }
-}
 
-.el-card {
-  width: calc(16.666% - 10px);
-  margin: 5px;
-  box-sizing: border-box;
-}
-@media (max-width: 1499px) {
-  .el-card {
-    width: calc(100%/5 - 10px); /* 5列布局，单卡片宽度20% */
-  }
-}
-@media (max-width: 1199px) {
-  .el-card {
-    width: calc(100%/4 - 10px); /* 4列布局 */
-  }
-}
+    .el-card {
+      width: calc(16.666% - 10px);
+      margin: 5px;
+      box-sizing: border-box;
+    }
 
-@media (max-width: 899px) {
-  .el-card {
-    width: calc(100%/3 - 10px); /* 3列布局 */
+    @media (max-width: 1499px) {
+      .el-card {
+        width: calc(100% / 5 - 10px); /* 5列布局，单卡片宽度20% */
+      }
+    }
+    @media (max-width: 1199px) {
+      .el-card {
+        width: calc(100% / 4 - 10px); /* 4列布局 */
+      }
+    }
+
+    @media (max-width: 899px) {
+      .el-card {
+        width: calc(100% / 3 - 10px); /* 3列布局 */
+      }
+    }
+
   }
 }
