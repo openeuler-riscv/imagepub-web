@@ -17,8 +17,6 @@
         </div>
       </div>
       <div>
-        <span>{{ searchCondition.socSearch }}</span>
-        <span>{{ searchCondition.systemSearch }}</span>
       </div>
       <div class="dropdown-list-container">
         <el-dropdown size="large" class="dropdown-item" trigger="click" @command="socSearch">
@@ -72,7 +70,7 @@
 </template>
 
 <script setup>
-import {onMounted, ref, nextTick, getCurrentInstance} from 'vue'
+import {onMounted, ref, nextTick, getCurrentInstance, reactive} from 'vue'
 import logo from '@/assets/logo/Frame1@3x.svg';
 import CustomPrefixIcon from "@/components/icon/CustomPrefixIcon.vue";
 import CustomSearchIcon from "@/components/icon/CustomSearchIcon.vue";
@@ -81,16 +79,16 @@ import {ElMessage} from 'element-plus'
 import CustomDropIcon from "@/components/icon/CustomDropIcon.vue";
 import {useRouter} from "vue-router";
 
-const searchCondition = {
+const searchCondition = reactive({
   searchValue: "",
   socSearch: "",
   systemSearch: "",
-}
+})
 
 const productList = ref([]);
 const router = useRouter();
 const socSearch = (command) => {
-  searchCondition.searchValue = command;
+  searchCondition.socSearch = command;
 }
 const systemSearch = (command) => {
   searchCondition.systemSearch = command;

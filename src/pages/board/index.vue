@@ -7,7 +7,7 @@
           <div class="back-home-container">
             <el-button @click="goHome" class="home-button">
               <CustomBackHomeIcon/>
-              回首页
+              <span style="font-size: 1.25rem;font-family: PingFang SC-Regular;">回首页</span>
             </el-button>
           </div>
           <div class="spacer"></div>
@@ -28,7 +28,7 @@
         <div class="board-info">
           <div class="board-image-container">
             <div class="board-image">
-              <el-image :src="currentImageSrc" style="width: 13vw; height: 15vw;"/>
+              <el-image :src="currentImageSrc" style="width: 25vh; height: 25vh;"/>
             </div>
             <div class="thumbnail-container">
               <el-image
@@ -42,72 +42,61 @@
           </div>
           <div class="info-list">
             <div class="info-item">
-              <h4>板卡信息</h4>
-              <p>厂商名称: {{ boardDetail?.vendor?.name }}</p>
-              <p>Soc型号: {{ boardDetail?.soc?.name }}</p>
-              <p>板卡类型: {{ boardDetail?.type }}</p>
+              <BoardInfoTitle title="板卡信息"/>
+              <el-row>厂商名称: {{ boardDetail?.vendor?.name }}</el-row>
+              <el-row>Soc型号: {{ boardDetail?.soc?.name }}</el-row>
+              <el-row>板卡类型: {{ boardDetail?.type }}</el-row>
             </div>
             <div class="info-item">
-              <h4>RAM配置</h4>
-              <p>{{ getRamConfig() }}</p>
+              <BoardInfoTitle title="RAM配置"/>
+              <el-row>{{ getRamConfig() }}</el-row>
             </div>
             <div class="info-item">
-              <h4>存储接口</h4>
-              <ul>
-                <li v-for="(item, index) in getStorageInterfaces()" :key="index">{{ item.type }},
-                  {{ item.capacity ? item.capacity : 'NC' }}
-                </li>
-              </ul>
+              <BoardInfoTitle title="存储接口"/>
+              <el-row>
+                <el-col v-for="(item, index) in getStorageInterfaces()" :key="index" :span="24">
+                  {{ item.type }}, {{ item.capacity ? item.capacity : 'NC' }}
+                </el-col>
+              </el-row>
             </div>
             <div class="info-item">
-              <h4>高速接口</h4>
-              <ul>
-                <li v-for="(item, index) in getHighSpeedInterfaces()" :key="index">{{ item.type }}
-                  {{ item.nums ? `x${item.nums}` : '' }}
-                </li>
-              </ul>
+              <BoardInfoTitle title="高速接口"/>
+              <el-row>
+                <el-col v-for="(item, index) in getHighSpeedInterfaces()" :key="index" :span="24">
+                  {{ item.type }} {{ item.nums ? `x${item.nums}` : '' }}
+                </el-col>
+              </el-row>
             </div>
             <div class="info-item">
-              <h4>低速接口</h4>
-              <ul>
-                <li v-for="(item, index) in getLowSpeedInterfaces()" :key="index">{{ item.type }}
-                  {{ item.nums ? `x${item.nums}` : '' }}
-                </li>
-              </ul>
+              <BoardInfoTitle title="低速接口"/>
+              <el-row>
+                <el-col v-for="(item, index) in getLowSpeedInterfaces()" :key="index" :span="24">
+                  {{ item.type }} {{ item.nums ? `x${item.nums}` : '' }}
+                </el-col>
+              </el-row>
             </div>
           </div>
         </div>
-
-        <!-- 展示操作系统信息 -->
-        <!--      <div class="os-info">-->
-        <!--        <h3>操作系统信息</h3>-->
-        <!--        <el-table :data="boardDetail?.os?.openEuler?.flatMap(item => item.imagesuites) || []">-->
-        <!--          <el-table-column label="名称" :formatter="(row) => row?.name"></el-table-column>-->
-        <!--          <el-table-column label="镜像套件名称" :formatter="(row) => row?.name"></el-table-column>-->
-        <!--          <el-table-column label="内核类型" :formatter="(row) => row?.kernel?.type"></el-table-column>-->
-        <!--          <el-table-column label="内核分支" :formatter="(row) => row?.kernel?.branch"></el-table-column>-->
-        <!--          <el-table-column label="内核版本" :formatter="(row) => row?.kernel?.version"></el-table-column>-->
-        <!--          <el-table-column label="用户空间" :formatter="(row) => row?.userspace"></el-table-column>-->
-        <!--          <el-table-column label="类型" :formatter="(row) => row?.type"></el-table-column>-->
-        <!--        </el-table>-->
-        <!--      </div>-->
       </div>
       <div v-else>
         <p>暂无板卡详情信息，请稍后重试。</p>
       </div>
     </div>
-
+    <div class="bottom-container">
+      123
+    </div>
   </div>
 </template>
 
 <script setup>
 import {useRoute} from 'vue-router';
 import {ref, onMounted, nextTick} from 'vue';
-import {ElMessage, ElButton, ElTable, ElTableColumn, ElImage} from 'element-plus';
+import {ElMessage, ElButton, ElTable, ElTableColumn, ElImage, ElRow, ElCol} from 'element-plus';
 import CustomSearchIcon from '@/components/icon/CustomSearchIcon.vue';
 import CustomLogoIcon from '@/components/icon/CustomLogoIcon.vue';
 import CustomBackHomeIcon from '@/components/icon/CustomBackHomeIcon.vue';
 import {useRouter} from 'vue-router';
+import BoardInfoTitle from "@/components/board/BoardInfoTitle.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -220,7 +209,6 @@ onMounted(async () => {
     background: rgba(74, 119, 202, .05);
     color: #4a77ca;
     border-radius: 12px;
-    font-size: 24px;
     display: flex;
     justify-content: space-between;
   }
@@ -269,9 +257,6 @@ onMounted(async () => {
 
 .product-container {
   width: 90%;
-  background-color: #ffffff;
-  overflow-y: auto;
-  /* 确保元素可见 */
   visibility: visible;
   opacity: 1;
   display: flex;
@@ -280,9 +265,11 @@ onMounted(async () => {
 }
 
 .board-info {
+  margin-top: 20px;
   display: flex;
   width: 100%;
-  margin-bottom: 20px;
+  border-radius: 20px;
+  box-shadow: 0 3px 2px #012fa605, 0 7px 5px #012fa608, 0 12px 10px #012fa60a, 0 22px 18px #012fa60a;
 }
 
 .board-image {
@@ -304,22 +291,20 @@ onMounted(async () => {
   margin-bottom: 10px;
 }
 
-.os-info {
-  width: 100%;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-li {
-  margin-bottom: 5px;
-}
-
 .board-container{
   display: flex;
   justify-content: center;
+  font-family: PingFang SC-Regular;
 }
+
+.bottom-container{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+:deep(.el-row) {
+  font-size: 0.9rem;
+}
+
 </style>
