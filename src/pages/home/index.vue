@@ -16,54 +16,65 @@
           </el-input>
         </div>
       </div>
-      <div>
-      </div>
-      <div class="dropdown-list-container">
-        <el-dropdown size="large" class="dropdown-item" trigger="click" @command="socSearch">
-          <el-button style="width: 90%">
-            SoC型号
-            <el-icon class="el-icon--right">
-              <CustomDropIcon/>
-            </el-icon>
-          </el-button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item command="SpacemiT K1/M1/X1">SpacemiT K1/M1/X1</el-dropdown-item>
-              <el-dropdown-item command="SOPHGO SG2042">SOPHGO SG2042</el-dropdown-item>
-              <el-dropdown-item command="ESWin EIC7700X">ESWin EIC7700X</el-dropdown-item>
-              <el-dropdown-item command="Qemu virt">Qemu virt</el-dropdown-item>
-              <el-dropdown-item command=">T-HEAD TH1520">T-HEAD TH1520</el-dropdown-item>
-              <el-dropdown-item>StarFive JH7110</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
+    </div>
 
-        <el-dropdown size="large" class="dropdown-item" trigger="click" @command="systemSearch">
-          <el-button style="width: 90%">
-            系统特性
-            <el-icon class="el-icon--right">
-              <CustomDropIcon/>
-            </el-icon>
-          </el-button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item command="系统特性 1">系统特性 1</el-dropdown-item>
-              <el-dropdown-item command="系统特性 2">系统特性 2</el-dropdown-item>
-              <el-dropdown-item command="系统特性 3">系统特性 3</el-dropdown-item>
-              <el-dropdown-item command="系统特性 4">系统特性 4</el-dropdown-item>
-              <el-dropdown-item command="系统特性 5">系统特性 5</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-      </div>
-      <div class="bottom-container">
-        <div class="product-container">
-          <el-card v-for="(product, index) in productList" :key="index" class="product-card"
-                   @click="openProduct(product)">
-            <template #header>{{ product.name }} {{ product.vendor }}</template>
-            <el-image :src="product.thumbnail" fit="cover"/>
-          </el-card>
-        </div>
+    <div class="filter-tags" v-if="searchCondition.socSearch || searchCondition.systemSearch">
+      <el-tag v-if="searchCondition.socSearch" closable @close="clearSocSearch">
+        {{ searchCondition.socSearch }}
+      </el-tag>
+      <el-tag v-if="searchCondition.systemSearch" closable @close="clearSystemSearch">
+        {{ searchCondition.systemSearch }}
+      </el-tag>
+    </div>
+    <div class="dropdown-list-container">
+      <el-dropdown size="large" class="dropdown-item" trigger="click" @command="socSearch">
+        <el-button class="filter-button">
+          SoC型号
+          <el-icon class="el-icon--right">
+            <CustomDropIcon />
+          </el-icon>
+        </el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item command="SpacemiT K1/M1/X1">SpacemiT K1/M1/X1</el-dropdown-item>
+            <el-dropdown-item command="SOPHGO SG2042">SOPHGO SG2042</el-dropdown-item>
+            <el-dropdown-item command="ESWin EIC7700X">ESWin EIC7700X</el-dropdown-item>
+            <el-dropdown-item command="Qemu virt">Qemu virt</el-dropdown-item>
+            <el-dropdown-item command="T-HEAD TH1520">T-HEAD TH1520</el-dropdown-item>
+            <el-dropdown-item>StarFive JH7110</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+
+      <el-dropdown size="large" class="dropdown-item" trigger="click" @command="systemSearch">
+        <el-button class="filter-button">
+          系统特性
+          <el-icon class="el-icon--right">
+            <CustomDropIcon />
+          </el-icon>
+        </el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item command="系统特性 1">系统特性 1</el-dropdown-item>
+            <el-dropdown-item command="系统特性 2">系统特性 2</el-dropdown-item>
+            <el-dropdown-item command="系统特性 3">系统特性 3</el-dropdown-item>
+            <el-dropdown-item command="系统特性 4">系统特性 4</el-dropdown-item>
+            <el-dropdown-item command="系统特性 5">系统特性 5</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+    </div>
+
+    <div class="bottom-container">
+      <div class="product-container">
+        <el-card v-for="(product, index) in productList" :key="index" class="product-card"
+                 @click="openProduct(product)">
+            <el-image :src="product.thumbnail" fit="cover" class="product-image" @error="handleImageError" />
+            <div class="product-info">
+              <h3 class="product-name">{{ product.name }}</h3>
+              <p class="product-vendor">{{ product.vendor }}</p>
+            </div>
+        </el-card>
       </div>
     </div>
   </div>
@@ -97,9 +108,14 @@ const fetchProductList = async () => {
   try {
     const response = await getProductList();
     productList.value = response.data;
+    console.log(productList.value);
+    // 检查数据格式
+    productList.value.forEach(product => {
+      console.log('Product:', product);
+    });
     await nextTick();
   } catch (error) {
-    ElMessage('获取产品列表失败:', error.message);
+    ElMessage.error('获取产品列表失败: ' + error.message);
   }
 };
 const openProduct = (product) => {
@@ -108,6 +124,17 @@ const openProduct = (product) => {
       productUri: product.uri
     }
   });
+};
+const clearSocSearch = () => {
+  searchCondition.socSearch = "";
+  searchCondition.searchValue = "";
+}
+
+const clearSystemSearch = () => {
+  searchCondition.systemSearch = "";
+}
+const handleImageError = (event) => {
+  console.error('图片加载失败:', event);
 };
 onMounted(async () => {
   await fetchProductList();
@@ -122,7 +149,6 @@ onMounted(async () => {
   .home-search-container {
     font-size: 20px;
     margin-top: 15vh;
-    height: 100%;
 
     .logo-container {
       width: 100%;
@@ -197,4 +223,16 @@ onMounted(async () => {
     width: 10vw;
   }
 }
+
+.filter-tags {
+  display: flex;
+  gap: 12px;
+  margin: 12px 0;
+  :deep(.el-tag) {
+    padding: 10px 20px;
+    font-size: 16px;
+    height: auto;
+  }
+}
+
 </style>
