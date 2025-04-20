@@ -102,47 +102,55 @@
     <!-- 条件筛选栏 -->
     <div class="filters">
       <div class="filter-row">
-        <span>内核版本：</span>
-        <el-link :type="!selectedKernel ? 'primary' : ''" @click="selectedKernel = ''">全部</el-link>
+        <span class="filter-label">内核版本：</span>
+        <el-link :type="!selectedKernel ? 'primary' : 'default'" @click="selectedKernel = ''">全部</el-link>
         <el-link
           v-for="kernel in kernelVersions"
-          :key="kernel"
-          :type="selectedKernel === kernel ? 'primary' : ''"
-          @click="selectedKernel = kernel"
-        >{{ kernel }}</el-link>
+          :key="kernel.version"
+          :type="selectedKernel === kernel.version ? 'primary' : 'default'"
+          @click="selectedKernel = kernel.version"
+        >{{ kernel.version }}</el-link>
       </div>
 
       <div class="filter-row">
-        <span>ISA基线：</span>
-        <el-link :type="!selectedISA ? 'primary' : ''" @click="selectedISA = ''">全部</el-link>
+        <span class="filter-label">ISA基线：</span>
+        <el-link :type="!selectedISA ? 'primary' : 'default'" @click="selectedISA = ''">全部</el-link>
         <el-link
           v-for="isa in isaProfiles"
-          :key="isa"
-          :type="selectedISA === isa ? 'primary' : ''"
-          @click="selectedISA = isa"
-        >{{ isa }}</el-link>
+          :key="isa.profile"
+          :type="selectedISA === isa.profile ? 'primary' : 'default'"
+          @click="selectedISA = isa.profile"
+        >{{ isa.profile }}</el-link>
       </div>
 
       <div class="filter-row">
-        <span>预装列表：</span>
-        <el-link :type="!selectedUserspace ? 'primary' : ''" @click="selectedUserspace = ''">全部</el-link>
+        <span class="filter-label">预装列表：</span>
+        <el-link :type="!selectedUserspace ? 'primary' : 'default'" @click="selectedUserspace = ''">全部</el-link>
         <el-link
           v-for="space in userspaces"
-          :key="space"
-          :type="selectedUserspace === space ? 'primary' : ''"
-          @click="selectedUserspace = space"
-        >{{ space }}</el-link>
+          :key="space.userspace"
+          :type="selectedUserspace === space.userspace ? 'primary' : 'default'"
+          @click="selectedUserspace = space.userspace"
+        >{{ space.userspace }}</el-link>
       </div>
 
       <div class="filter-row">
-        <span>引导器：</span>
-        <el-link :type="!selectedInstaller ? 'primary' : ''" @click="selectedInstaller = ''">全部</el-link>
+        <span class="filter-label">引导器：</span>
+        <el-link :type="!selectedInstaller ? 'primary' : 'default'" @click="selectedInstaller = ''">全部</el-link>
         <el-link
           v-for="type in installerTypes"
           :key="type"
-          :type="selectedInstaller === type ? 'primary' : ''"
+          :type="selectedInstaller === type ? 'primary' : 'default'"
           @click="selectedInstaller = type"
         >{{ type }}</el-link>
+      </div>
+
+      <div class="filter-row">
+        <span class="filter-label">仅看最新版：</span>
+        <el-radio-group v-model="onlyLatest">
+          <el-radio :value=true >是</el-radio>
+          <el-radio :value=false >否</el-radio>
+        </el-radio-group>
       </div>
     </div>
 
@@ -150,7 +158,7 @@
     <div class="file-list">
       <div class="file-item" v-for="(file, index) in filteredFiles" :key="index">
         <span>{{ file.name }}</span>
-        <el-link type="primary" :href="file.link" target="_blank">下载</el-link>
+        <el-link type="primary" :href="file.link" target="_blank">点击下载</el-link>
       </div>
     </div>
   </el-card>
@@ -161,7 +169,7 @@
 <script setup>
 import { useRoute } from 'vue-router';
 import { ref, computed, onMounted, nextTick } from 'vue';
-import { ElMessage, ElButton, ElTable, ElTableColumn, ElImage } from 'element-plus';
+import { ElMessage, ElButton, ElImage } from 'element-plus';
 import CustomSearchIcon from '@/components/icon/CustomSearchIcon.vue';
 import CustomLogoIcon from '@/components/icon/CustomLogoIcon.vue';
 import CustomBackHomeIcon from '@/components/icon/CustomBackHomeIcon.vue';
@@ -174,6 +182,7 @@ const route = useRoute();
 const router = useRouter();
 const boardDetail = ref({});
 const currentImageSrc = ref('');
+const onlyLatest = ref(true);
 
 const os = ref('openEuler');
 const version = ref('');
@@ -278,15 +287,55 @@ const imageSuites = computed(() => {
 });
 
 // 提取所有筛选项数据
-const kernelVersions = computed(() =>
-  [...new Set(imageSuites.value.map(s => s.kernel?.version).filter(Boolean))]
-);
-const isaProfiles = computed(() =>
-  [...new Set(imageSuites.value.map(s => s.isa?.profile).filter(Boolean))]
-);
-const userspaces = computed(() =>
-  [...new Set(imageSuites.value.map(s => s.userspace).filter(Boolean))]
-);
+const kernelVersions = computed(() => {
+  return imageSuites.value.flatMap(suite => {
+    const versions = suite.kernel?.versions;
+    if (versions) {
+      return versions.map(version => ({ version }));
+    }
+    return [];
+  });
+});
+
+const isaProfiles = computed(() => {
+  return imageSuites.value.flatMap((suite, index) => {
+    const isaList = suite.isa;
+    if (Array.isArray(isaList)) {
+      return isaList.map((isa, isaIndex) => ({
+        id: `${index}-${isaIndex}`,
+        profile: isa.profile,
+        extensions: isa.extensions
+      }));
+    } else if (isaList && typeof isaList === 'object') {
+      return [{
+        id: `${index}-0`,
+        profile: isaList.profile,
+        extensions: isaList.extensions
+      }];
+    }
+    return [];
+  });
+});
+
+
+const userspaces = computed(() => {
+  return imageSuites.value.flatMap((suite, index) => {
+    const userSpaceList = suite.userspace;
+    if (Array.isArray(userSpaceList)) {
+      return userSpaceList.map((space, spaceIndex) => ({
+        id: `${index}-${spaceIndex}`,
+        userspace: space
+      }));
+    } else if (userSpaceList) {
+      return [{
+        id: `${index}-0`,
+        userspace: userSpaceList
+      }];
+    }
+    return [];
+  });
+});
+
 const installerTypes = computed(() =>
   [...new Set(imageSuites.value.map(s => s.type).filter(Boolean))]
 );
@@ -329,6 +378,7 @@ const filteredFiles = computed(() => {
 onMounted(async () => {
   await fetchBoardDetail();
   await fetchProductVersion();
+  nextTick();
 
 });
 </script>
