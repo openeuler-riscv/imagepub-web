@@ -112,96 +112,129 @@
     </div>
 
     <el-card class="box-card">
-      <!-- 顶部操作系统与版本 -->
-      <div class="top-selects">
-        <el-select
-          v-model="os"
-          placeholder="选择系统"
+    <!-- 顶部操作系统与版本 -->
+    <div class="top-selects">
+      <el-select v-model="os" placeholder="选择系统" class="select-box">
+        <el-option label="openEuler" value="openEuler" />
+      </el-select>
+      <el-select v-model="version" placeholder="选择版本" class="select-box">
+        <el-option
+          v-for="ver in boardImageData?.os?.[os] || []"
+          :key="ver.name"
+          :label="`openEuler ${ver.name}`"
+          :value="ver.name"
+        />
+      </el-select>
+    </div>
+
+    <!-- 条件筛选栏 -->
+    <div class="filters">
+      <div class="filter-row">
+        <span class="filter-label">内核版本：</span>
+      <div style="display: flex; align-items: center; flex-wrap: wrap;">
+        <el-checkbox
+          v-model="KernelscheckAll"
+          :indeterminate="KernelsisIndeterminate"
+          @change="KernelshandleCheckAllChange"
+          style="margin-right: 15px;"
+        >全部</el-checkbox>
+        <el-checkbox-group 
+          v-model="selectedKernels"
+          @change="handleCheckedKernelsChange"
         >
-          <el-option
-            label="openEuler"
-            value="openEuler"
-          />
-        </el-select>
-        <el-select
-          v-model="version"
-          placeholder="选择版本"
-        >
-          <el-option
-            v-for="ver in boardImageData?.os?.[os] || []"
-            :key="ver.name"
-            :label="`openEuler ${ver.name}`"
-            :value="ver.name"
-          />
-        </el-select>
+          <el-checkbox 
+           v-for="kernel in kernelVersions" 
+            :key="kernel.version"
+            :label="kernel.version"
+          >
+            {{ kernel.version }}
+          </el-checkbox>
+        </el-checkbox-group>
+      </div>
       </div>
 
-      <!-- 条件筛选栏 -->
-      <div class="filters">
-        <div class="filter-row">
-          <span>内核版本：</span>
-          <el-link
-            :type="!selectedKernel ? 'primary' : 'default'"
-            @click="selectedKernel = ''"
-            >全部</el-link
+      <div class="filter-row">
+        <span class="filter-label">ISA基线：</span>
+        <div style="display: flex; align-items: center; flex-wrap: wrap;">
+        <el-checkbox
+          v-model="isacheckAll"
+          :indeterminate="isaisIndeterminate"
+          @change="isahandleCheckAllChange"
+          style="margin-right: 15px;"
+        >全部</el-checkbox>
+        <el-checkbox-group 
+          v-model="selectedISAs"
+          @change="handleCheckedisaChange"
+        >
+          <el-checkbox 
+            v-for="isa in isaProfiles" 
+            :key="isa.id"
+            :label="isa.profile"
           >
-          <el-link
-            v-for="kernel in kernelVersions"
-            :key="kernel"
-            :type="selectedKernel === kernel ? 'primary' : 'default'"
-            @click="selectedKernel = kernel"
-            >{{ kernel }}</el-link
-          >
-        </div>
-
-        <div class="filter-row">
-          <span>ISA基线：</span>
-          <el-link
-            :type="!selectedISA ? 'primary' : 'default'"
-            @click="selectedISA = ''"
-            >全部</el-link
-          >
-          <el-link
-            v-for="isa in isaProfiles"
-            :key="isa"
-            :type="selectedISA === isa ? 'primary' : 'default'"
-            @click="selectedISA = isa"
-            >{{ isa }}</el-link
-          >
-        </div>
-
-        <div class="filter-row">
-          <span>预装列表：</span>
-          <el-link
-            :type="!selectedUserspace ? 'primary' : 'default'"
-            @click="selectedUserspace = ''"
-            >全部</el-link
-          >
-          <el-link
-            v-for="space in userspaces"
-            :key="space"
-            :type="selectedUserspace === space ? 'primary' : 'default'"
-            @click="selectedUserspace = space"
-            >{{ space }}</el-link
-          >
-        </div>
-
-        <div class="filter-row">
-          <span>引导器：</span>
-          <el-link
-            :type="!selectedInstaller ? 'primary' : 'default'"
-            @click="selectedInstaller = ''"
-            >全部</el-link
-          >
-          <el-link
-            v-for="type in installerTypes"
-            :key="type"
-            :type="selectedInstaller === type ? 'primary' : 'default'"
-            @click="selectedInstaller = type"
-            >{{ type }}</el-link
-          >
-        </div>
+            {{ isa.profile }}
+          </el-checkbox>
+        </el-checkbox-group>
       </div>
+        
+      </div>
+
+      <div class="filter-row">
+        <span class="filter-label">预装列表：</span>
+        <div style="display: flex; align-items: center; flex-wrap: wrap;">
+        <el-checkbox
+          v-model="userspacescheckAll"
+          :indeterminate="userspacesisIndeterminate"
+          @change="userspaceshandleCheckAllChange"
+          style="margin-right: 15px;"
+        >全部</el-checkbox>
+        <el-checkbox-group 
+          v-model="selectedUserspaces"
+          @change="handleCheckeduserspacesChange"
+        >
+        <el-checkbox 
+          v-for="space in userspaces" 
+          :key="space.id"
+          :label="space.userspace"
+        >
+          {{ space.userspace }}
+        </el-checkbox>
+      </el-checkbox-group>
+      </div>
+      </div>
+
+      <div class="filter-row">
+        <span class="filter-label">引导器：</span>
+        <div style="display: flex; align-items: center; flex-wrap: wrap;">
+        <el-checkbox
+          v-model="installercheckAll"
+          :indeterminate="installerisIndeterminate"
+          @change="installerhandleCheckAllChange"
+          style="margin-right: 15px;"
+        >全部</el-checkbox>
+        <el-checkbox-group 
+          v-model="selectedInstallers"
+          @change="handleCheckedinstallerChange"
+        >
+        <el-checkbox 
+          v-for="type in installerTypes" 
+          :key="type"
+          :label="type"
+        >
+          {{ type }}
+        </el-checkbox>
+      </el-checkbox-group>
+      </div>
+      </div>
+
+      <div class="filter-row">
+        <span class="filter-label">仅看最新版：</span>
+        <el-radio-group v-model="onlyLatest">
+          <el-radio :value=true >是</el-radio>
+          <el-radio :value=false >否</el-radio>
+        </el-radio-group>
+      </div>
+    </div>
+
 
       <!-- 镜像文件列表 -->
       <div class="file-list">
@@ -238,33 +271,28 @@
         </div>
       </div>
     </el-card>
+
   </div>
 </template>
 
 <script setup>
-import { useRoute } from "vue-router";
-
-import { ref, computed, onMounted, nextTick, watch } from "vue";
-import {
-  ElMessage,
-  ElButton,
-  ElTable,
-  ElTableColumn,
-  ElImage,
-  ElDialog,
-} from "element-plus";
-import CustomSearchIcon from "@/components/icon/CustomSearchIcon.vue";
-import CustomLogoIcon from "@/components/icon/CustomLogoIcon.vue";
-import CustomBackHomeIcon from "@/components/icon/CustomBackHomeIcon.vue";
+import { useRoute } from 'vue-router';
+import { ref, computed, onMounted, nextTick } from 'vue';
+import { ElMessage, ElButton, ElImage } from 'element-plus';
+import CustomSearchIcon from '@/components/icon/CustomSearchIcon.vue';
+import CustomLogoIcon from '@/components/icon/CustomLogoIcon.vue';
+import CustomBackHomeIcon from '@/components/icon/CustomBackHomeIcon.vue';
 import BoardInfoTitle from "@/components/board/BoardInfoTitle.vue";
-import { useRouter } from "vue-router";
-import { getProductVersion } from "@/api/get-json";
+import { useRouter } from 'vue-router';
+import { getProductVersion } from '@/api/get-json';
+import './style.scss'
 
 import HelpDoc from "@/components/helpDoc/helpDoc.vue";
 const route = useRoute();
 const router = useRouter();
 const boardDetail = ref({});
-const currentImageSrc = ref("");
+const currentImageSrc = ref('');
+const onlyLatest = ref(true);
 
 const os = ref("openEuler");
 const version = ref("");
@@ -426,19 +454,117 @@ const imageSuites = computed(() => {
   );
 });
 
+const selectedKernels = ref([]);
+const selectedISAs = ref([]);
+const selectedUserspaces = ref([]);
+const selectedInstallers = ref([]);
+
+const KernelscheckAll = ref(false)
+const KernelsisIndeterminate = ref(true)
+const isacheckAll = ref(false)
+const isaisIndeterminate = ref(true)
+const userspacescheckAll = ref(false)
+const userspacesisIndeterminate = ref(true)
+const installercheckAll = ref(false)
+const installerisIndeterminate = ref(true)
+
+const KernelshandleCheckAllChange = (val) => {
+  selectedKernels.value = val ? kernelVersions.value.map(k => k.version) : [];
+  KernelsisIndeterminate.value = false;
+}
+
+const handleCheckedKernelsChange = (value) => {
+  const checkedCount = value.length
+  KernelscheckAll.value = checkedCount === kernelVersions.length
+  KernelsisIndeterminate.value = checkedCount > 0 && checkedCount < kernelVersions.length
+}
+
+const isahandleCheckAllChange = (val) => {
+  selectedISAs.value = val ? isaProfiles.value.map(k => k.profile) : [];
+  isaisIndeterminate.value = false;
+}
+
+const handleCheckedisaChange = (value) => {
+  const checkedCount = value.length
+  isacheckAll.value = checkedCount === isaProfiles.length
+  isaisIndeterminate.value = checkedCount > 0 && checkedCount < isaProfiles.length
+}
+
+const userspaceshandleCheckAllChange = (val) => {
+  selectedUserspaces.value = val ? userspaces.value.map(k => k.userspace) : [];
+  userspacesisIndeterminate.value = false;
+}
+
+const handleCheckeduserspacesChange = (value) => {
+  const checkedCount = value.length
+  userspacescheckAll.value = checkedCount === userspaces.length
+  userspacesisIndeterminate.value = checkedCount > 0 && checkedCount < userspaces.length
+}
+
+const installerhandleCheckAllChange = (val) => {
+  selectedInstallers.value = val ? installerTypes.value : [];
+  installerisIndeterminate.value = false;
+}
+
+const handleCheckedinstallerChange = (value) => {
+  const checkedCount = value.length
+  installercheckAll.value = checkedCount === installerTypes.length
+  installerisIndeterminate.value = checkedCount > 0 && checkedCount < installerTypes.length
+}
+
 // 提取所有筛选项数据
-const kernelVersions = computed(() => [
-  ...new Set(imageSuites.value.map((s) => s.kernel?.version).filter(Boolean)),
-]);
-const isaProfiles = computed(() => [
-  ...new Set(imageSuites.value.map((s) => s.isa?.profile).filter(Boolean)),
-]);
-const userspaces = computed(() => [
-  ...new Set(imageSuites.value.map((s) => s.userspace).filter(Boolean)),
-]);
-const installerTypes = computed(() => [
-  ...new Set(imageSuites.value.map((s) => s.type).filter(Boolean)),
-]);
+const kernelVersions = computed(() => {
+  return imageSuites.value.flatMap(suite => {
+    const versions = suite.kernel?.versions;
+    if (versions) {
+      return [...new Set(versions.map(version => ({ version }))).filter(Boolean)]
+    }
+    return [];
+  });
+});
+
+const isaProfiles = computed(() => {
+  return imageSuites.value.flatMap((suite, index) => {
+    const isaList = suite.isa;
+    if (Array.isArray(isaList)) {
+      return isaList.map((isa, isaIndex) => ({
+        id: `${index}-${isaIndex}`,
+        profile: isa.profile,
+        extensions: isa.extensions
+      }));
+    } else if (isaList && typeof isaList === 'object') {
+      return [...new Set([{
+        id: `${index}-0`,
+        profile: isaList.profile,
+        extensions: isaList.extensions
+      }])];
+    }
+    return [];
+  });
+});
+
+
+const userspaces = computed(() => {
+  return imageSuites.value.flatMap((suite, index) => {
+    const userSpaceList = suite.userspace;
+    if (Array.isArray(userSpaceList)) {
+      return userSpaceList.map((space, spaceIndex) => ({
+        id: `${index}-${spaceIndex}`,
+        userspace: space
+      }));
+    } else if (userSpaceList) {
+      return [...new Set([{
+        id: `${index}-0`,
+        userspace: userSpaceList
+      }])];
+    }
+    return [];
+  });
+});
+
+const installerTypes = computed(() =>
+  [...new Set(imageSuites.value.map(s => s.type).filter(Boolean))]
+);
 
 // 过滤后的文件列表
 const filteredFiles = computed(() => {
@@ -477,95 +603,11 @@ const filteredFiles = computed(() => {
 onMounted(async () => {
   await fetchBoardDetail();
   await fetchProductVersion();
+  nextTick();
 });
 </script>
 
 <style scoped>
-.detail-container {
-  width: 100%;
-  height: 100%;
-
-  .main-container {
-    display: flex;
-    justify-content: center;
-  }
-}
-
-.top-bar-container {
-  width: 90%;
-  height: 7vh;
-  margin-top: 2vh;
-  border: 1px solid #f1faff;
-  border-radius: 24px;
-  background-color: #ffffff;
-  display: flex;
-  justify-content: center;
-
-  .detail-search-container {
-    width: 50vw;
-    display: flex;
-    justify-content: center;
-
-    .input-container {
-      width: 80%;
-    }
-  }
-
-  .back-home-container {
-    background: rgba(74, 119, 202, 0.05);
-    color: #4a77ca;
-    border-radius: 12px;
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .back-home-container:hover {
-    color: #012fa6;
-    background: rgba(1, 47, 166, 1);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px #012fa61a;
-  }
-}
-
-.input-wrapper {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding: 0 10px;
-  justify-content: space-between;
-}
-
-.prefix-icon {
-  margin-right: 10px;
-}
-
-.home-button {
-  background-color: transparent;
-  border: none;
-  font-weight: 500;
-  font-size: 16px;
-  color: #4a77ca;
-  transition: all 0.3s;
-}
-
-.home-button:hover {
-  color: #012fa6;
-  background: rgba(1, 47, 166, 0.1);
-  border-radius: 12px;
-  transform: translateY(-2px);
-}
-
-.detail-search-container {
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-
-.input-container {
-  width: 100%;
-}
-
 :deep(.el-input__wrapper) {
   background-color: #f0f4f8;
   border-radius: 24px;
@@ -576,116 +618,6 @@ onMounted(async () => {
   margin-right: 4.5vh;
 }
 
-.product-container {
-  width: 90%;
-  visibility: visible;
-  opacity: 1;
-  display: flex;
-  flex-wrap: wrap;
-  padding: 20px;
-}
-
-.board-info {
-  margin-top: 20px;
-  display: flex;
-  width: 100%;
-  border-radius: 20px;
-  box-shadow: 0 3px 2px #012fa605, 0 7px 5px #012fa608, 0 12px 10px #012fa60a,
-    0 22px 18px #012fa60a;
-}
-
-.board-image {
-  margin-right: 20px;
-}
-
-.thumbnail-container {
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: 10px;
-  gap: 8px;
-}
-
-.info-list {
-  display: flex;
-  flex-wrap: wrap;
-  width: calc(100% - 320px);
-}
-
-.info-item {
-  width: 33%;
-  margin-bottom: 10px;
-}
-
-.board-container {
-  display: flex;
-  justify-content: center;
-  font-family: PingFang SC-Regular;
-}
-
-.info-item h4 {
-  margin: 0 0 6px;
-  color: #333;
-  font-weight: 600;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-li {
-  margin-bottom: 5px;
-  color: #555;
-}
-
-.ram-config {
-  font-weight: 500;
-  color: #666;
-}
-
-.board-container {
-  display: flex;
-  justify-content: center;
-}
-
-.box-card {
-  width: 90%;
-  margin: 20px auto;
-  padding: 20px;
-  background: #fff;
-  border-radius: 12px;
-}
-.top-selects {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 20px;
-}
-.filters {
-  margin-bottom: 20px;
-}
-.filter-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-  margin-bottom: 10px;
-  font-size: 14px;
-  color: #444;
-}
-.file-list {
-  margin-top: 20px;
-}
-.file-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid #e5e5e5;
-}
-.file-item span {
-  font-weight: 500;
-  color: #333;
-}
 
 :deep(.el-row) {
   font-size: 0.9rem;

@@ -1,0 +1,148 @@
+.dropdown-list-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px 10px;
+}
+
+.dropdown-item {
+  flex-shrink: 1;
+  min-width: 180px;
+}
+
+.filter-button {
+  width: 100%;
+  max-width: 200px;
+  height: 44px;
+  font-size: 14px;
+  border-radius: 22px;
+
+  @media (max-width: 768px) {
+    max-width: 160px;
+    font-size: 12px;
+  }
+}
+
+.filter-tags {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin: 12px 0;
+
+  :deep(.el-tag) {
+    padding: 10px 20px;
+    font-size: 16px;
+    height: auto;
+  }
+}
+
+.product-image-container {
+  width: 100%;
+  height: 200px; // 可按需调整图片容器高度
+  overflow: hidden;
+  position: relative;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.product-info {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.product-name {
+  margin: 0;
+}
+
+.product-vendor {
+  margin: 0;
+}
+
+.home-container {
+  width: 100%;
+  height: 100%;
+
+  .home-search-container {
+    font-size: 20px;
+    margin-top: 15vh;
+
+    .logo-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .search-container {
+      width: 100%;
+      display: flex;
+      height: 10vh;
+      justify-content: center;
+      align-items: center;
+
+      .input-container {
+        width: 65%;
+        height: 5vh;
+        border: 4px solid #012fa6;
+        border-radius: 24px;
+      }
+    }
+  }
+}
+
+.bottom-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .product-container {
+    width: 85vw;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    .product-card {
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      height: 300px; // 可按需调整卡片高度
+    }
+
+    .el-card {
+      width: calc(16.666% - 10px);
+      margin: 5px;
+      box-sizing: border-box;
+    }
+
+    @media (max-width: 1499px) {
+      .el-card {
+        width: calc(100% / 5 - 10px); /* 5列布局，单卡片宽度20% */
+      }
+    }
+    @media (max-width: 1199px) {
+      .el-card {
+        width: calc(100% / 4 - 10px); /* 4列布局 */
+      }
+    }
+
+    @media (max-width: 899px) {
+      .el-card {
+        width: calc(100% / 3 - 10px); /* 3列布局 */
+      }
+    }
+
+  }
+}
