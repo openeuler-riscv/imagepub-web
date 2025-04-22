@@ -3,75 +3,103 @@
     <div class="main-container">
       <div class="top-bar-container">
         <div class="input-wrapper">
-          <CustomLogoIcon class="prefix-icon"/>
+          <CustomLogoIcon class="prefix-icon" />
           <div class="back-home-container">
-            <el-button @click="goHome" class="home-button">
-              <CustomBackHomeIcon/>
-              <span style="font-size: 1.25rem;font-family: PingFang SC-Regular;">回首页</span>
+            <el-button
+              @click="goHome"
+              class="home-button"
+            >
+              <CustomBackHomeIcon />
+              <span style="font-size: 1.25rem; font-family: PingFang SC-Regular"
+                >回首页</span
+              >
             </el-button>
           </div>
           <div class="spacer"></div>
           <div class="detail-search-container">
             <el-input
-                class="input-container"
-                placeholder="板卡信息"
-                size="large"
+              class="input-container"
+              placeholder="板卡信息"
+              size="large"
             ></el-input>
-            <CustomSearchIcon/>
+            <CustomSearchIcon />
           </div>
         </div>
       </div>
-
     </div>
     <div class="board-container">
-      <div class="product-container" v-if="boardDetail">
+      <div
+        class="product-container"
+        v-if="boardDetail"
+      >
         <div class="board-info">
           <div class="board-image-container">
             <div class="board-image">
-              <el-image :src="currentImageSrc" style="width: 25vh; height: 25vh;"/>
+              <el-image
+                :src="currentImageSrc"
+                style="width: 25vh; height: 25vh"
+              />
             </div>
             <div class="thumbnail-container">
               <el-image
-                  v-for="(pic, index) in boardDetail?.pictures || []"
-                  :key="index"
-                  :src="pic"
-                  style="width: 60px; height: 45px; margin-right: 10px; cursor: pointer; border: saddlebrown 1px solid "
-                  @click="changeMainImage(index)"
+                v-for="(pic, index) in boardDetail?.pictures || []"
+                :key="index"
+                :src="pic"
+                style="
+                  width: 60px;
+                  height: 45px;
+                  margin-right: 10px;
+                  cursor: pointer;
+                  border: saddlebrown 1px solid;
+                "
+                @click="changeMainImage(index)"
               />
             </div>
           </div>
           <div class="info-list">
             <div class="info-item">
-              <BoardInfoTitle title="板卡信息"/>
+              <BoardInfoTitle title="板卡信息" />
               <el-row>厂商名称: {{ boardDetail?.vendor?.name }}</el-row>
               <el-row>Soc型号: {{ boardDetail?.soc?.name }}</el-row>
               <el-row>板卡类型: {{ boardDetail?.type }}</el-row>
             </div>
             <div class="info-item">
-              <BoardInfoTitle title="RAM配置"/>
+              <BoardInfoTitle title="RAM配置" />
               <el-row>{{ getRamConfig() }}</el-row>
             </div>
             <div class="info-item">
-              <BoardInfoTitle title="存储接口"/>
+              <BoardInfoTitle title="存储接口" />
               <el-row>
-                <el-col v-for="(item, index) in getStorageInterfaces()" :key="index" :span="24">
-                  {{ item.type }}, {{ item.capacity ? item.capacity : 'NC' }}
+                <el-col
+                  v-for="(item, index) in getStorageInterfaces()"
+                  :key="index"
+                  :span="24"
+                >
+                  {{ item.type }}, {{ item.capacity ? item.capacity : "NC" }}
                 </el-col>
               </el-row>
             </div>
             <div class="info-item">
-              <BoardInfoTitle title="高速接口"/>
+              <BoardInfoTitle title="高速接口" />
               <el-row>
-                <el-col v-for="(item, index) in getHighSpeedInterfaces()" :key="index" :span="24">
-                  {{ item.type }} {{ item.nums ? `x${item.nums}` : '' }}
+                <el-col
+                  v-for="(item, index) in getHighSpeedInterfaces()"
+                  :key="index"
+                  :span="24"
+                >
+                  {{ item.type }} {{ item.nums ? `x${item.nums}` : "" }}
                 </el-col>
               </el-row>
             </div>
             <div class="info-item">
-              <BoardInfoTitle title="低速接口"/>
+              <BoardInfoTitle title="低速接口" />
               <el-row>
-                <el-col v-for="(item, index) in getLowSpeedInterfaces()" :key="index" :span="24">
-                  {{ item.type }} {{ item.nums ? `x${item.nums}` : '' }}
+                <el-col
+                  v-for="(item, index) in getLowSpeedInterfaces()"
+                  :key="index"
+                  :span="24"
+                >
+                  {{ item.type }} {{ item.nums ? `x${item.nums}` : "" }}
                 </el-col>
               </el-row>
             </div>
@@ -84,109 +112,173 @@
     </div>
 
     <el-card class="box-card">
-    <!-- 顶部操作系统与版本 -->
-    <div class="top-selects">
-      <el-select v-model="os" placeholder="选择系统">
-        <el-option label="openEuler" value="openEuler" />
-      </el-select>
-      <el-select v-model="version" placeholder="选择版本">
-        <el-option
-          v-for="ver in boardImageData?.os?.[os] || []"
-          :key="ver.name"
-          :label="`openEuler ${ver.name}`"
-          :value="ver.name"
-        />
-      </el-select>
-    </div>
-
-    <!-- 条件筛选栏 -->
-    <div class="filters">
-      <div class="filter-row">
-        <span>内核版本：</span>
-        <el-link :type="!selectedKernel ? 'primary' : ''" @click="selectedKernel = ''">全部</el-link>
-        <el-link
-          v-for="kernel in kernelVersions"
-          :key="kernel"
-          :type="selectedKernel === kernel ? 'primary' : ''"
-          @click="selectedKernel = kernel"
-        >{{ kernel }}</el-link>
+      <!-- 顶部操作系统与版本 -->
+      <div class="top-selects">
+        <el-select
+          v-model="os"
+          placeholder="选择系统"
+        >
+          <el-option
+            label="openEuler"
+            value="openEuler"
+          />
+        </el-select>
+        <el-select
+          v-model="version"
+          placeholder="选择版本"
+        >
+          <el-option
+            v-for="ver in boardImageData?.os?.[os] || []"
+            :key="ver.name"
+            :label="`openEuler ${ver.name}`"
+            :value="ver.name"
+          />
+        </el-select>
       </div>
 
-      <div class="filter-row">
-        <span>ISA基线：</span>
-        <el-link :type="!selectedISA ? 'primary' : ''" @click="selectedISA = ''">全部</el-link>
-        <el-link
-          v-for="isa in isaProfiles"
-          :key="isa"
-          :type="selectedISA === isa ? 'primary' : ''"
-          @click="selectedISA = isa"
-        >{{ isa }}</el-link>
+      <!-- 条件筛选栏 -->
+      <div class="filters">
+        <div class="filter-row">
+          <span>内核版本：</span>
+          <el-link
+            :type="!selectedKernel ? 'primary' : 'default'"
+            @click="selectedKernel = ''"
+            >全部</el-link
+          >
+          <el-link
+            v-for="kernel in kernelVersions"
+            :key="kernel"
+            :type="selectedKernel === kernel ? 'primary' : 'default'"
+            @click="selectedKernel = kernel"
+            >{{ kernel }}</el-link
+          >
+        </div>
+
+        <div class="filter-row">
+          <span>ISA基线：</span>
+          <el-link
+            :type="!selectedISA ? 'primary' : 'default'"
+            @click="selectedISA = ''"
+            >全部</el-link
+          >
+          <el-link
+            v-for="isa in isaProfiles"
+            :key="isa"
+            :type="selectedISA === isa ? 'primary' : 'default'"
+            @click="selectedISA = isa"
+            >{{ isa }}</el-link
+          >
+        </div>
+
+        <div class="filter-row">
+          <span>预装列表：</span>
+          <el-link
+            :type="!selectedUserspace ? 'primary' : 'default'"
+            @click="selectedUserspace = ''"
+            >全部</el-link
+          >
+          <el-link
+            v-for="space in userspaces"
+            :key="space"
+            :type="selectedUserspace === space ? 'primary' : 'default'"
+            @click="selectedUserspace = space"
+            >{{ space }}</el-link
+          >
+        </div>
+
+        <div class="filter-row">
+          <span>引导器：</span>
+          <el-link
+            :type="!selectedInstaller ? 'primary' : 'default'"
+            @click="selectedInstaller = ''"
+            >全部</el-link
+          >
+          <el-link
+            v-for="type in installerTypes"
+            :key="type"
+            :type="selectedInstaller === type ? 'primary' : 'default'"
+            @click="selectedInstaller = type"
+            >{{ type }}</el-link
+          >
+        </div>
       </div>
 
-      <div class="filter-row">
-        <span>预装列表：</span>
-        <el-link :type="!selectedUserspace ? 'primary' : ''" @click="selectedUserspace = ''">全部</el-link>
-        <el-link
-          v-for="space in userspaces"
-          :key="space"
-          :type="selectedUserspace === space ? 'primary' : ''"
-          @click="selectedUserspace = space"
-        >{{ space }}</el-link>
+      <!-- 镜像文件列表 -->
+      <div class="file-list">
+        <div
+          class="file-item"
+          v-for="(file, index) in filteredFiles"
+          :key="index"
+        >
+          <span>{{ file.name }}</span>
+          <el-link
+            type="primary"
+            :href="file.link"
+            target="_blank"
+            >下载</el-link
+          >
+        </div>
       </div>
 
-      <div class="filter-row">
-        <span>引导器：</span>
-        <el-link :type="!selectedInstaller ? 'primary' : ''" @click="selectedInstaller = ''">全部</el-link>
-        <el-link
-          v-for="type in installerTypes"
-          :key="type"
-          :type="selectedInstaller === type ? 'primary' : ''"
-          @click="selectedInstaller = type"
-        >{{ type }}</el-link>
+      <!-- 查看帮助文档 -->
+      <div class="help-doc-buttons">
+        <div
+          v-for="(docURL, index) in getMarkDownInDocs()"
+          :key="index"
+        >
+          <el-button
+            type="primary"
+            @click="helpDocVisible = true"
+          >
+            查看帮助文档
+          </el-button>
+          <el-dialog v-model="helpDocVisible" align-center draggable lock-scroll destroy-on-close>
+            <HelpDoc :markdownURL="docURL" :boardDetail="boardDetail" />
+          </el-dialog>
+        </div>
       </div>
-    </div>
-
-    <!-- 镜像文件列表 -->
-    <div class="file-list">
-      <div class="file-item" v-for="(file, index) in filteredFiles" :key="index">
-        <span>{{ file.name }}</span>
-        <el-link type="primary" :href="file.link" target="_blank">下载</el-link>
-      </div>
-    </div>
-  </el-card>
-
+    </el-card>
   </div>
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router';
-import { ref, computed, onMounted, nextTick } from 'vue';
-import { ElMessage, ElButton, ElTable, ElTableColumn, ElImage } from 'element-plus';
-import CustomSearchIcon from '@/components/icon/CustomSearchIcon.vue';
-import CustomLogoIcon from '@/components/icon/CustomLogoIcon.vue';
-import CustomBackHomeIcon from '@/components/icon/CustomBackHomeIcon.vue';
-import BoardInfoTitle from "@/components/board/BoardInfoTitle.vue";
-import { useRouter } from 'vue-router';
-import { getProductVersion } from '@/api/get-json';
+import { useRoute } from "vue-router";
 
+import { ref, computed, onMounted, nextTick, watch } from "vue";
+import {
+  ElMessage,
+  ElButton,
+  ElTable,
+  ElTableColumn,
+  ElImage,
+  ElDialog,
+} from "element-plus";
+import CustomSearchIcon from "@/components/icon/CustomSearchIcon.vue";
+import CustomLogoIcon from "@/components/icon/CustomLogoIcon.vue";
+import CustomBackHomeIcon from "@/components/icon/CustomBackHomeIcon.vue";
+import BoardInfoTitle from "@/components/board/BoardInfoTitle.vue";
+import { useRouter } from "vue-router";
+import { getProductVersion } from "@/api/get-json";
+
+import HelpDoc from "@/components/helpDoc/helpDoc.vue";
 const route = useRoute();
 const router = useRouter();
 const boardDetail = ref({});
-const currentImageSrc = ref('');
+const currentImageSrc = ref("");
 
-const os = ref('openEuler');
-const version = ref('');
+const os = ref("openEuler");
+const version = ref("");
 const boardImageData = ref({});
-const selectedKernel = ref('');
-const selectedISA = ref('');
-const selectedUserspace = ref('');
-const selectedInstaller = ref('');
+const selectedKernel = ref("");
+const selectedISA = ref("");
+const selectedUserspace = ref("");
+const selectedInstaller = ref("");
 
 const fetchBoardDetail = async () => {
   try {
     const productUri = route.query.productUri;
     if (!productUri) {
-      ElMessage.error('路由参数 productUri 为空');
+      ElMessage.error("路由参数 productUri 为空");
       return;
     }
     const uri = `/${productUri}`;
@@ -198,31 +290,79 @@ const fetchBoardDetail = async () => {
     const data = await response.json();
 
     // 检查数据是否有效
-    if (typeof data === 'object' && data !== null) {
+    if (typeof data === "object" && data !== null) {
       boardDetail.value = data;
       if (boardDetail.value.pictures && boardDetail.value.pictures.length > 0) {
         currentImageSrc.value = boardDetail.value.pictures[0];
       }
     } else {
-      ElMessage.error('返回的数据不是有效的对象');
+      ElMessage.error("返回的数据不是有效的对象");
       return;
     }
 
     await nextTick();
   } catch (error) {
-    ElMessage.error('获取板子详情失败：' + error.message);
+    ElMessage.error("获取板子详情失败：" + error.message);
   }
 };
 
+// 帮助文档
+const helpDocVisible = ref(false);
+const getMarkDownInDocs = () => {
+  const getDocs = () => {
+    const os = boardDetail.value.os;
+    if (!os) {
+      return [];
+    }
+    if (os["openEuler"]) {
+      return os["openEuler"];
+    } else {
+      return [];
+    }
+  };
+  const doc = getDocs();
+  const markdownDocs = [];
+  if (Array.isArray(doc)) {
+    for (const docItem of doc) {
+      if (docItem.imagesuites && Array.isArray(docItem.imagesuites)) {
+        for (const imageSuite of docItem.imagesuites) {
+          if (imageSuite.docs && Array.isArray(imageSuite.docs)) {
+            for (const docContent of imageSuite.docs) {
+              if (docContent) {
+                markdownDocs.push(docContent);
+              }
+            }
+          }
+        }
+      }
+    }
+  } else if (doc && typeof doc === "object") {
+    if (doc.imagesuites && Array.isArray(doc.imagesuites)) {
+      for (const doc2 of doc.imagesuites) {
+        if (doc2 && doc2.docs && Array.isArray(doc2.docs)) {
+          for (const doc3 of doc2.docs) {
+            if (doc3) {
+              markdownDocs.push(doc3);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // 使用 Set 进行去重，然后转换回数组
+  return [...new Set(markdownDocs)];
+};
+
 const goHome = () => {
-  router.push('/home');
+  router.push("/home");
 };
 
 const getRamConfig = () => {
   const hardware = boardDetail.value.hardware;
   const ram = hardware && hardware.ram;
-  if (!ram) return 'NC';
-  const capacities = ram.capacity.join('/');
+  if (!ram) return "NC";
+  const capacities = ram.capacity.join("/");
   return `${ram.type}, ${capacities}`;
 };
 
@@ -231,17 +371,27 @@ const getStorageInterfaces = () => {
 };
 
 const getHighSpeedInterfaces = () => {
-  return boardDetail.value.hardware?.connectivity?.filter(item => {
-    const highSpeedTypes = ['USB-A', 'Ethernet', 'HDMI', 'MIPI-CSI', 'MIPI-DSI'];
-    return highSpeedTypes.includes(item.type);
-  }) || [];
+  return (
+    boardDetail.value.hardware?.connectivity?.filter((item) => {
+      const highSpeedTypes = [
+        "USB-A",
+        "Ethernet",
+        "HDMI",
+        "MIPI-CSI",
+        "MIPI-DSI",
+      ];
+      return highSpeedTypes.includes(item.type);
+    }) || []
+  );
 };
 
 const getLowSpeedInterfaces = () => {
-  return boardDetail.value.hardware?.connectivity?.filter(item => {
-    const lowSpeedTypes = ['USB-C', 'WiFi', 'Bluetooth'];
-    return lowSpeedTypes.includes(item.type);
-  }) || [];
+  return (
+    boardDetail.value.hardware?.connectivity?.filter((item) => {
+      const lowSpeedTypes = ["USB-C", "WiFi", "Bluetooth"];
+      return lowSpeedTypes.includes(item.type);
+    }) || []
+  );
 };
 
 const changeMainImage = (index) => {
@@ -260,35 +410,35 @@ const fetchProductVersion = async () => {
         version.value = boardImageData.value.os[os.value][0].name;
       }
     } else {
-      ElMessage.error('获取产品版本失败：返回数据为空');
+      ElMessage.error("获取产品版本失败：返回数据为空");
     }
   } catch (error) {
-    console.error('获取产品版本失败:', error);
-    ElMessage.error('获取产品版本失败：' + error.message);
+    console.error("获取产品版本失败:", error);
+    ElMessage.error("获取产品版本失败：" + error.message);
   }
 };
 
 // 当前版本对应的镜像集
 const imageSuites = computed(() => {
   return (
-    boardImageData.value?.os?.[os.value]?.find(v => v.name === version.value)
+    boardImageData.value?.os?.[os.value]?.find((v) => v.name === version.value)
       ?.imagesuites || []
   );
 });
 
 // 提取所有筛选项数据
-const kernelVersions = computed(() =>
-  [...new Set(imageSuites.value.map(s => s.kernel?.version).filter(Boolean))]
-);
-const isaProfiles = computed(() =>
-  [...new Set(imageSuites.value.map(s => s.isa?.profile).filter(Boolean))]
-);
-const userspaces = computed(() =>
-  [...new Set(imageSuites.value.map(s => s.userspace).filter(Boolean))]
-);
-const installerTypes = computed(() =>
-  [...new Set(imageSuites.value.map(s => s.type).filter(Boolean))]
-);
+const kernelVersions = computed(() => [
+  ...new Set(imageSuites.value.map((s) => s.kernel?.version).filter(Boolean)),
+]);
+const isaProfiles = computed(() => [
+  ...new Set(imageSuites.value.map((s) => s.isa?.profile).filter(Boolean)),
+]);
+const userspaces = computed(() => [
+  ...new Set(imageSuites.value.map((s) => s.userspace).filter(Boolean)),
+]);
+const installerTypes = computed(() => [
+  ...new Set(imageSuites.value.map((s) => s.type).filter(Boolean)),
+]);
 
 // 过滤后的文件列表
 const filteredFiles = computed(() => {
@@ -296,39 +446,37 @@ const filteredFiles = computed(() => {
 
   if (selectedKernel.value) {
     filteredSuites = filteredSuites.filter(
-      s => s.kernel?.version === selectedKernel.value
+      (s) => s.kernel?.version === selectedKernel.value
     );
   }
   if (selectedISA.value) {
     filteredSuites = filteredSuites.filter(
-      s => s.isa?.profile === selectedISA.value
+      (s) => s.isa?.profile === selectedISA.value
     );
   }
   if (selectedUserspace.value) {
     filteredSuites = filteredSuites.filter(
-      s => s.userspace === selectedUserspace.value
+      (s) => s.userspace === selectedUserspace.value
     );
   }
   if (selectedInstaller.value) {
     filteredSuites = filteredSuites.filter(
-      s => s.type === selectedInstaller.value
+      (s) => s.type === selectedInstaller.value
     );
   }
 
   // 合并所有符合条件的文件
-  return filteredSuites.flatMap(s =>
-    s.files.map(f => ({
-      name: f.url.split('/').pop(),
-      link: f.url
+  return filteredSuites.flatMap((s) =>
+    s.files.map((f) => ({
+      name: f.url.split("/").pop(),
+      link: f.url,
     }))
   );
 });
 
-
 onMounted(async () => {
   await fetchBoardDetail();
   await fetchProductVersion();
-
 });
 </script>
 
@@ -364,7 +512,7 @@ onMounted(async () => {
   }
 
   .back-home-container {
-    background: rgba(74, 119, 202, .05);
+    background: rgba(74, 119, 202, 0.05);
     color: #4a77ca;
     border-radius: 12px;
     display: flex;
@@ -442,7 +590,8 @@ onMounted(async () => {
   display: flex;
   width: 100%;
   border-radius: 20px;
-  box-shadow: 0 3px 2px #012fa605, 0 7px 5px #012fa608, 0 12px 10px #012fa60a, 0 22px 18px #012fa60a;
+  box-shadow: 0 3px 2px #012fa605, 0 7px 5px #012fa608, 0 12px 10px #012fa60a,
+    0 22px 18px #012fa60a;
 }
 
 .board-image {
@@ -467,12 +616,11 @@ onMounted(async () => {
   margin-bottom: 10px;
 }
 
-.board-container{
+.board-container {
   display: flex;
   justify-content: center;
   font-family: PingFang SC-Regular;
 }
-
 
 .info-item h4 {
   margin: 0 0 6px;
@@ -507,7 +655,6 @@ li {
   padding: 20px;
   background: #fff;
   border-radius: 12px;
-
 }
 .top-selects {
   display: flex;
@@ -543,5 +690,7 @@ li {
 :deep(.el-row) {
   font-size: 0.9rem;
 }
-
+.help-doc-buttons{
+  margin: 10px;
+}
 </style>
