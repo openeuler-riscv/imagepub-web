@@ -2,7 +2,7 @@
   <div class="help-doc">
     <div class="markdown-body">
       <!-- 板卡信息 -->
-      <div class="board-info">
+      <div class="board-info-2">
         <DesriName name="板卡信息"></DesriName>
         <div class="info-detail">
           <div id="board-block">
@@ -158,11 +158,12 @@ onMounted(() => {
 
 
 /* 办卡信息 */
-.board-info {
+.board-info-2 {
+
   margin-top: 24px;
   .info-detail {
     display: flex;
-    margin-top: 12px;
+    margin-top: 16px;
   }
 }
 
