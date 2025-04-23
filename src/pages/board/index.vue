@@ -588,7 +588,6 @@ const installerTypes = computed(() =>
 // 过滤后的文件列表（按 Group 分组）
 const groupedFiles = computed(() => {
   let filteredSuites = imageSuites.value;
-
   // 基础过滤条件
   if (selectedKernel.value) {
     filteredSuites = filteredSuites.filter(s => s.kernel?.version === selectedKernel.value);
@@ -608,14 +607,21 @@ const groupedFiles = computed(() => {
       s => s.type === selectedInstaller.value
     );
   }
-
+  console.log("filteredSuites",filteredSuites)
   // 合并所有符合条件的文件
-  return filteredSuites.flatMap(s =>
-    s.files.map(f => ({
-      name: f.url.split('/').pop(),
-      link: f.url
-    }))
-  );
+  return filteredSuites.flatMap(suite => {
+    return suite.files.map(file => {
+      return {
+        name: file.group, // 提取 Group 名称
+        items: [
+          {
+            link: file.url,
+            lists: file.lists || []
+          }
+        ]
+      };
+    });
+  });
 });
 
 
