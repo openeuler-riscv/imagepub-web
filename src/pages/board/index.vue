@@ -84,151 +84,189 @@
     </div>
 
     <el-card class="box-card">
-    <!-- 顶部操作系统与版本 -->
-    <div class="top-selects">
-      <el-select v-model="os" placeholder="选择系统" class="select-box">
-        <el-option label="openEuler" value="openEuler" />
-      </el-select>
-      <el-select v-model="version" placeholder="选择版本" class="select-box">
-        <el-option
-          v-for="ver in boardImageData?.os?.[os] || []"
-          :key="ver.name"
-          :label="`openEuler ${ver.name}`"
-          :value="ver.name"
-        />
-      </el-select>
-    </div>
-
-    <!-- 条件筛选栏 -->
-    <div class="filters">
-      <div class="filter-row">
-        <span class="filter-label">内核版本：</span>
-      <div style="display: flex; align-items: center; flex-wrap: wrap;">
-        <el-checkbox
-          v-model="KernelscheckAll"
-          :indeterminate="KernelsisIndeterminate"
-          @change="KernelshandleCheckAllChange"
-          style="margin-right: 15px;"
-        >全部</el-checkbox>
-        <el-checkbox-group 
-          v-model="selectedKernels"
-          @change="handleCheckedKernelsChange"
-        >
-          <el-checkbox 
-           v-for="kernel in kernelVersions" 
-            :key="kernel.version"
-            :label="kernel.version"
-          >
-            {{ kernel.version }}
-          </el-checkbox>
-        </el-checkbox-group>
-      </div>
+      <!-- 顶部操作系统与版本 -->
+      <div class="top-selects">
+        <el-select v-model="os" placeholder="选择系统" class="select-box">
+          <el-option label="openEuler" value="openEuler"/>
+        </el-select>
+        <el-select v-model="version" placeholder="选择版本" class="select-box">
+          <el-option
+              v-for="ver in boardImageData?.os?.[os] || []"
+              :key="ver.name"
+              :label="`openEuler ${ver.name}`"
+              :value="ver.name"
+          />
+        </el-select>
       </div>
 
-      <div class="filter-row">
-        <span class="filter-label">ISA基线：</span>
-        <div style="display: flex; align-items: center; flex-wrap: wrap;">
-        <el-checkbox
-          v-model="isacheckAll"
-          :indeterminate="isaisIndeterminate"
-          @change="isahandleCheckAllChange"
-          style="margin-right: 15px;"
-        >全部</el-checkbox>
-        <el-checkbox-group 
-          v-model="selectedISAs"
-          @change="handleCheckedisaChange"
-        >
-          <el-checkbox 
-            v-for="isa in isaProfiles" 
-            :key="isa.id"
-            :label="isa.profile"
-          >
-            {{ isa.profile }}
-          </el-checkbox>
-        </el-checkbox-group>
-      </div>
-        
+      <!-- 条件筛选栏 -->
+      <div class="filters">
+        <div class="filter-row">
+          <span class="filter-label">内核版本：</span>
+          <div style="display: flex; align-items: center; flex-wrap: wrap;">
+            <el-checkbox
+                v-model="KernelscheckAll"
+                :indeterminate="KernelsisIndeterminate"
+                @change="KernelshandleCheckAllChange"
+                style="margin-right: 15px;"
+            >全部
+            </el-checkbox>
+            <el-checkbox-group
+                v-model="selectedKernels"
+                @change="handleCheckedKernelsChange"
+            >
+              <el-checkbox
+                  v-for="kernel in kernelVersions"
+                  :key="kernel.version"
+                  :label="kernel.version"
+              >
+                {{ kernel.version }}
+              </el-checkbox>
+            </el-checkbox-group>
+          </div>
+        </div>
+
+        <div class="filter-row">
+          <span class="filter-label">ISA基线：</span>
+          <div style="display: flex; align-items: center; flex-wrap: wrap;">
+            <el-checkbox
+                v-model="isacheckAll"
+                :indeterminate="isaisIndeterminate"
+                @change="isahandleCheckAllChange"
+                style="margin-right: 15px;"
+            >全部
+            </el-checkbox>
+            <el-checkbox-group
+                v-model="selectedISAs"
+                @change="handleCheckedisaChange"
+            >
+              <el-checkbox
+                  v-for="isa in isaProfiles"
+                  :key="isa.id"
+                  :label="isa.profile"
+              >
+                {{ isa.profile }}
+              </el-checkbox>
+            </el-checkbox-group>
+          </div>
+
+        </div>
+
+        <div class="filter-row">
+          <span class="filter-label">预装列表：</span>
+          <div style="display: flex; align-items: center; flex-wrap: wrap;">
+            <el-checkbox
+                v-model="userspacescheckAll"
+                :indeterminate="userspacesisIndeterminate"
+                @change="userspaceshandleCheckAllChange"
+                style="margin-right: 15px;"
+            >全部
+            </el-checkbox>
+            <el-checkbox-group
+                v-model="selectedUserspaces"
+                @change="handleCheckeduserspacesChange"
+            >
+              <el-checkbox
+                  v-for="space in userspaces"
+                  :key="space.id"
+                  :label="space.userspace"
+              >
+                {{ space.userspace }}
+              </el-checkbox>
+            </el-checkbox-group>
+          </div>
+        </div>
+
+        <div class="filter-row">
+          <span class="filter-label">引导器：</span>
+          <div style="display: flex; align-items: center; flex-wrap: wrap;">
+            <el-checkbox
+                v-model="installercheckAll"
+                :indeterminate="installerisIndeterminate"
+                @change="installerhandleCheckAllChange"
+                style="margin-right: 15px;"
+            >全部
+            </el-checkbox>
+            <el-checkbox-group
+                v-model="selectedInstallers"
+                @change="handleCheckedinstallerChange"
+            >
+              <el-checkbox
+                  v-for="type in installerTypes"
+                  :key="type"
+                  :label="type"
+              >
+                {{ type }}
+              </el-checkbox>
+            </el-checkbox-group>
+          </div>
+        </div>
+
+        <div class="filter-row">
+          <span class="filter-label">仅看最新版：</span>
+          <el-radio-group v-model="onlyLatest">
+            <el-radio :value=true>是</el-radio>
+            <el-radio :value=false>否</el-radio>
+          </el-radio-group>
+        </div>
       </div>
 
-      <div class="filter-row">
-        <span class="filter-label">预装列表：</span>
-        <div style="display: flex; align-items: center; flex-wrap: wrap;">
-        <el-checkbox
-          v-model="userspacescheckAll"
-          :indeterminate="userspacesisIndeterminate"
-          @change="userspaceshandleCheckAllChange"
-          style="margin-right: 15px;"
-        >全部</el-checkbox>
-        <el-checkbox-group 
-          v-model="selectedUserspaces"
-          @change="handleCheckeduserspacesChange"
-        >
-        <el-checkbox 
-          v-for="space in userspaces" 
-          :key="space.id"
-          :label="space.userspace"
-        >
-          {{ space.userspace }}
-        </el-checkbox>
-      </el-checkbox-group>
-      </div>
-      </div>
+      <!-- 镜像文件列表 -->
+      <div class="file-list">
+        <!-- 按 Group 分组渲染 -->
+        <div v-for="(group, groupIndex) in groupedFiles" :key="groupIndex" class="file-group">
+          <h3 class="group-header">{{ group.name }}</h3> <!-- 显示 Group 名称 -->
+          <div class="group-content">
+            <div
+                v-for="(item, itemIndex) in group.items"
+                :key="itemIndex"
+                class="file-item"
+            >
+              <!-- 勾选时显示最新版下载按钮，未勾选时显示所有版本链接 -->
+              <div v-if="onlyLatest">
+                <el-link
+                    type="primary"
+                    :href="item.link"
+                    target="_blank"
+                >
+                  {{ item.link.split('/').pop() }} - 最新版下载
+                </el-link>
+              </div>
 
-      <div class="filter-row">
-        <span class="filter-label">引导器：</span>
-        <div style="display: flex; align-items: center; flex-wrap: wrap;">
-        <el-checkbox
-          v-model="installercheckAll"
-          :indeterminate="installerisIndeterminate"
-          @change="installerhandleCheckAllChange"
-          style="margin-right: 15px;"
-        >全部</el-checkbox>
-        <el-checkbox-group 
-          v-model="selectedInstallers"
-          @change="handleCheckedinstallerChange"
-        >
-        <el-checkbox 
-          v-for="type in installerTypes" 
-          :key="type"
-          :label="type"
-        >
-          {{ type }}
-        </el-checkbox>
-      </el-checkbox-group>
+              <div v-else>
+                <div
+                    v-for="(listUrl, listIndex) in item.lists"
+                    :key="listIndex"
+                    class="download-item"
+                >
+                  <el-link
+                      type="primary"
+                      :href="listUrl"
+                      target="_blank"
+                  >
+                    {{ listUrl.split('/').pop() }} - 下载
+                  </el-link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      </div>
-
-      <div class="filter-row">
-        <span class="filter-label">仅看最新版：</span>
-        <el-radio-group v-model="onlyLatest">
-          <el-radio :value=true >是</el-radio>
-          <el-radio :value=false >否</el-radio>
-        </el-radio-group>
-      </div>
-    </div>
-
-    <!-- 镜像文件列表 -->
-    <div class="file-list">
-      <div class="file-item" v-for="(file, index) in filteredFiles" :key="index">
-        <span>{{ file.name }}</span>
-        <el-link type="primary" :href="file.link" target="_blank">点击下载</el-link>
-      </div>
-    </div>
-  </el-card>
+    </el-card>
 
   </div>
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router';
-import { ref, computed, onMounted, nextTick } from 'vue';
-import { ElMessage, ElButton, ElImage } from 'element-plus';
+import {useRoute} from 'vue-router';
+import {ref, computed, onMounted, nextTick} from 'vue';
+import {ElMessage, ElButton, ElImage} from 'element-plus';
 import CustomSearchIcon from '@/components/icon/CustomSearchIcon.vue';
 import CustomLogoIcon from '@/components/icon/CustomLogoIcon.vue';
 import CustomBackHomeIcon from '@/components/icon/CustomBackHomeIcon.vue';
 import BoardInfoTitle from "@/components/board/BoardInfoTitle.vue";
-import { useRouter } from 'vue-router';
-import { getProductVersion } from '@/api/get-json';
+import {useRouter} from 'vue-router';
+import {getProductVersion} from '@/api/get-json';
 import './style.scss'
 
 const route = useRoute();
@@ -334,8 +372,8 @@ const fetchProductVersion = async () => {
 // 当前版本对应的镜像集
 const imageSuites = computed(() => {
   return (
-    boardImageData.value?.os?.[os.value]?.find(v => v.name === version.value)
-      ?.imagesuites || []
+      boardImageData.value?.os?.[os.value]?.find(v => v.name === version.value)
+          ?.imagesuites || []
   );
 });
 
@@ -402,7 +440,7 @@ const kernelVersions = computed(() => {
   return imageSuites.value.flatMap(suite => {
     const versions = suite.kernel?.versions;
     if (versions) {
-      return versions.map(version => ({ version }));
+      return versions.map(version => ({version}));
     }
     return [];
   });
@@ -448,43 +486,42 @@ const userspaces = computed(() => {
 });
 
 const installerTypes = computed(() =>
-  [...new Set(imageSuites.value.map(s => s.type).filter(Boolean))]
+    [...new Set(imageSuites.value.map(s => s.type).filter(Boolean))]
 );
 
-// 过滤后的文件列表
-const filteredFiles = computed(() => {
+// 过滤后的文件列表（按 Group 分组）
+const groupedFiles = computed(() => {
   let filteredSuites = imageSuites.value;
 
+  // 基础过滤条件
   if (selectedKernel.value) {
-    filteredSuites = filteredSuites.filter(
-      s => s.kernel?.version === selectedKernel.value
-    );
+    filteredSuites = filteredSuites.filter(s => s.kernel?.version === selectedKernel.value);
   }
   if (selectedISA.value) {
-    filteredSuites = filteredSuites.filter(
-      s => s.isa?.profile === selectedISA.value
-    );
+    filteredSuites = filteredSuites.filter(s => s.isa?.profile === selectedISA.value);
   }
   if (selectedUserspace.value) {
-    filteredSuites = filteredSuites.filter(
-      s => s.userspace === selectedUserspace.value
-    );
+    filteredSuites = filteredSuites.filter(s => s.userspace === selectedUserspace.value);
   }
   if (selectedInstaller.value) {
-    filteredSuites = filteredSuites.filter(
-      s => s.type === selectedInstaller.value
-    );
+    filteredSuites = filteredSuites.filter(s => s.type === selectedInstaller.value);
   }
 
-  // 合并所有符合条件的文件
-  return filteredSuites.flatMap(s =>
-    s.files.map(f => ({
-      name: f.url.split('/').pop(),
-      link: f.url
-    }))
-  );
+  // 按 Group 分组处理
+  return filteredSuites.flatMap(suite => {
+    return suite.files.map(file => {
+      return {
+        name: file.group, // 提取 Group 名称
+        items: [
+          {
+            link: file.url,
+            lists: file.lists || []
+          }
+        ]
+      };
+    });
+  });
 });
-
 
 onMounted(async () => {
   await fetchBoardDetail();
