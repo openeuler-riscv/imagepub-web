@@ -5,55 +5,33 @@
         <div class="input-wrapper">
           <CustomLogoIcon class="prefix-icon" />
           <div class="back-home-container">
-            <el-button
-              @click="goHome"
-              class="home-button"
-            >
+            <el-button @click="goHome" class="home-button">
               <CustomBackHomeIcon />
-              <span style="font-size: 1.25rem; font-family: PingFang SC-Regular"
-                >回首页</span
-              >
+              <span style="font-size: 1.25rem; font-family: PingFang SC-Regular">回首页</span>
             </el-button>
           </div>
           <div class="spacer"></div>
           <div class="detail-search-container">
-            <el-input
-              class="input-container"
-              placeholder="板卡信息"
-              size="large"
-            ></el-input>
+            <el-input class="input-container" placeholder="板卡信息" size="large" />
             <CustomSearchIcon />
           </div>
         </div>
       </div>
-
     </div>
     <div class="board-container">
-      <div
-        class="product-container"
-        v-if="boardDetail"
-      >
+      <div class="product-container" v-if="boardDetail">
         <div class="board-info">
           <div class="board-image-container">
             <div class="board-image">
-              <el-image
-                :src="currentImageSrc"
-                style="width: 25vh; height: 25vh"
-              />
+              <el-image :src="currentImageSrc" style="width: 25vh; height: 25vh" />
             </div>
             <div class="thumbnail-container">
               <el-image
-                v-for="(pic, index) in boardDetail?.pictures || []"
-                :key="index"
-                :src="pic"
-                style="
-                  width: 60px;
-                  height: 45px;
-                  margin-right: 10px;
-                  cursor: pointer;
-                  border: saddlebrown 1px solid;
-                "
-                @click="changeMainImage(index)"
+                  v-for="(pic, index) in boardDetail?.pictures || []"
+                  :key="index"
+                  :src="pic"
+                  style="width: 60px; height: 45px; margin-right: 10px; cursor: pointer; border: saddlebrown 1px solid;"
+                  @click="changeMainImage(index)"
               />
             </div>
           </div>
@@ -71,11 +49,7 @@
             <div class="info-item">
               <BoardInfoTitle title="存储接口" />
               <el-row>
-                <el-col
-                  v-for="(item, index) in getStorageInterfaces()"
-                  :key="index"
-                  :span="24"
-                >
+                <el-col v-for="(item, index) in getStorageInterfaces()" :key="index" :span="24">
                   {{ item.type }}, {{ item.capacity ? item.capacity : "NC" }}
                 </el-col>
               </el-row>
@@ -83,11 +57,7 @@
             <div class="info-item">
               <BoardInfoTitle title="高速接口" />
               <el-row>
-                <el-col
-                  v-for="(item, index) in getHighSpeedInterfaces()"
-                  :key="index"
-                  :span="24"
-                >
+                <el-col v-for="(item, index) in getHighSpeedInterfaces()" :key="index" :span="24">
                   {{ item.type }} {{ item.nums ? `x${item.nums}` : "" }}
                 </el-col>
               </el-row>
@@ -95,11 +65,7 @@
             <div class="info-item">
               <BoardInfoTitle title="低速接口" />
               <el-row>
-                <el-col
-                  v-for="(item, index) in getLowSpeedInterfaces()"
-                  :key="index"
-                  :span="24"
-                >
+                <el-col v-for="(item, index) in getLowSpeedInterfaces()" :key="index" :span="24">
                   {{ item.type }} {{ item.nums ? `x${item.nums}` : "" }}
                 </el-col>
               </el-row>
@@ -111,12 +77,11 @@
         <p>暂无板卡详情信息，请稍后重试。</p>
       </div>
     </div>
-
     <el-card class="box-card">
       <!-- 顶部操作系统与版本 -->
       <div class="top-selects">
         <el-select v-model="os" placeholder="选择系统" class="select-box">
-          <el-option label="openEuler" value="openEuler"/>
+          <el-option label="openEuler" value="openEuler" />
         </el-select>
         <el-select v-model="version" placeholder="选择版本" class="select-box">
           <el-option
@@ -127,7 +92,6 @@
           />
         </el-select>
       </div>
-
       <!-- 条件筛选栏 -->
       <div class="filters">
         <div class="filter-row">
@@ -138,23 +102,19 @@
                 :indeterminate="KernelsisIndeterminate"
                 @change="KernelshandleCheckAllChange"
                 style="margin-right: 15px;"
-            >全部
+            >
+              全部
             </el-checkbox>
             <el-checkbox-group
                 v-model="selectedKernels"
                 @change="handleCheckedKernelsChange"
             >
-              <el-checkbox
-                  v-for="kernel in kernelVersions"
-                  :key="kernel.version"
-                  :label="kernel.version"
-              >
+              <el-checkbox v-for="kernel in kernelVersions" :key="kernel.version" :label="kernel.version">
                 {{ kernel.version }}
               </el-checkbox>
             </el-checkbox-group>
           </div>
         </div>
-
         <div class="filter-row">
           <span class="filter-label">ISA基线：</span>
           <div style="display: flex; align-items: center; flex-wrap: wrap;">
@@ -163,24 +123,19 @@
                 :indeterminate="isaisIndeterminate"
                 @change="isahandleCheckAllChange"
                 style="margin-right: 15px;"
-            >全部
+            >
+              全部
             </el-checkbox>
             <el-checkbox-group
                 v-model="selectedISAs"
                 @change="handleCheckedisaChange"
             >
-              <el-checkbox
-                  v-for="isa in isaProfiles"
-                  :key="isa.id"
-                  :label="isa.profile"
-              >
+              <el-checkbox v-for="isa in isaProfiles" :key="isa.id" :label="isa.profile">
                 {{ isa.profile }}
               </el-checkbox>
             </el-checkbox-group>
           </div>
-
         </div>
-
         <div class="filter-row">
           <span class="filter-label">预装列表：</span>
           <div style="display: flex; align-items: center; flex-wrap: wrap;">
@@ -189,23 +144,19 @@
                 :indeterminate="userspacesisIndeterminate"
                 @change="userspaceshandleCheckAllChange"
                 style="margin-right: 15px;"
-            >全部
+            >
+              全部
             </el-checkbox>
             <el-checkbox-group
                 v-model="selectedUserspaces"
                 @change="handleCheckeduserspacesChange"
             >
-              <el-checkbox
-                  v-for="space in userspaces"
-                  :key="space.id"
-                  :label="space.userspace"
-              >
+              <el-checkbox v-for="space in userspaces" :key="space.id" :label="space.userspace">
                 {{ space.userspace }}
               </el-checkbox>
             </el-checkbox-group>
           </div>
         </div>
-
         <div class="filter-row">
           <span class="filter-label">引导器：</span>
           <div style="display: flex; align-items: center; flex-wrap: wrap;">
@@ -214,23 +165,19 @@
                 :indeterminate="installerisIndeterminate"
                 @change="installerhandleCheckAllChange"
                 style="margin-right: 15px;"
-            >全部
+            >
+              全部
             </el-checkbox>
             <el-checkbox-group
                 v-model="selectedInstallers"
                 @change="handleCheckedinstallerChange"
             >
-              <el-checkbox
-                  v-for="type in installerTypes"
-                  :key="type"
-                  :label="type"
-              >
+              <el-checkbox v-for="type in installerTypes" :key="type" :label="type">
                 {{ type }}
               </el-checkbox>
             </el-checkbox-group>
           </div>
         </div>
-
         <div class="filter-row">
           <span class="filter-label">仅看最新版：</span>
           <el-radio-group v-model="onlyLatest">
@@ -239,7 +186,6 @@
           </el-radio-group>
         </div>
       </div>
-
       <!-- 镜像文件列表 -->
       <div class="file-list">
         <!-- 按 Group 分组渲染 -->
@@ -253,26 +199,17 @@
             >
               <!-- 勾选时显示最新版下载按钮，未勾选时显示所有版本链接 -->
               <div v-if="onlyLatest">
-                <el-link
-                    type="primary"
-                    :href="item.link"
-                    target="_blank"
-                >
+                <el-link type="primary" :href="item.link" target="_blank">
                   {{ item.link.split('/').pop() }} - 最新版下载
                 </el-link>
               </div>
-
               <div v-else>
                 <div
                     v-for="(listUrl, listIndex) in item.lists"
                     :key="listIndex"
                     class="download-item"
                 >
-                  <el-link
-                      type="primary"
-                      :href="listUrl"
-                      target="_blank"
-                  >
+                  <el-link type="primary" :href="listUrl" target="_blank">
                     {{ listUrl.split('/').pop() }} - 下载
                   </el-link>
                 </div>
@@ -281,17 +218,10 @@
           </div>
         </div>
       </div>
-
       <!-- 查看帮助文档 -->
       <div class="help-doc-buttons">
-        <div
-          v-for="(docURL, index) in getMarkDownInDocs()"
-          :key="index"
-        >
-          <el-button
-            type="primary"
-            @click="helpDocVisible = true"
-          >
+        <div v-for="(docURL, index) in getMarkDownInDocs()" :key="index">
+          <el-button type="primary" @click="helpDocVisible = true">
             查看帮助文档
           </el-button>
           <el-dialog v-model="helpDocVisible" align-center draggable lock-scroll destroy-on-close>
@@ -300,37 +230,190 @@
         </div>
       </div>
     </el-card>
-
   </div>
 </template>
 
 <script setup>
-import {useRoute} from 'vue-router';
-import {ref, computed, onMounted, nextTick} from 'vue';
-import {ElMessage, ElButton, ElImage} from 'element-plus';
+// ---------------------------
+// 1. 依赖引入
+// ---------------------------
+import { useRoute, useRouter } from 'vue-router';
+import { ref, computed, onMounted, nextTick } from 'vue';
+import { ElMessage } from 'element-plus';
 import CustomSearchIcon from '@/components/icon/CustomSearchIcon.vue';
 import CustomLogoIcon from '@/components/icon/CustomLogoIcon.vue';
 import CustomBackHomeIcon from '@/components/icon/CustomBackHomeIcon.vue';
-import BoardInfoTitle from "@/components/board/BoardInfoTitle.vue";
-import {useRouter} from 'vue-router';
-import {getProductVersion} from '@/api/get-json';
-import './style.scss'
+import BoardInfoTitle from '@/components/board/BoardInfoTitle.vue';
+import HelpDoc from '@/components/helpDoc/helpDoc.vue';
+import { getProductVersion } from '@/api/get-json';
+import './style.scss';
 
-import HelpDoc from "@/components/helpDoc/helpDoc.vue";
+// ---------------------------
+// 2. 组件变量定义
+// ---------------------------
 const route = useRoute();
 const router = useRouter();
 const boardDetail = ref({});
 const currentImageSrc = ref('');
 const onlyLatest = ref(true);
-
 const os = ref('openEuler');
 const version = ref('');
 const boardImageData = ref({});
-const selectedKernel = ref('');
-const selectedISA = ref('');
-const selectedUserspace = ref('');
-const selectedInstaller = ref('');
+const helpDocVisible = ref(false);
 
+// ---------------------------
+// 3. 筛选相关变量
+// ---------------------------
+const selectedKernels = ref([]);
+const selectedISAs = ref([]);
+const selectedUserspaces = ref([]);
+const selectedInstallers = ref([]);
+
+const KernelscheckAll = ref(false);
+const KernelsisIndeterminate = ref(true);
+const isacheckAll = ref(false);
+const isaisIndeterminate = ref(true);
+const userspacescheckAll = ref(false);
+const userspacesisIndeterminate = ref(true);
+const installercheckAll = ref(false);
+const installerisIndeterminate = ref(true);
+
+// ---------------------------
+// 4. 计算属性
+// ---------------------------
+const kernelVersions = computed(() => {
+  return boardImageData.value?.os?.[os.value]?.find(v => v.name === version.value)
+      ?.imagesuites.flatMap(suite => suite.kernel?.versions.map(version => ({ version }))) || [];
+});
+
+const isaProfiles = computed(() => {
+  return boardImageData.value?.os?.[os.value]?.find(v => v.name === version.value)
+      ?.imagesuites.flatMap((suite, index) => {
+        const isaList = suite.isa;
+        return Array.isArray(isaList)
+            ? isaList.map((isa, isaIndex) => ({ id: `${index}-${isaIndex}`, profile: isa.profile }))
+            : [{ id: `${index}-0`, profile: isaList.profile }];
+      }) || [];
+});
+
+const userspaces = computed(() => {
+  return boardImageData.value?.os?.[os.value]?.find(v => v.name === version.value)
+      ?.imagesuites.flatMap((suite, index) => {
+        const userSpaceList = suite.userspace;
+        return Array.isArray(userSpaceList)
+            ? userSpaceList.map((space, spaceIndex) => ({ id: `${index}-${spaceIndex}`, userspace: space }))
+            : [{ id: `${index}-0`, userspace: userSpaceList }];
+      }) || [];
+});
+
+const installerTypes = computed(() =>
+    [...new Set(boardImageData.value?.os?.[os.value]?.find(v => v.name === version.value)
+        ?.imagesuites.map(s => s.type).filter(Boolean) || [])]
+);
+
+const imageSuites = computed(() =>
+    boardImageData.value?.os?.[os.value]?.find(v => v.name === version.value)?.imagesuites || []
+);
+
+const groupedFiles = computed(() => {
+  let filteredSuites = imageSuites.value;
+  filteredSuites = filteredSuites
+      .filter(s => !selectedKernels.value.length || s.kernel?.version === selectedKernels.value[0])
+      .filter(s => !selectedISAs.value.length || s.isa?.profile === selectedISAs.value[0])
+      .filter(s => !selectedUserspaces.value.length || s.userspace === selectedUserspaces.value[0])
+      .filter(s => !selectedInstallers.value.length || s.type === selectedInstallers.value[0]);
+
+  return filteredSuites.flatMap(suite =>
+      suite.files.map(file => ({ name: file.group, items: [{ link: file.url, lists: file.lists || [] }] }))
+  );
+});
+
+// ---------------------------
+// 5. 工具函数
+// ---------------------------
+const goHome = () => router.push('/home');
+
+const getRamConfig = () => {
+  const ram = boardDetail.value.hardware?.ram;
+  return ram
+      ? `${ram.type}, ${ram.capacity.join('/')}`
+      : 'NC';
+};
+
+const getStorageInterfaces = () =>
+    boardDetail.value.hardware?.storage || [];
+
+const getHighSpeedInterfaces = () =>
+    boardDetail.value.hardware?.connectivity?.filter(item =>
+        ['USB-A', 'Ethernet', 'HDMI', 'MIPI-CSI', 'MIPI-DSI'].includes(item.type)
+    ) || [];
+
+const getLowSpeedInterfaces = () =>
+    boardDetail.value.hardware?.connectivity?.filter(item =>
+        ['USB-C', 'WiFi', 'Bluetooth'].includes(item.type)
+    ) || [];
+
+const changeMainImage = (index) => {
+  currentImageSrc.value = boardDetail.value.pictures?.[index] || '';
+};
+
+const getMarkDownInDocs = () => {
+  const docs = boardDetail.value.os?.openEuler?.flatMap(osItem =>
+      osItem.imagesuites.flatMap(suite => suite.docs)
+  );
+  console.log("docs",docs)
+  return Array.isArray(docs) ? [...new Set(docs)] : [];
+};
+
+// 更新全选和不确定状态的函数
+const updateCheckState = (checkAll, isIndeterminate, selected, all) => {
+  const checkedCount = selected.value.length;
+  checkAll.value = checkedCount === all.value.length;
+  isIndeterminate.value = checkedCount > 0 && checkedCount < all.value.length;
+};
+
+// ---------------------------
+// 6. 事件处理函数
+// ---------------------------
+const KernelshandleCheckAllChange = (val) => {
+  selectedKernels.value = val ? kernelVersions.value.map(k => k.version) : [];
+  updateCheckState(KernelscheckAll, KernelsisIndeterminate, selectedKernels, kernelVersions);
+};
+
+const handleCheckedKernelsChange = (value) => {
+  updateCheckState(KernelscheckAll, KernelsisIndeterminate, value, kernelVersions);
+};
+
+const isahandleCheckAllChange = (val) => {
+  selectedISAs.value = val ? isaProfiles.value.map(k => k.profile) : [];
+  updateCheckState(isacheckAll, isaisIndeterminate, selectedISAs, isaProfiles);
+};
+
+const handleCheckedisaChange = (value) => {
+  updateCheckState(isacheckAll, isaisIndeterminate, value, isaProfiles);
+};
+
+const userspaceshandleCheckAllChange = (val) => {
+  selectedUserspaces.value = val ? userspaces.value.map(k => k.userspace) : [];
+  updateCheckState(userspacescheckAll, userspacesisIndeterminate, selectedUserspaces, userspaces);
+};
+
+const handleCheckeduserspacesChange = (value) => {
+  updateCheckState(userspacescheckAll, userspacesisIndeterminate, value, userspaces);
+};
+
+const installerhandleCheckAllChange = (val) => {
+  selectedInstallers.value = val ? installerTypes.value : [];
+  updateCheckState(installercheckAll, installerisIndeterminate, selectedInstallers, installerTypes);
+};
+
+const handleCheckedinstallerChange = (value) => {
+  updateCheckState(installercheckAll, installerisIndeterminate, value, installerTypes);
+};
+
+// ---------------------------
+// 7. 数据获取函数
+// ---------------------------
 const fetchBoardDetail = async () => {
   try {
     const productUri = route.query.productUri;
@@ -363,90 +446,6 @@ const fetchBoardDetail = async () => {
   }
 };
 
-// 帮助文档
-const helpDocVisible = ref(false);
-const getMarkDownInDocs = () => {
-  const getDocs = () => {
-    const os = boardDetail.value.os;
-    if (!os) {
-      return [];
-    }
-    if (os["openEuler"]) {
-      return os["openEuler"];
-    } else {
-      return [];
-    }
-  };
-  const doc = getDocs();
-  const markdownDocs = [];
-  if (Array.isArray(doc)) {
-    for (const docItem of doc) {
-      if (docItem.imagesuites && Array.isArray(docItem.imagesuites)) {
-        for (const imageSuite of docItem.imagesuites) {
-          if (imageSuite.docs && Array.isArray(imageSuite.docs)) {
-            for (const docContent of imageSuite.docs) {
-              if (docContent) {
-                markdownDocs.push(docContent);
-              }
-            }
-          }
-        }
-      }
-    }
-  } else if (doc && typeof doc === "object") {
-    if (doc.imagesuites && Array.isArray(doc.imagesuites)) {
-      for (const doc2 of doc.imagesuites) {
-        if (doc2 && doc2.docs && Array.isArray(doc2.docs)) {
-          for (const doc3 of doc2.docs) {
-            if (doc3) {
-              markdownDocs.push(doc3);
-            }
-          }
-        }
-      }
-    }
-  }
-
-  // 使用 Set 进行去重，然后转换回数组
-  return [...new Set(markdownDocs)];
-};
-
-const goHome = () => {
-  router.push('/home');
-};
-
-const getRamConfig = () => {
-  const hardware = boardDetail.value.hardware;
-  const ram = hardware && hardware.ram;
-  if (!ram) return 'NC';
-  const capacities = ram.capacity.join('/');
-  return `${ram.type}, ${capacities}`;
-};
-
-const getStorageInterfaces = () => {
-  return boardDetail.value.hardware?.storage || [];
-};
-
-const getHighSpeedInterfaces = () => {
-  return boardDetail.value.hardware?.connectivity?.filter(item => {
-    const highSpeedTypes = ['USB-A', 'Ethernet', 'HDMI', 'MIPI-CSI', 'MIPI-DSI'];
-    return highSpeedTypes.includes(item.type);
-  }) || [];
-};
-
-const getLowSpeedInterfaces = () => {
-  return boardDetail.value.hardware?.connectivity?.filter(item => {
-    const lowSpeedTypes = ['USB-C', 'WiFi', 'Bluetooth'];
-    return lowSpeedTypes.includes(item.type);
-  }) || [];
-};
-
-const changeMainImage = (index) => {
-  if (boardDetail.value.pictures && boardDetail.value.pictures.length > index) {
-    currentImageSrc.value = boardDetail.value.pictures[index];
-  }
-};
-// 获取接口数据
 const fetchProductVersion = async () => {
   try {
     const response = await getProductVersion();
@@ -465,171 +464,13 @@ const fetchProductVersion = async () => {
   }
 };
 
-// 当前版本对应的镜像集
-const imageSuites = computed(() => {
-  return (
-    boardImageData.value?.os?.[os.value]?.find(v => v.name === version.value)
-      ?.imagesuites || []
-  );
-});
-
-const selectedKernels = ref([]);
-const selectedISAs = ref([]);
-const selectedUserspaces = ref([]);
-const selectedInstallers = ref([]);
-
-const KernelscheckAll = ref(false)
-const KernelsisIndeterminate = ref(true)
-const isacheckAll = ref(false)
-const isaisIndeterminate = ref(true)
-const userspacescheckAll = ref(false)
-const userspacesisIndeterminate = ref(true)
-const installercheckAll = ref(false)
-const installerisIndeterminate = ref(true)
-
-const KernelshandleCheckAllChange = (val) => {
-  selectedKernels.value = val ? kernelVersions.value.map(k => k.version) : [];
-  KernelsisIndeterminate.value = false;
-}
-
-const handleCheckedKernelsChange = (value) => {
-  const checkedCount = value.length
-  KernelscheckAll.value = checkedCount === kernelVersions.length
-  KernelsisIndeterminate.value = checkedCount > 0 && checkedCount < kernelVersions.length
-}
-
-const isahandleCheckAllChange = (val) => {
-  selectedISAs.value = val ? isaProfiles.value.map(k => k.profile) : [];
-  isaisIndeterminate.value = false;
-}
-
-const handleCheckedisaChange = (value) => {
-  const checkedCount = value.length
-  isacheckAll.value = checkedCount === isaProfiles.length
-  isaisIndeterminate.value = checkedCount > 0 && checkedCount < isaProfiles.length
-}
-
-const userspaceshandleCheckAllChange = (val) => {
-  selectedUserspaces.value = val ? userspaces.value.map(k => k.userspace) : [];
-  userspacesisIndeterminate.value = false;
-}
-
-const handleCheckeduserspacesChange = (value) => {
-  const checkedCount = value.length
-  userspacescheckAll.value = checkedCount === userspaces.length
-  userspacesisIndeterminate.value = checkedCount > 0 && checkedCount < userspaces.length
-}
-
-const installerhandleCheckAllChange = (val) => {
-  selectedInstallers.value = val ? installerTypes.value : [];
-  installerisIndeterminate.value = false;
-}
-
-const handleCheckedinstallerChange = (value) => {
-  const checkedCount = value.length
-  installercheckAll.value = checkedCount === installerTypes.length
-  installerisIndeterminate.value = checkedCount > 0 && checkedCount < installerTypes.length
-}
-
-// 提取所有筛选项数据
-const kernelVersions = computed(() => {
-  return imageSuites.value.flatMap(suite => {
-    const versions = suite.kernel?.versions;
-    if (versions) {
-      return versions.map(version => ({version}));
-    }
-    return [];
-  });
-});
-
-const isaProfiles = computed(() => {
-  return imageSuites.value.flatMap((suite, index) => {
-    const isaList = suite.isa;
-    if (Array.isArray(isaList)) {
-      return isaList.map((isa, isaIndex) => ({
-        id: `${index}-${isaIndex}`,
-        profile: isa.profile,
-        extensions: isa.extensions
-      }));
-    } else if (isaList && typeof isaList === 'object') {
-      return [{
-        id: `${index}-0`,
-        profile: isaList.profile,
-        extensions: isaList.extensions
-      }];
-    }
-    return [];
-  });
-});
-
-
-const userspaces = computed(() => {
-  return imageSuites.value.flatMap((suite, index) => {
-    const userSpaceList = suite.userspace;
-    if (Array.isArray(userSpaceList)) {
-      return userSpaceList.map((space, spaceIndex) => ({
-        id: `${index}-${spaceIndex}`,
-        userspace: space
-      }));
-    } else if (userSpaceList) {
-      return [{
-        id: `${index}-0`,
-        userspace: userSpaceList
-      }];
-    }
-    return [];
-  });
-});
-
-const installerTypes = computed(() =>
-    [...new Set(imageSuites.value.map(s => s.type).filter(Boolean))]
-);
-
-// 过滤后的文件列表（按 Group 分组）
-const groupedFiles = computed(() => {
-  let filteredSuites = imageSuites.value;
-  // 基础过滤条件
-  if (selectedKernel.value) {
-    filteredSuites = filteredSuites.filter(s => s.kernel?.version === selectedKernel.value);
-  }
-  if (selectedISA.value) {
-    filteredSuites = filteredSuites.filter(
-      s => s.isa?.profile === selectedISA.value
-    );
-  }
-  if (selectedUserspace.value) {
-    filteredSuites = filteredSuites.filter(
-      s => s.userspace === selectedUserspace.value
-    );
-  }
-  if (selectedInstaller.value) {
-    filteredSuites = filteredSuites.filter(
-      s => s.type === selectedInstaller.value
-    );
-  }
-  console.log("filteredSuites",filteredSuites)
-  // 合并所有符合条件的文件
-  return filteredSuites.flatMap(suite => {
-    return suite.files.map(file => {
-      return {
-        name: file.group, // 提取 Group 名称
-        items: [
-          {
-            link: file.url,
-            lists: file.lists || []
-          }
-        ]
-      };
-    });
-  });
-});
-
-
+// ---------------------------
+// 8. 生命周期钩子
+// ---------------------------
 onMounted(async () => {
   await fetchBoardDetail();
   await fetchProductVersion();
-  nextTick();
-
+  await nextTick();
 });
 </script>
 
@@ -644,11 +485,10 @@ onMounted(async () => {
   margin-right: 4.5vh;
 }
 
-
 :deep(.el-row) {
   font-size: 0.9rem;
 }
-.help-doc-buttons{
+.help-doc-buttons {
   margin: 10px;
 }
 </style>
