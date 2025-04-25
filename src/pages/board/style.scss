@@ -123,19 +123,12 @@
     }
   }
 
-  .back-home-container {
-    background: rgba(74, 119, 202, .05);
-    color: #4a77ca;
-    border-radius: 12px;
-    display: flex;
-    justify-content: space-between;
+  .no-border-button {
+    border: none !important;
   }
 
-  .back-home-container:hover {
-    color: #012fa6;
-    background: rgba(1, 47, 166, 1);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px #012fa61a;
+  .no-border-button:hover {
+    color: #012fa6 !important;
   }
 }
 
@@ -182,6 +175,21 @@
   text-align: right;
   margin-right: 1rem;
   font-weight: 500;
+}
+.filter-label-center {
+  min-width: 80px;
+  text-align: center;
+  margin-right: 1rem;
+  font-weight: 500;
+}
+
+.filter-label.adjusted-position {
+  margin-left: 2px;  /* 向右移动 */
+  margin-top: 10px;   /* 向下移动 */
+  padding: 2px;
+  position: relative;
+  left: 5px;
+  top: 5px;
 }
 
 .file-group {
