@@ -14,6 +14,24 @@
   min-width: 180px;
 }
 
+.dropdown-item .filter-button {
+  color: #444455;
+  border: 1px solid #012fa6;
+  transition: all 0.3s ease;
+}
+
+.el-dropdown-menu {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+.el-dropdown-item {
+  color: #333;
+  transition: background-color 0.3s ease;
+}
+
 .filter-button {
   width: 100%;
   max-width: 200px;
@@ -127,22 +145,33 @@
       box-sizing: border-box;
     }
 
-    @media (max-width: 1499px) {
+    @media (max-width: 1650px) {
       .el-card {
         width: calc(100% / 5 - 10px); /* 5列布局，单卡片宽度20% */
       }
     }
-    @media (max-width: 1199px) {
+    @media (max-width: 1400px) {
       .el-card {
         width: calc(100% / 4 - 10px); /* 4列布局 */
       }
     }
 
-    @media (max-width: 899px) {
+    @media (max-width: 1150px) {
       .el-card {
         width: calc(100% / 3 - 10px); /* 3列布局 */
       }
     }
+    @media (max-width: 800px) {
+      .el-card {
+        width: calc(100% / 2 - 10px); /* 2列布局 */
+      }
+    }
+    @media (max-width: 400px) {
+      .el-card {
+        width: calc(100% - 20px); /* 单栏布局 */
+      }
+    }
+
 
   }
 }

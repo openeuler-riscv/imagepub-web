@@ -19,14 +19,6 @@
       </div>
     </div>
 
-<!--    <div class="filter-tags" v-if="searchCondition.socSearch || searchCondition.systemSearch">-->
-<!--      <el-tag v-if="searchCondition.socSearch" closable @close="clearSocSearch">-->
-<!--        {{ searchCondition.socSearch }}-->
-<!--      </el-tag>-->
-<!--      <el-tag v-if="searchCondition.systemSearch" closable @close="clearSystemSearch">-->
-<!--        {{ searchCondition.systemSearch }}-->
-<!--      </el-tag>-->
-<!--    </div>-->
     <div class="dropdown-list-container">
       <el-dropdown
         size="large"
@@ -74,67 +66,10 @@
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>
-              <el-dropdown placement="right-start" @command="instructionSetSearch">
-                <span class="el-dropdown-link">
-                  指令集特性
-                  <el-icon class="el-icon--right"><arrow-right /></el-icon>
-                </span>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item command="RVA20">RVA20</el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-            </el-dropdown-item>
-
-            <el-dropdown-item>
-              <el-dropdown placement="right-start" @command="kernelVersionSearch">
-                <span class="el-dropdown-link">
-                  内核版本
-                  <el-icon class="el-icon--right"><arrow-right /></el-icon>
-                </span>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item command="VENDOR - 6.6">VENDOR - 6.6</el-dropdown-item>
-                    <el-dropdown-item command="RVCK - 6.6">RVCK - 6.6</el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-            </el-dropdown-item>
-
-            <el-dropdown-item>
-              <el-dropdown placement="right-start" @command="imageFeatureSearch">
-                <span class="el-dropdown-link">
-                  镜像特性
-                  <el-icon class="el-icon--right"><arrow-right /></el-icon>
-                </span>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item command="UBOOT">UBOOT</el-dropdown-item>
-                    <el-dropdown-item command="BOOTSTD">BOOTSTD</el-dropdown-item>
-                    <el-dropdown-item command="FDT">FDT</el-dropdown-item>
-                    <el-dropdown-item command="LINUXBOOT">LINUXBOOT</el-dropdown-item>
-                    <el-dropdown-item command="EFI">EFI</el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-            </el-dropdown-item>
-
-            <el-dropdown-item>
-              <el-dropdown placement="right-start" @command="supportStatusSearch">
-                <span class="el-dropdown-link">
-                  支持状态
-                  <el-icon class="el-icon--right"><arrow-right /></el-icon>
-                </span>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item command="SUPPORTED">SUPPORTED</el-dropdown-item>
-                    <el-dropdown-item command="WIP">WIP</el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-            </el-dropdown-item>
+            <el-dropdown-item command="系统特性1">系统特性1</el-dropdown-item>
+            <el-dropdown-item command="系统特性2">系统特性2</el-dropdown-item>
+            <el-dropdown-item command="系统特性3">系统特性3</el-dropdown-item>
+            <el-dropdown-item command="系统特性4">系统特性4</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -145,7 +80,7 @@
         <el-card v-for="(product, index) in productList" :key="index" class="product-card"
                  @click="openProduct(product)">
           <div class="product-image-container">
-            <el-image :src="product.thumbnail" fit="cover" class="product-image" @error="handleImageError" />
+            <el-image :src="product.thumbnail" fit="contain" class="product-image" @error="handleImageError" />
           </div>
           <div class="product-info">
             <h3 class="product-name">{{ product.name }}</h3>
@@ -197,11 +132,6 @@ const fetchProductList = async () => {
   try {
     const response = await getProductList();
     productList.value = response.data;
-    console.log(productList.value);
-    // 检查数据格式
-    productList.value.forEach((product) => {
-      console.log("Product:", product);
-    });
     await nextTick();
   } catch (error) {
     ElMessage.error("获取产品列表失败: " + error.message);
@@ -223,7 +153,7 @@ const clearFilter = (filterType) => {
 };
 
 const handleImageError = (event) => {
-  console.error("图片加载失败:", event);
+  ElMessage.error("主板信息加载失败！",event.message);
 };
 onMounted(async () => {
   await fetchProductList();
