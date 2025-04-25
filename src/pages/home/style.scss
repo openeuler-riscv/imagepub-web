@@ -16,7 +16,7 @@
 
 .dropdown-item .filter-button {
   color: #444455;
-  border: 1px solid #012fa6;
+  border: 2px solid #012fa6;
   transition: all 0.3s ease;
 }
 
@@ -37,7 +37,7 @@
   max-width: 200px;
   height: 44px;
   font-size: 14px;
-  border-radius: 22px;
+  border-radius: 18px;
 
   @media (max-width: 768px) {
     max-width: 160px;
@@ -166,7 +166,7 @@
         width: calc(100% / 2 - 10px); /* 2列布局 */
       }
     }
-    @media (max-width: 400px) {
+    @media (max-width: 525px) {
       .el-card {
         width: calc(100% - 20px); /* 单栏布局 */
       }
