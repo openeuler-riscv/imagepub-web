@@ -26,13 +26,9 @@
               <el-image :src="currentImageSrc" style="width: 25vh; height: 25vh" />
             </div>
             <div class="thumbnail-container">
-              <el-image
-                  v-for="(pic, index) in boardDetail?.pictures || []"
-                  :key="index"
-                  :src="pic"
-                  style="width: 60px; height: 45px; margin-right: 10px; cursor: pointer; border: saddlebrown 1px solid;"
-                  @click="changeMainImage(index)"
-              />
+              <el-image v-for="(pic, index) in boardDetail?.pictures || []" :key="index" :src="pic"
+                style="width: 60px; height: 45px; margin-right: 10px; cursor: pointer; border: saddlebrown 1px solid;"
+                @click="changeMainImage(index)" />
             </div>
           </div>
           <div class="info-list">
@@ -84,12 +80,8 @@
           <el-option label="openEuler" value="openEuler" />
         </el-select>
         <el-select v-model="version" placeholder="选择版本" class="select-box">
-          <el-option
-              v-for="ver in boardImageData?.os?.[os] || []"
-              :key="ver.name"
-              :label="`openEuler ${ver.name}`"
-              :value="ver.name"
-          />
+          <el-option v-for="ver in boardImageData?.os?.[os] || []" :key="ver.name" :label="`openEuler ${ver.name}`"
+            :value="ver.name" />
         </el-select>
       </div>
       <!-- 条件筛选栏 -->
@@ -97,18 +89,11 @@
         <div class="filter-row">
           <span class="filter-label">内核版本：</span>
           <div style="display: flex; align-items: center; flex-wrap: wrap;">
-            <el-checkbox
-                v-model="KernelscheckAll"
-                :indeterminate="KernelsisIndeterminate"
-                @change="KernelshandleCheckAllChange"
-                style="margin-right: 15px;"
-            >
+            <el-checkbox v-model="KernelscheckAll" :indeterminate="KernelsisIndeterminate"
+              @change="KernelshandleCheckAllChange" style="margin-right: 15px;">
               全部
             </el-checkbox>
-            <el-checkbox-group
-                v-model="selectedKernels"
-                @change="handleCheckedKernelsChange"
-            >
+            <el-checkbox-group v-model="selectedKernels" @change="handleCheckedKernelsChange">
               <el-checkbox v-for="kernel in kernelVersions" :key="kernel.version" :label="kernel.version">
                 {{ kernel.version }}
               </el-checkbox>
@@ -118,18 +103,11 @@
         <div class="filter-row">
           <span class="filter-label">ISA基线：</span>
           <div style="display: flex; align-items: center; flex-wrap: wrap;">
-            <el-checkbox
-                v-model="isacheckAll"
-                :indeterminate="isaisIndeterminate"
-                @change="isahandleCheckAllChange"
-                style="margin-right: 15px;"
-            >
+            <el-checkbox v-model="isacheckAll" :indeterminate="isaisIndeterminate" @change="isahandleCheckAllChange"
+              style="margin-right: 15px;">
               全部
             </el-checkbox>
-            <el-checkbox-group
-                v-model="selectedISAs"
-                @change="handleCheckedisaChange"
-            >
+            <el-checkbox-group v-model="selectedISAs" @change="handleCheckedisaChange">
               <el-checkbox v-for="isa in isaProfiles" :key="isa.id" :label="isa.profile">
                 {{ isa.profile }}
               </el-checkbox>
@@ -139,18 +117,11 @@
         <div class="filter-row">
           <span class="filter-label">预装列表：</span>
           <div style="display: flex; align-items: center; flex-wrap: wrap;">
-            <el-checkbox
-                v-model="userspacescheckAll"
-                :indeterminate="userspacesisIndeterminate"
-                @change="userspaceshandleCheckAllChange"
-                style="margin-right: 15px;"
-            >
+            <el-checkbox v-model="userspacescheckAll" :indeterminate="userspacesisIndeterminate"
+              @change="userspaceshandleCheckAllChange" style="margin-right: 15px;">
               全部
             </el-checkbox>
-            <el-checkbox-group
-                v-model="selectedUserspaces"
-                @change="handleCheckeduserspacesChange"
-            >
+            <el-checkbox-group v-model="selectedUserspaces" @change="handleCheckeduserspacesChange">
               <el-checkbox v-for="space in userspaces" :key="space.id" :label="space.userspace">
                 {{ space.userspace }}
               </el-checkbox>
@@ -160,18 +131,11 @@
         <div class="filter-row">
           <span class="filter-label">引导器：</span>
           <div style="display: flex; align-items: center; flex-wrap: wrap;">
-            <el-checkbox
-                v-model="installercheckAll"
-                :indeterminate="installerisIndeterminate"
-                @change="installerhandleCheckAllChange"
-                style="margin-right: 15px;"
-            >
+            <el-checkbox v-model="installercheckAll" :indeterminate="installerisIndeterminate"
+              @change="installerhandleCheckAllChange" style="margin-right: 15px;">
               全部
             </el-checkbox>
-            <el-checkbox-group
-                v-model="selectedInstallers"
-                @change="handleCheckedinstallerChange"
-            >
+            <el-checkbox-group v-model="selectedInstallers" @change="handleCheckedinstallerChange">
               <el-checkbox v-for="type in installerTypes" :key="type" :label="type">
                 {{ type }}
               </el-checkbox>
@@ -192,11 +156,7 @@
         <div v-for="(group, groupIndex) in groupedFiles" :key="groupIndex" class="file-group">
           <h3 class="group-header">{{ group.name }}</h3> <!-- 显示 Group 名称 -->
           <div class="group-content">
-            <div
-                v-for="(item, itemIndex) in group.items"
-                :key="itemIndex"
-                class="file-item"
-            >
+            <div v-for="(item, itemIndex) in group.items" :key="itemIndex" class="file-item">
               <!-- 勾选时显示最新版下载按钮，未勾选时显示所有版本链接 -->
               <div v-if="onlyLatest">
                 <el-link type="primary" :href="item.link" target="_blank">
@@ -204,11 +164,7 @@
                 </el-link>
               </div>
               <div v-else>
-                <div
-                    v-for="(listUrl, listIndex) in item.lists"
-                    :key="listIndex"
-                    class="download-item"
-                >
+                <div v-for="(listUrl, listIndex) in item.lists" :key="listIndex" class="download-item">
                   <el-link type="primary" :href="listUrl" target="_blank">
                     {{ listUrl.split('/').pop() }} - 下载
                   </el-link>
@@ -283,48 +239,48 @@ const installerisIndeterminate = ref(true);
 // ---------------------------
 const kernelVersions = computed(() => {
   return boardImageData.value?.os?.[os.value]?.find(v => v.name === version.value)
-      ?.imagesuites.flatMap(suite => suite.kernel?.versions.map(version => ({ version }))) || [];
+    ?.imagesuites.flatMap(suite => suite.kernel?.versions.map(version => ({ version }))) || [];
 });
 
 const isaProfiles = computed(() => {
   return boardImageData.value?.os?.[os.value]?.find(v => v.name === version.value)
-      ?.imagesuites.flatMap((suite, index) => {
-        const isaList = suite.isa;
-        return Array.isArray(isaList)
-            ? isaList.map((isa, isaIndex) => ({ id: `${index}-${isaIndex}`, profile: isa.profile }))
-            : [{ id: `${index}-0`, profile: isaList.profile }];
-      }) || [];
+    ?.imagesuites.flatMap((suite, index) => {
+      const isaList = suite.isa;
+      return Array.isArray(isaList)
+        ? isaList.map((isa, isaIndex) => ({ id: `${index}-${isaIndex}`, profile: isa.profile }))
+        : [{ id: `${index}-0`, profile: isaList.profile }];
+    }) || [];
 });
 
 const userspaces = computed(() => {
   return boardImageData.value?.os?.[os.value]?.find(v => v.name === version.value)
-      ?.imagesuites.flatMap((suite, index) => {
-        const userSpaceList = suite.userspace;
-        return Array.isArray(userSpaceList)
-            ? userSpaceList.map((space, spaceIndex) => ({ id: `${index}-${spaceIndex}`, userspace: space }))
-            : [{ id: `${index}-0`, userspace: userSpaceList }];
-      }) || [];
+    ?.imagesuites.flatMap((suite, index) => {
+      const userSpaceList = suite.userspace;
+      return Array.isArray(userSpaceList)
+        ? userSpaceList.map((space, spaceIndex) => ({ id: `${index}-${spaceIndex}`, userspace: space }))
+        : [{ id: `${index}-0`, userspace: userSpaceList }];
+    }) || [];
 });
 
 const installerTypes = computed(() =>
-    [...new Set(boardImageData.value?.os?.[os.value]?.find(v => v.name === version.value)
-        ?.imagesuites.map(s => s.type).filter(Boolean) || [])]
+  [...new Set(boardImageData.value?.os?.[os.value]?.find(v => v.name === version.value)
+    ?.imagesuites.map(s => s.type).filter(Boolean) || [])]
 );
 
 const imageSuites = computed(() =>
-    boardImageData.value?.os?.[os.value]?.find(v => v.name === version.value)?.imagesuites || []
+  boardImageData.value?.os?.[os.value]?.find(v => v.name === version.value)?.imagesuites || []
 );
 
 const groupedFiles = computed(() => {
   let filteredSuites = imageSuites.value;
   filteredSuites = filteredSuites
-      .filter(s => !selectedKernels.value.length || s.kernel?.version === selectedKernels.value[0])
-      .filter(s => !selectedISAs.value.length || s.isa?.profile === selectedISAs.value[0])
-      .filter(s => !selectedUserspaces.value.length || s.userspace === selectedUserspaces.value[0])
-      .filter(s => !selectedInstallers.value.length || s.type === selectedInstallers.value[0]);
+    .filter(s => !selectedKernels.value.length || s.kernel?.version === selectedKernels.value[0])
+    .filter(s => !selectedISAs.value.length || s.isa?.profile === selectedISAs.value[0])
+    .filter(s => !selectedUserspaces.value.length || s.userspace === selectedUserspaces.value[0])
+    .filter(s => !selectedInstallers.value.length || s.type === selectedInstallers.value[0]);
 
   return filteredSuites.flatMap(suite =>
-      suite.files.map(file => ({ name: file.group, items: [{ link: file.url, lists: file.lists || [] }] }))
+    suite.files.map(file => ({ name: file.group, items: [{ link: file.url, lists: file.lists || [] }] }))
   );
 });
 
@@ -336,22 +292,22 @@ const goHome = () => router.push('/home');
 const getRamConfig = () => {
   const ram = boardDetail.value.hardware?.ram;
   return ram
-      ? `${ram.type}, ${ram.capacity.join('/')}`
-      : 'NC';
+    ? `${ram.type}, ${ram.capacity.join('/')}`
+    : 'NC';
 };
 
 const getStorageInterfaces = () =>
-    boardDetail.value.hardware?.storage || [];
+  boardDetail.value.hardware?.storage || [];
 
 const getHighSpeedInterfaces = () =>
-    boardDetail.value.hardware?.connectivity?.filter(item =>
-        ['USB-A', 'Ethernet', 'HDMI', 'MIPI-CSI', 'MIPI-DSI'].includes(item.type)
-    ) || [];
+  boardDetail.value.hardware?.connectivity?.filter(item =>
+    ['USB-A', 'Ethernet', 'HDMI', 'MIPI-CSI', 'MIPI-DSI'].includes(item.type)
+  ) || [];
 
 const getLowSpeedInterfaces = () =>
-    boardDetail.value.hardware?.connectivity?.filter(item =>
-        ['USB-C', 'WiFi', 'Bluetooth'].includes(item.type)
-    ) || [];
+  boardDetail.value.hardware?.connectivity?.filter(item =>
+    ['USB-C', 'WiFi', 'Bluetooth'].includes(item.type)
+  ) || [];
 
 const changeMainImage = (index) => {
   currentImageSrc.value = boardDetail.value.pictures?.[index] || '';
@@ -359,9 +315,9 @@ const changeMainImage = (index) => {
 
 const getMarkDownInDocs = () => {
   const docs = boardDetail.value.os?.openEuler?.flatMap(osItem =>
-      osItem.imagesuites.flatMap(suite => suite.docs)
+    osItem.imagesuites.flatMap(suite => suite.docs)
   );
-  console.log("docs",docs)
+  console.log("docs", docs)
   return Array.isArray(docs) ? [...new Set(docs)] : [];
 };
 
@@ -488,6 +444,7 @@ onMounted(async () => {
 :deep(.el-row) {
   font-size: 0.9rem;
 }
+
 .help-doc-buttons {
   margin: 10px;
 }

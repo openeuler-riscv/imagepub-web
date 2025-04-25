@@ -1,17 +1,13 @@
 <template>
   <div class="document-list-container">
     <div class="doc-directory">
-      <DocTree
-        :items="tocItems"
-        :onClick="handleDocItemClick"
-        :currentItem="currentDocItem"
-      />
+      <DocTree :items="tocItems" :onClick="handleDocItemClick" :currentItem="currentDocItem" />
     </div>
     <div class="related-list">
-        <DesriName name="相关文档"></DesriName> 
-        <div class="related-list-item">文档1</div>
-        <div class="related-list-item">文档2</div>
-        <div class="related-list-item">文档3</div>
+      <DesriName name="相关文档"></DesriName>
+      <div class="related-list-item">文档1</div>
+      <div class="related-list-item">文档2</div>
+      <div class="related-list-item">文档3</div>
     </div>
   </div>
 </template>
@@ -43,10 +39,10 @@ const handleDocItemClick = (item) => {
       if (markdownBody) {
         markdownBody.removeEventListener("scroll", handleDocScroll);
       }
-      
+
       // 滚动到目标元素
       element.scrollIntoView({ behavior: "smooth" });
-      
+
       // 等待滚动完成后再添加监听
       setTimeout(() => {
         if (markdownBody) {
@@ -208,7 +204,7 @@ watch(
   (newContent) => {
     if (newContent) {
       tocItems.value = parseTocFromMarkdown(newContent);
-      
+
       // 内容变化后，重新设置滚动监听
       nextTick(() => {
         setupScrollListener();
@@ -234,7 +230,7 @@ onMounted(() => {
   if (props.markdownContent) {
     tocItems.value = parseTocFromMarkdown(props.markdownContent);
   }
-  
+
   // 等待DOM更新后设置滚动监听
   nextTick(() => {
     setupScrollListener();
@@ -256,24 +252,26 @@ onUnmounted(() => {
   height: 100%;
   overflow: hidden;
 }
-.document-list-container{
+
+.document-list-container {
   position: absolute;
   left: calc(-25% - 60px);
   width: 25%;
-  top:-30px;
+  top: -30px;
   background-color: #FFFFFF;
   border-radius: 10px;
   padding: 10px;
 }
 
-.related-list{
-    margin-top:20px;
-    padding: 20px 14px;
+.related-list {
+  margin-top: 20px;
+  padding: 20px 14px;
 }
-.related-list-item{
-    padding: 10px;
-    border-radius: 5px;
-    background-color: #f0f0f0;
-    margin: 10px;
+
+.related-list-item {
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  margin: 10px;
 }
 </style>

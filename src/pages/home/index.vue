@@ -145,7 +145,7 @@
         <el-card v-for="(product, index) in productList" :key="index" class="product-card"
                  @click="openProduct(product)">
           <div class="product-image-container">
-            <el-image :src="product.thumbnail" fit="cover" class="product-image" @error="handleImageError" />
+            <el-image :src="product.thumbnail" :lazy="true" fit="cover" class="product-image" @error="handleImageError" />
           </div>
           <div class="product-info">
             <h3 class="product-name">{{ product.name }}</h3>
