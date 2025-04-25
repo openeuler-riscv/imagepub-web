@@ -4,9 +4,8 @@
       <div class="top-bar-container">
         <div class="input-wrapper">
           <CustomLogoIcon class="prefix-icon" />
-          <div class="back-home-container">
-            <el-button @click="goHome" class="home-button">
-              <CustomBackHomeIcon />
+          <div>
+            <el-button @click="goHome" :icon="Back" round dark class="no-border-button">
               <span style="font-size: 1.25rem; font-family: PingFang SC-Regular">回首页</span>
             </el-button>
           </div>
@@ -95,8 +94,32 @@
       <!-- 条件筛选栏 -->
       <div class="filters">
         <div class="filter-row">
-          <span class="filter-label">内核版本：</span>
+          <el-container>
+          <el-aside width="106px">
+            <span class="filter-label adjusted-position">内核版本：</span>
+          </el-aside>
+          <el-main :style="{ padding: '0', textAlign: 'left' }">
+            <div style="display: flex; align-items: center; flex-wrap: wrap;">
+              <span class="filter-label-center">版本标签</span>
+          <el-checkbox
+            v-model="KNumbercheckAll"
+            :indeterminate="KNumberisIndeterminate"
+            @change="handleCheckAllChange"
+            style="margin-right: 15px;"
+            >全部     
+          </el-checkbox>
+          <el-checkbox-group
+            v-model="checkedKNumbers"
+            @change="handleCheckedKNumbersChange"
+          >
+            <el-checkbox v-for="KNumber in KNumbers" :key="KNumber" :label="KNumber">{{
+              KNumber
+            }}</el-checkbox>
+          </el-checkbox-group>
+          </div>
+          <el-divider style="margin: 4px 0;width: 55%;" />
           <div style="display: flex; align-items: center; flex-wrap: wrap;">
+            <span class="filter-label-center">版本号</span>
             <el-checkbox
                 v-model="KernelscheckAll"
                 :indeterminate="KernelsisIndeterminate"
@@ -114,6 +137,8 @@
               </el-checkbox>
             </el-checkbox-group>
           </div>
+          </el-main>
+        </el-container>
         </div>
         <div class="filter-row">
           <span class="filter-label">ISA基线：</span>
@@ -177,13 +202,6 @@
               </el-checkbox>
             </el-checkbox-group>
           </div>
-        </div>
-        <div class="filter-row">
-          <span class="filter-label">仅看最新版：</span>
-          <el-radio-group v-model="onlyLatest">
-            <el-radio :value=true>是</el-radio>
-            <el-radio :value=false>否</el-radio>
-          </el-radio-group>
         </div>
       </div>
       <!-- 镜像文件列表 -->
@@ -268,7 +286,11 @@ const selectedKernels = ref([]);
 const selectedISAs = ref([]);
 const selectedUserspaces = ref([]);
 const selectedInstallers = ref([]);
+const checkedKNumbers = ref([])
+const KNumbers = ['RVCK', 'VENDOR', 'TORVALDS']
 
+const KNumbercheckAll = ref(false)
+const KNumberisIndeterminate = ref(true)
 const KernelscheckAll = ref(false);
 const KernelsisIndeterminate = ref(true);
 const isacheckAll = ref(false);
@@ -375,6 +397,16 @@ const updateCheckState = (checkAll, isIndeterminate, selected, all) => {
 // ---------------------------
 // 6. 事件处理函数
 // ---------------------------
+const handleCheckAllChange = (val) => {
+  checkedKNumbers.value = val ? KNumbers : []
+  KNumberisIndeterminate.value = false
+}
+const handleCheckedKNumbersChange = (value) => {
+  const checkedCount = value.length
+  KNumbercheckAll.value = checkedCount === KNumbers.length
+  KNumberisIndeterminate.value = checkedCount > 0 && checkedCount < KNumbers.length
+}
+
 const KernelshandleCheckAllChange = (val) => {
   selectedKernels.value = val ? kernelVersions.value.map(k => k.version) : [];
   updateCheckState(KernelscheckAll, KernelsisIndeterminate, selectedKernels, kernelVersions);
@@ -472,6 +504,11 @@ onMounted(async () => {
   await fetchProductVersion();
   await nextTick();
 });
+
+import {
+  Back,
+} from '@element-plus/icons-vue'
+
 </script>
 
 <style scoped>
