@@ -18,11 +18,13 @@
   font-weight: 500;
   color: #666;
 }
-.demo-tabs > .el-tabs__content {
-  padding: 32px;
+.top-tabs > .el-tabs__content {
   color: #6b778c;
   font-size: 32px;
   font-weight: 600;
+}
+.top-tabs > .el-tabs__header{
+  margin: 0;
 }
 
 .box-card {
