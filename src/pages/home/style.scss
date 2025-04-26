@@ -129,7 +129,7 @@
   .product-container {
     width: 85vw;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     flex-wrap: wrap;
 
     .product-card {
@@ -138,11 +138,20 @@
       flex-direction: column;
       height: 300px; // 可按需调整卡片高度
     }
-
     .el-card {
       width: calc(16.666% - 10px);
       margin: 5px;
       box-sizing: border-box;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+    }
+    
+    .el-card:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      border: 1px solid #409EFF;
+      transform: translateY(-5px);
+      z-index: 1;
     }
 
     @media (max-width: 1650px) {

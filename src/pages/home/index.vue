@@ -80,7 +80,7 @@
         <el-card v-for="(product, index) in productList" :key="index" class="product-card"
                  @click="openProduct(product)">
           <div class="product-image-container">
-            <el-image :src="product.thumbnail" fit="contain" class="product-image" @error="handleImageError" />
+            <el-image :src="product.thumbnail" :lazy="true" fit="contain" class="product-image" @error="handleImageError" />
           </div>
           <div class="product-info">
             <h3 class="product-name">{{ product.name }}</h3>
@@ -132,6 +132,11 @@ const fetchProductList = async () => {
   try {
     const response = await getProductList();
     productList.value = response.data;
+    console.log(productList.value);
+    // 检查数据格式
+    productList.value.forEach((product) => {
+      console.log("Product:", product);
+    });
     await nextTick();
   } catch (error) {
     ElMessage.error("获取产品列表失败: " + error.message);

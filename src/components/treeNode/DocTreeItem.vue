@@ -1,25 +1,14 @@
 <template>
   <li class="tree-item">
-    <div
-      class="item-content"
-      :class="[
-        `level-${item.level}`,
-        {
-          'has-children': hasChildren,
-          active: isActive,
-        },
-      ]"
-      @click="handleClick(item)"
-    >
-      <div
-        class="item-toggle"
-        v-if="hasChildren"
-        @click.stop="toggleExpand"
-      >
-        <span
-          class="toggle-icon"
-          :class="{ expanded: isExpanded }"
-        >
+    <div class="item-content" :class="[
+      `level-${item.level}`,
+      {
+        'has-children': hasChildren,
+        active: isActive,
+      },
+    ]" @click="handleClick(item)">
+      <div class="item-toggle" v-if="hasChildren" @click.stop="toggleExpand">
+        <span class="toggle-icon" :class="{ expanded: isExpanded }">
           {{ isExpanded ? "▼" : "▶" }}
         </span>
       </div>
@@ -27,18 +16,10 @@
     </div>
 
     <transition name="fade">
-      <div
-        v-if="hasChildren && isExpanded"
-        class="subtree-list"
-      >
-        <doc-tree-item
-          v-for="child in item.children"
-          :key="child.id"
-          :item="child"
-          :onClick="onClick"
-          :currentItem="currentItem"
-        />
-    </div>
+      <div v-if="hasChildren && isExpanded" class="subtree-list">
+        <doc-tree-item v-for="child in item.children" :key="child.id" :item="child" :onClick="onClick"
+          :currentItem="currentItem" />
+      </div>
     </transition>
   </li>
 </template>
@@ -68,7 +49,7 @@ const hasChildren = computed(
 
 const isActive = computed(() => {
   // 修复active状态判断，这里不知道为什么会传两次，会传一个其他的，但是id一样，推测是前面的id没生成好，所以检测一下text即可，完美修复
-  const active = props.currentItem && props.item.id === props.currentItem.id&&props.item.text===props.currentItem.text;
+  const active = props.currentItem && props.item.id === props.currentItem.id && props.item.text === props.currentItem.text;
   if (active) {
     console.log(props.currentItem, props.item, "我是当前项");
     return true;
@@ -219,7 +200,10 @@ const findActiveChild = (children, activeId) => {
   font-weight: 500;
 }
 
-.level-3, .level-4, .level-5, .level-6 {
+.level-3,
+.level-4,
+.level-5,
+.level-6 {
   .item-text {
     font-size: 13px;
     font-weight: normal;

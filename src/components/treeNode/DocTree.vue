@@ -2,22 +2,12 @@
   <div class="doc-tree">
     <div class="tree-header">目录</div>
     <div class="search-box">
-      <input 
-        type="text" 
-        v-model="searchQuery" 
-        placeholder="搜索目录..." 
-        class="search-input"
-      />
+      <input type="text" v-model="searchQuery" placeholder="搜索目录..." class="search-input" />
     </div>
     <div class="tree-container">
       <ul class="tree-list" v-if="filteredItems.length > 0">
-        <doc-tree-item 
-          v-for="item in filteredItems" 
-          :key="item.id" 
-          :item="item" 
-          :onClick="onClick"
-          :currentItem="currentItem"
-        />
+        <doc-tree-item v-for="item in filteredItems" :key="item.id" :item="item" :onClick="onClick"
+          :currentItem="currentItem" />
       </ul>
       <div class="no-results" v-else>
         没有找到匹配的目录项
@@ -59,11 +49,11 @@ const filterItemsByQuery = (items, query) => {
       const isMatch = item.text.toLowerCase().includes(query);
       const filteredChildren = filterItemsByQuery(item.children, query);
       if (isMatch) {
-        return {...item, children: item.children}; 
+        return { ...item, children: item.children };
       } else if (filteredChildren.length > 0) {
-        return {...item, children: filteredChildren}; 
+        return { ...item, children: filteredChildren };
       } else {
-        return null; 
+        return null;
       }
     })
     .filter(Boolean);
@@ -165,4 +155,4 @@ const filterItemsByQuery = (items, query) => {
     }
   }
 }
-</style> 
+</style>
