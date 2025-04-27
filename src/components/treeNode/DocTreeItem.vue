@@ -81,13 +81,6 @@ watch(
 
 // 默认展开第一季目录和被选中的目录
 onMounted(() => {
-  if (
-    props.item.level === 0 ||
-    props.item.level === 1 ||
-    props.item.isSection
-  ) {
-    isExpanded.value = true;
-  }
   if (props.currentItem && hasChildren.value) {
     const hasActiveChild = findActiveChild(
       props.item.children,

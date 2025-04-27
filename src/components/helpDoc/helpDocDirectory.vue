@@ -1,14 +1,15 @@
 <template>
   <div class="document-list-container">
-    <div class="doc-directory">
-      <DocTree :items="tocItems" :onClick="handleDocItemClick" :currentItem="currentDocItem" />
-    </div>
     <div class="related-list">
       <DesriName name="相关文档"></DesriName>
       <div class="related-list-item">文档1</div>
       <div class="related-list-item">文档2</div>
       <div class="related-list-item">文档3</div>
     </div>
+    <div class="doc-directory">
+      <DocTree :items="tocItems" :onClick="handleDocItemClick" :currentItem="currentDocItem" />
+    </div>
+   
   </div>
 </template>
 
@@ -255,8 +256,8 @@ onUnmounted(() => {
 
 .document-list-container {
   position: absolute;
-  left: calc(-25% - 60px);
-  width: 25%;
+  left: -340px;
+  width: 290px;
   top: -30px;
   background-color: #FFFFFF;
   border-radius: 10px;
