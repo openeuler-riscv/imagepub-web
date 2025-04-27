@@ -42,7 +42,7 @@ import "github-markdown-css/github-markdown.css";
 import "highlight.js/styles/github.css";
 import path from "path-browserify";
 import DesriName from "@/components/DesriName.vue";
-import helpDocDirectory from "@/components/helpDocDirectory/helpDocDirectory.vue";
+import helpDocDirectory from "@/components/helpDoc/helpDocDirectory.vue";
 
 const baseUrl = ref("");
 // 配置marked插件

@@ -1,11 +1,9 @@
 <template>
   <div class="help-doc-buttons">
-    <div v-for="(docURL, index) in getMarkDownInDocs()" :key="index">
-      <el-button type="primary" @click="helpDocVisible = true">查看帮助文档</el-button>
-      <el-dialog v-model="helpDocVisible" align-center draggable lock-scroll destroy-on-close>
-        <HelpDoc :markdownURL="docURL" :boardDetail="boardDetail" />
-      </el-dialog>
-    </div>
+    <el-button type="primary" @click="helpDocVisible = true">查看帮助文档</el-button>
+    <el-dialog v-model="helpDocVisible" align-center draggable lock-scroll destroy-on-close>
+      <HelpDoc :markdownURL="getMarkDownURL()" :boardDetail="boardDetail" />
+    </el-dialog>
   </div>
 </template>
 
@@ -25,6 +23,12 @@ const props = defineProps({
 });
 
 const helpDocVisible = ref(false);
+
+// 获取第一个文档URL
+const getMarkDownURL = () => {
+  const docs = props.getMarkDownInDocs();
+  return docs[0];
+};
 </script>
 
 <style scoped>
