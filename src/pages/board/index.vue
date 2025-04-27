@@ -3,159 +3,44 @@
   <div class="detail-container">
     <TopBackHome/>
     <BoardDetail :boardDetail="boardDetail"></BoardDetail>
-
-    <el-card v-if="isDataLoaded" class="box-card">
-      <template #header>
-        <div style="width: 20vw">
-          <el-tabs v-model="releaseTabs" class="top-tabs">
+    <div v-if="isDataLoaded" class="box-card">
+        <div style="width: 100%">
+          <el-tabs v-model="releaseTabs" class="top-tabs"  type="border-card" >
             <el-tab-pane name="openEuler" label="openEuler">
-              <el-tabs v-model="subTabs" class="sub-tabs">
-                <el-tab-pane v-for="distro in tabList.openEuler" :key="distro" :label="distro" :name="distro"></el-tab-pane>
+              <el-tabs v-model="subTabs" class="sub-tabs"   type="border-card">
+                <el-tab-pane v-for="distro in tabList.openEuler" :key="distro" :label="distro" :name="distro">
+                  <template #label>
+                    <span>
+                      {{distro}}
+                    </span>
+                  </template>
+
+                  <BoardFilter :filters="filters" :kernelVersions="kernelVersions" :otherFilters="{
+                    isa: { label: 'ISA 基线', options: isaProfiles },
+                    userspace: { label: '预装列表', options: userspaces },
+                    installer: { label: '引导器', options: installerTypes }
+                  }"></BoardFilter>
+                  <BoardDescription :title="distro" description="openEuler 24.03 LTS SP1是基于6.6内核的24.03-LTS版本增强扩展版本（参见版本生命周期），面向服务器、云、边缘计算和嵌入式场景，持续提供更多新特性和功能扩展，给开发者和用户带来全新的体验，服务更多的领域和更多的用户。"></BoardDescription>
+                  <HelpDocButton :getMarkDownInDocs="getMarkDownInDocs" :boardDetail="boardDetail"></HelpDocButton>
+                </el-tab-pane>
               </el-tabs>
             </el-tab-pane>
             <el-tab-pane name="others" label="others">
-              <el-tabs v-model="subTabs" class="sub-tabs">
-                <el-tab-pane v-for="distro in tabList.others" :key="distro" :label="distro" :name="distro"></el-tab-pane>
+              <el-tabs v-model="subTabs" class="sub-tabs"  >
+                <el-tab-pane v-for="distro in tabList.others" :key="distro" :label="distro" :name="distro">
+                  <BoardFilter :filters="filters" :kernelVersions="kernelVersions" :otherFilters="{
+                    isa: { label: 'ISA 基线', options: isaProfiles },
+                    userspace: { label: '预装列表', options: userspaces },
+                    installer: { label: '引导器', options: installerTypes }
+                  }"></BoardFilter>
+                  <BoardDescription></BoardDescription>
+                  <HelpDocButton :getMarkDownInDocs="getMarkDownInDocs" :boardDetail="boardDetail"></HelpDocButton>
+                </el-tab-pane>
               </el-tabs>
             </el-tab-pane>
           </el-tabs>
         </div>
-      </template>
-      <template #default>
-        <div class="filters">
-          <div class="filter-row">
-            <el-container>
-              <el-aside width="106px"><span class="filter-label adjusted-position">内核版本：</span></el-aside>
-              <el-main :style="{ padding: '0', textAlign: 'left' }">
-                <div style="display: flex; align-items: center; flex-wrap: wrap;">
-                  <span class="filter-label-center">版本标签</span>
-                  <el-checkbox-button
-                      v-model="filters.kernel.checkAll"
-                      :indeterminate="filters.kernel.isIndeterminate"
-                      @change="handleKernelCheckAll"
-                      style="margin-right: 15px;"
-                  >全部</el-checkbox-button>
-
-                  <el-checkbox-group
-                      v-model="filters.kernel.selected"
-                      @change="handleKernelChange"
-                  >
-                    <el-checkbox-button v-for="item in filters.kernel.all" :key="item" :label="item">{{item}}</el-checkbox-button>
-                  </el-checkbox-group>
-                </div>
-                <div style="display: flex; align-items: center; flex-wrap: wrap;margin-top: 8px">
-                  <span class="filter-label-center">版本号</span>
-                  <el-checkbox-button
-                      v-model="filters.kernels.checkAll"
-                      :indeterminate="filters.kernels.isIndeterminate"
-                      @change="handleFilterCheckAll('kernels')"
-                      style="margin-right: 15px;"
-                  >全部</el-checkbox-button>
-
-                  <el-checkbox-group
-                      v-model="filters.kernels.selected"
-                      @change="handleFilterChange('kernels')"
-                  >
-                    <el-checkbox-button v-for="item in kernelVersions" :key="item.version" :label="item.version">{{item.version}}</el-checkbox-button>
-                  </el-checkbox-group>
-                </div>
-              </el-main>
-            </el-container>
-          </div>
-          <div class="filter-row">
-            <span class="filter-label">ISA基线：</span>
-            <div style="display: flex; align-items: center; flex-wrap: wrap;">
-              <el-checkbox-button
-                  v-model="filters.isa.checkAll"
-                  :indeterminate="filters.isa.isIndeterminate"
-                  @change="handleFilterCheckAll('isa')"
-                  style="margin-right: 15px;"
-              >全部</el-checkbox-button>
-              <el-checkbox-group
-                  v-model="filters.isa.selected"
-                  @change="handleFilterChange('isa')"
-              >
-                <el-checkbox-button v-for="item in isaProfiles" :key="item.id" :label="item.profile">{{item.profile}}</el-checkbox-button>
-              </el-checkbox-group>
-            </div>
-          </div>
-          <div class="filter-row">
-            <span class="filter-label">预装列表：</span>
-            <div style="display: flex; align-items: center; flex-wrap: wrap;">
-              <el-checkbox-button
-                  v-model="filters.userspace.checkAll"
-                  :indeterminate="filters.userspace.isIndeterminate"
-                  @change="handleFilterCheckAll('userspace')"
-                  style="margin-right: 15px;"
-              >全部</el-checkbox-button>
-              <el-checkbox-group
-                  v-model="filters.userspace.selected"
-                  @change="handleFilterChange('userspace')"
-              >
-                <el-checkbox-button v-for="item in userspaces" :key="item.id" :label="item.userspace">{{item.userspace}}</el-checkbox-button>
-              </el-checkbox-group>
-            </div>
-          </div>
-          <div class="filter-row">
-            <span class="filter-label">引导器：</span>
-            <div style="display: flex; align-items: center; flex-wrap: wrap;">
-              <el-checkbox-button
-                  v-model="filters.installer.checkAll"
-                  :indeterminate="filters.installer.isIndeterminate"
-                  @change="handleFilterCheckAll('installer')"
-                  style="margin-right: 15px;"
-              >全部</el-checkbox-button>
-              <el-checkbox-group
-                  v-model="filters.installer.selected"
-                  @change="handleFilterChange('installer')"
-              >
-                <el-checkbox-button v-for="item in installerTypes" :key="item" :label="item">{{item}}</el-checkbox-button>
-              </el-checkbox-group>
-            </div>
-          </div>
-        </div>
-        <div class="file-list">
-          <div v-for="(group, groupIndex) in groupedFiles" :key="groupIndex" class="file-group">
-            <h3 class="group-header">{{ group.name }}</h3>
-            <div class="group-content">
-              <div
-                  v-for="(item, itemIndex) in group.items"
-                  :key="itemIndex"
-                  class="file-item"
-              >
-                <div v-if="onlyLatest">
-                  <el-link type="primary" :href="item.link" target="_blank">
-                    {{ item.link.split('/').pop() }} - 最新版下载
-                  </el-link>
-                </div>
-                <div v-else>
-                  <div
-                      v-for="(listUrl, listIndex) in item.lists"
-                      :key="listIndex"
-                      class="download-item"
-                  >
-                    <el-link type="primary" :href="listUrl" target="_blank">
-                      {{ listUrl.split('/').pop() }} - 下载
-                    </el-link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </template>
-
-      <template #footer footer-class="card-footer-class">
-        <div class="help-doc-buttons">
-          <div v-for="(docURL, index) in getMarkDownInDocs()" :key="index">
-            <el-button type="primary" @click="helpDocVisible = true">查看帮助文档</el-button>
-            <el-dialog v-model="helpDocVisible" align-center draggable lock-scroll destroy-on-close>
-              <HelpDoc :markdownURL="docURL" :boardDetail="boardDetail" />
-            </el-dialog>
-          </div>
-        </div>
-      </template>
-    </el-card>
+    </div>
   </div>
 </template>
 
@@ -169,7 +54,9 @@ import BoardDetail from "@/components/board/BoardDetail.vue";
 import { getProductVersion } from '@/api/get-json';
 import './style.scss';
 import TopBackHome from "@/components/common/TopBackHome.vue";
-
+import BoardFilter from "@/components/board/BoardFilter.vue";
+import BoardDescription from "@/components/board/BoardDescription.vue";
+import HelpDocButton from "@/components/board/HelpDocButton.vue";
 const releaseTabs = ref('openEuler');
 const subTabs = ref('');
 const tabList = ref({ openEuler: [], others: [] });
@@ -406,6 +293,14 @@ onMounted(async () => {
 }
 :deep(.el-tabs__item.is-active),
 :deep(.el-tabs__item:hover) {
-  color: initial;
+  color: #333;
+  background-color: #cddff3;
+  font-family: PingFang SC-Regular;
+}
+:deep(.el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active ),
+:deep(.el-tabs--border-card>.el-tabs__header .el-tabs__item:hover ){
+  color: #333;
+  background-color: #cddff3;
+  font-family: PingFang SC-Regular;
 }
 </style>
