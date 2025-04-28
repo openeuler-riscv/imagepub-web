@@ -1,7 +1,7 @@
 <template>
   <div class="help-doc-buttons">
     <el-button type="primary" @click="helpDocVisible = true">查看帮助文档</el-button>
-    <el-dialog v-model="helpDocVisible" align-center draggable lock-scroll destroy-on-close>
+    <el-dialog v-model="helpDocVisible" align-center draggable lock-scroll>
       <HelpDoc :markdownURL="getMarkDownURL()" :boardDetail="boardDetail" />
     </el-dialog>
   </div>

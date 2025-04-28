@@ -57,7 +57,12 @@ marked.use(
 );
 
 // 创建一个新的渲染器，继承默认渲染器的所有方法
-const renderer = new marked.Renderer();
+const renderer = new marked.Renderer({
+  text(text) {
+    console.log(text, "text");
+      return he.decode(text);
+    },
+});
 
 // 标题计数器，用于生成唯一ID
 const titleCounts = {};
@@ -123,7 +128,7 @@ const parseMarkdown = () => {
     }
     
     const htmlContent = marked(markdownContent.value);
-    parsedMarkdown.value = DOMPurify.sanitize(htmlContent);
+    parsedMarkdown.value = DOMPurify.sanitize(htmlContent).replace('&amp;','&');
   }
 };
 
