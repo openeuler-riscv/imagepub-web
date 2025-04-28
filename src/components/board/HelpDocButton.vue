@@ -10,7 +10,6 @@
 <script setup>
 import { ref } from 'vue';
 import HelpDoc from '@/components/helpDoc/helpDoc.vue';
-
 const props = defineProps({
   getMarkDownInDocs: {
     type: Function,
