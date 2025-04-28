@@ -43,7 +43,6 @@ import "highlight.js/styles/github.css";
 import path from "path-browserify";
 import DesriName from "@/components/DesriName.vue";
 import helpDocDirectory from "@/components/helpDoc/helpDocDirectory.vue";
-
 const baseUrl = ref("");
 // 配置marked插件
 marked.use(
@@ -55,6 +54,10 @@ marked.use(
     },
   })
 );
+marked.setOptions({
+  sanitize: true, 
+  breaks: true 
+});
 
 // 创建一个新的渲染器，继承默认渲染器的所有方法
 const renderer = new marked.Renderer({
@@ -83,7 +86,6 @@ renderer.heading = function ({text, depth}) {
   return `<h${depth} id=${id} >${text}</h${depth}>`;
 };
 
-// 只覆盖image方法
 renderer.image = function (href, title, text) {
   // 处理href可能是对象的情况
   let imageHref = "";
@@ -100,6 +102,16 @@ renderer.image = function (href, title, text) {
   return `<img src="${newHref}" alt="${text}" ${
     title ? `title="${title}"` : ""
   }>`;
+};
+const codeProxy=renderer.code;
+renderer.code = function(code) {
+  function htmlUnescape(escapedStr) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(`${escapedStr}`, 'text/html');
+    return doc.body.firstChild.textContent;
+}
+  code.rwa= htmlUnescape(code.raw);
+  return codeProxy(code);
 };
 
 // 设置自定义渲染器
@@ -128,7 +140,7 @@ const parseMarkdown = () => {
     }
     
     const htmlContent = marked(markdownContent.value);
-    parsedMarkdown.value = DOMPurify.sanitize(htmlContent).replace('&amp;','&');
+    parsedMarkdown.value =  DOMPurify.sanitize(htmlContent);
   }
 };
 
