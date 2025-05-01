@@ -6,26 +6,15 @@
       </div>
       <div class="search-container">
         <div class="input-container">
-          <el-input
-            v-model="searchCondition.searchValue"
-            placeholder="板卡信息"
-            size="large"
-            style="width: 100%; height: 100%"
-            :prefix-icon="CustomPrefixIcon"
-            :suffix-icon="CustomSearchIcon"
-          >
+          <el-input v-model="searchCondition.searchValue" placeholder="板卡信息" size="large"
+            style="width: 100%; height: 100%" :prefix-icon="CustomPrefixIcon" :suffix-icon="CustomSearchIcon">
           </el-input>
         </div>
       </div>
     </div>
 
     <div class="dropdown-list-container">
-      <el-dropdown
-        size="large"
-        class="dropdown-item"
-        trigger="click"
-        @command="socSearch"
-      >
+      <el-dropdown size="large" class="dropdown-item" trigger="click" @command="socSearch">
         <el-button class="filter-button">
           {{ socSearchText }}
           <el-icon class="el-icon--right">
@@ -34,32 +23,19 @@
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item command="SpacemiT K1/M1/X1"
-              >SpacemiT K1/M1/X1</el-dropdown-item
-            >
-            <el-dropdown-item command="SOPHGO SG2042"
-              >SOPHGO SG2042</el-dropdown-item
-            >
-            <el-dropdown-item command="ESWin EIC7700X"
-              >ESWin EIC7700X</el-dropdown-item
-            >
+            <el-dropdown-item command="SpacemiT K1/M1/X1">SpacemiT K1/M1/X1</el-dropdown-item>
+            <el-dropdown-item command="SOPHGO SG2042">SOPHGO SG2042</el-dropdown-item>
+            <el-dropdown-item command="ESWin EIC7700X">ESWin EIC7700X</el-dropdown-item>
             <el-dropdown-item command="Qemu virt">Qemu virt</el-dropdown-item>
-            <el-dropdown-item command="T-HEAD TH1520"
-              >T-HEAD TH1520</el-dropdown-item
-            >
+            <el-dropdown-item command="T-HEAD TH1520">T-HEAD TH1520</el-dropdown-item>
             <el-dropdown-item>StarFive JH7110</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
 
-      <el-dropdown
-        size="large"
-        class="dropdown-item"
-        trigger="click"
-        @command="systemSearch"
-      >
+      <el-dropdown size="large" class="dropdown-item" trigger="click" @command="systemSearch">
         <el-button class="filter-button">
-           {{systemSearchText}}
+          {{ systemSearchText }}
           <el-icon class="el-icon--right">
             <CustomDropIcon />
           </el-icon>
@@ -78,9 +54,10 @@
     <div class="bottom-container">
       <div class="product-container">
         <el-card v-for="(product, index) in productList" :key="index" class="product-card"
-                 @click="openProduct(product)">
+          @click="openProduct(product)">
           <div class="product-image-container">
-            <el-image :src="product.thumbnail" :lazy="true" fit="contain" class="product-image" @error="handleImageError" />
+            <el-image :src="product.thumbnail" :lazy="true" fit="contain" class="product-image"
+              @error="handleImageError" />
           </div>
           <div class="product-info">
             <h3 class="product-name">{{ product.name }}</h3>
@@ -93,7 +70,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, nextTick, computed , reactive } from "vue";
+import { onMounted, ref, nextTick, computed, reactive } from "vue";
 import logo from "@/assets/logo/Frame1@3x.svg";
 import CustomPrefixIcon from "@/components/icon/CustomPrefixIcon.vue";
 import CustomSearchIcon from "@/components/icon/CustomSearchIcon.vue";
@@ -142,23 +119,24 @@ const fetchProductList = async () => {
     ElMessage.error("获取产品列表失败: " + error.message);
   }
 };
-const openProduct = (product) => {
-  router.push({
+const openProduct = async (product) => {
+  await router.push({
     path: "/board",
     query: {
       productUri: product.uri,
     },
   });
+  window.location.reload();
 };
 const clearFilter = (filterType) => {
   searchCondition[filterType] = "";
-  if(filterType === 'socSearch') {
+  if (filterType === 'socSearch') {
     searchCondition.searchValue = "";
   }
 };
 
 const handleImageError = (event) => {
-  ElMessage.error("主板信息加载失败！",event.message);
+  ElMessage.error("主板信息加载失败！", event.message);
 };
 onMounted(async () => {
   await fetchProductList();
@@ -181,6 +159,7 @@ onMounted(async () => {
   box-shadow: none;
   padding: 0 12px;
 }
+
 .el-dropdown-link {
   display: flex;
   align-items: center;
@@ -191,10 +170,9 @@ onMounted(async () => {
 
 :deep(.el-dropdown-menu__item) {
   padding: 8px 20px;
+
   &:hover {
     background-color: #f5f7fa;
   }
 }
-
-
 </style>

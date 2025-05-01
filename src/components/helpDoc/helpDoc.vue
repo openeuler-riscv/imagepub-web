@@ -26,7 +26,6 @@
     <!-- 这里复用一下我在其他地方的组件 -->
     <!-- 让我封装进去使用 -->
     <helpDocDirectory :markdownContent="markdownContent" />
-
   </div>
 </template>
 
@@ -55,7 +54,7 @@ marked.use(
 );
 marked.setOptions({
   sanitize: true,
-  breaks: true
+  breaks: true,
 });
 
 // 创建一个新的渲染器，继承默认渲染器的所有方法
@@ -104,10 +103,10 @@ const codeProxy = renderer.code;
 renderer.code = function (code) {
   function htmlUnescape(escapedStr) {
     const parser = new DOMParser();
-    const doc = parser.parseFromString(`${escapedStr}`, 'text/html');
+    const doc = parser.parseFromString(`${escapedStr}`, "text/html");
     return doc.body.firstChild.textContent;
   }
-  code.rwa = htmlUnescape(code.raw);
+  code.rwa = htmlUnescape(code.raw).replace("&quot", '"');
   return codeProxy(code);
 };
 
@@ -169,7 +168,6 @@ onMounted(() => {
   padding: 16px;
   max-height: 90vh;
 }
-
 
 
 /* 办卡信息 */
