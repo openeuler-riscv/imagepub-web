@@ -48,8 +48,9 @@ const hasChildren = computed(
 );
 
 const isActive = computed(() => {
-  // 修复active状态判断，这里不知道为什么会传两次，会传一个其他的，但是id一样，推测是前面的id没生成好，所以检测一下text即可，完美修复
+  // 修复active状态判断，这里不知道为什么会传两次，会传一个其他的，但是id一样，推测是前面的id没生成好，所以检测一下text即可
   const active = props.currentItem && props.item.id === props.currentItem.id && props.item.text === props.currentItem.text;
+
   if (active) {
     console.log(props.currentItem, props.item, "我是当前项");
     return true;

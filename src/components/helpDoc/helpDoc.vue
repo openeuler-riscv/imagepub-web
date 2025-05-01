@@ -23,11 +23,10 @@
       源文件：{{ markdownURL }}
     </div>
 
-   
-      <!-- 这里复用一下我在其他地方的组件 -->
-      <!-- 让我封装进去使用 -->
-      <helpDocDirectory :markdownContent="markdownContent" />
- 
+    <!-- 这里复用一下我在其他地方的组件 -->
+    <!-- 让我封装进去使用 -->
+    <helpDocDirectory :markdownContent="markdownContent" />
+
   </div>
 </template>
 
@@ -55,24 +54,23 @@ marked.use(
   })
 );
 marked.setOptions({
-  sanitize: true, 
-  breaks: true 
+  sanitize: true,
+  breaks: true
 });
 
 // 创建一个新的渲染器，继承默认渲染器的所有方法
 const renderer = new marked.Renderer({
   text(text) {
     console.log(text, "text");
-      return he.decode(text);
-    },
+    return he.decode(text);
+  },
 });
 
 // 标题计数器，用于生成唯一ID
 const titleCounts = {};
 
-
-renderer.heading = function ({text, depth}) {
- // 为每个级别的标题计数
+renderer.heading = function ({ text, depth }) {
+  // 为每个级别的标题计数
   titleCounts[depth] = (titleCounts[depth] || 0) + 1;
   // 生成唯一ID
   let id;
@@ -81,7 +79,7 @@ renderer.heading = function ({text, depth}) {
   } else {
     const parentLevel = depth - 1;
     const parentCount = titleCounts[parentLevel] || 0;
-    id = `doc-title-${parentCount}-${titleCounts[depth]}`;
+    id = `doc-title-${depth}-${titleCounts[depth]}`;
   }
   return `<h${depth} id=${id} >${text}</h${depth}>`;
 };
@@ -99,18 +97,17 @@ renderer.image = function (href, title, text) {
   }
 
   const newHref = path.join(baseUrl.value, imageHref);
-  return `<img src="${newHref}" alt="${text}" ${
-    title ? `title="${title}"` : ""
-  }>`;
+  return `<img src="${newHref}" alt="${text}" ${title ? `title="${title}"` : ""
+    }>`;
 };
-const codeProxy=renderer.code;
-renderer.code = function(code) {
+const codeProxy = renderer.code;
+renderer.code = function (code) {
   function htmlUnescape(escapedStr) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(`${escapedStr}`, 'text/html');
     return doc.body.firstChild.textContent;
-}
-  code.rwa= htmlUnescape(code.raw);
+  }
+  code.rwa = htmlUnescape(code.raw);
   return codeProxy(code);
 };
 
@@ -129,7 +126,7 @@ const props = defineProps({
     required: true,
   },
 });
-const markdownContent=ref("");
+const markdownContent = ref("");
 const parsedMarkdown = ref("");
 
 const parseMarkdown = () => {
@@ -138,9 +135,9 @@ const parseMarkdown = () => {
     for (const key in titleCounts) {
       delete titleCounts[key];
     }
-    
+
     const htmlContent = marked(markdownContent.value);
-    parsedMarkdown.value =  DOMPurify.sanitize(htmlContent);
+    parsedMarkdown.value = DOMPurify.sanitize(htmlContent);
   }
 };
 
@@ -166,6 +163,7 @@ onMounted(() => {
 .help-doc {
   position: relative;
 }
+
 .markdown-body {
   overflow: auto;
   padding: 16px;
@@ -178,6 +176,7 @@ onMounted(() => {
 .board-info-2 {
 
   margin-top: 24px;
+
   .info-detail {
     display: flex;
     margin-top: 16px;
@@ -198,6 +197,7 @@ onMounted(() => {
     margin-top: 10px;
   }
 }
+
 #board-block {
   width: 33%;
 }
