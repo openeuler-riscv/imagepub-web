@@ -49,7 +49,6 @@
 import { useRoute } from 'vue-router';
 import { ref, computed, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
-import HelpDoc from '@/components/helpDoc/helpDoc.vue';
 import BoardDetail from "@/components/board/BoardDetail.vue";
 import { getProductVersion } from '@/api/get-json';
 import './style.scss';
@@ -63,11 +62,9 @@ const tabList = ref({ openEuler: [], others: [] });
 const isDataLoaded = ref(false);
 const route = useRoute();
 const boardDetail = ref({});
-const onlyLatest = ref(true);
 const os = ref('openEuler');
 const version = ref('');
 const boardImageData = ref({});
-const helpDocVisible = ref(false);
 
 const filters = ref({
   kernel: {

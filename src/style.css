@@ -8,10 +8,18 @@ html, body {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     width: 98%;
     min-height: 100vh; /* 关键修复：确保最小高度填满屏幕 */
+}
+
+
+.light{
     background: linear-gradient(
-        to right top,
-        #f4fbff 10%,
-        #eaf7fe 25%,
-        #ffffff 50%
+            to right top,
+            #f4fbff 10%,
+            #eaf7fe 25%,
+            #ffffff 50%
     );
 }
+.dark{
+    background: #000000;
+}
+

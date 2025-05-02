@@ -132,11 +132,6 @@ const fetchProductList = async () => {
   try {
     const response = await getProductList();
     productList.value = response.data;
-    console.log(productList.value);
-    // 检查数据格式
-    productList.value.forEach((product) => {
-      console.log("Product:", product);
-    });
     await nextTick();
   } catch (error) {
     ElMessage.error("获取产品列表失败: " + error.message);

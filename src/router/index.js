@@ -16,6 +16,11 @@ const router = createRouter({
       path: "/board",
       name: "board",
       component: () => import("../pages/board/index.vue")
+    },
+    {
+      path: "/image",
+      name: "image",
+      component: () => import("../pages/image/index.vue")
     }
   ]
 });
