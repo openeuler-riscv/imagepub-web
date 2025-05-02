@@ -9,7 +9,7 @@
     <div class="doc-directory">
       <DocTree :items="tocItems" :onClick="handleDocItemClick" :currentItem="currentDocItem" />
     </div>
-   
+
   </div>
 </template>
 
@@ -43,6 +43,7 @@ const handleDocItemClick = (item) => {
 
       // 滚动到目标元素
       element.scrollIntoView({ behavior: "smooth" });
+      console.log('elemtne' + element);
 
       // 等待滚动完成后再添加监听
       setTimeout(() => {
@@ -116,6 +117,7 @@ const parseTocFromMarkdown = (markdown) => {
     if (headingMatch) {
       const level = headingMatch[1].length;
       const text = headingMatch[2].trim();
+      console.log(headingMatch[1]);
 
       // 为每个级别的标题计数
       titleCounts[level] = (titleCounts[level] || 0) + 1;
@@ -127,7 +129,7 @@ const parseTocFromMarkdown = (markdown) => {
       } else {
         const parentLevel = level - 1;
         const parentCount = titleCounts[parentLevel] || 0;
-        id = `doc-title-${parentCount}-${titleCounts[level]}`;
+        id = `doc-title-${level}-${titleCounts[level]}`;
       }
 
       const item = {
@@ -230,6 +232,8 @@ const setupScrollListener = () => {
 onMounted(() => {
   if (props.markdownContent) {
     tocItems.value = parseTocFromMarkdown(props.markdownContent);
+    console.log('111111111111111111111111111' + tocItems.value);
+
   }
 
   // 等待DOM更新后设置滚动监听
