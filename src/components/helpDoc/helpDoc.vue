@@ -102,6 +102,7 @@ renderer.image = function (href, title, text) {
 const codeProxy = renderer.code;
 renderer.code = function (code) {
   function htmlUnescape(escapedStr) {
+    console.log("htmlUnescap1e", escapedStr);
     const parser = new DOMParser();
     const doc = parser.parseFromString(`${escapedStr}`, "text/html");
     return doc.body.firstChild.textContent;

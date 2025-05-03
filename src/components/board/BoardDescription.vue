@@ -20,33 +20,22 @@
 
 <script setup>
 import { ElTable, ElTableColumn, ElButton } from 'element-plus';
-import {useRouter} from "vue-router";
-const router = useRouter();
-
-const openImage = async (image) => {
-  await router.push({
-    path: "/image",
-    query: {
-      productUri: image.uri,
-    },
-  });
-  window.location.reload();
-};
 const props = defineProps({
   title: String,
   description: String,
   historyVersions: {
     type: Array,
     default: () => []
-  }
+  },
+  openImage: Function,
 });
 
 const handleRowClick =async (row) => {
-  await openImage(row);
+  await props.openImage(row);
 };
 
 const handleActionClick = async (row) => {
-  await openImage(row);
+  await props.openImage(row);
 };
 </script>
 

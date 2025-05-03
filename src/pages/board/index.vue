@@ -25,9 +25,9 @@
                     :title="distro"
                     :description="boardDetail.os.openEuler.find(o => o.name === distro).description"
                     :historyVersions="boardDetail.os.openEuler.find(o => o.name === distro).historyVersions"
+                    :open-image="openImage"
                 >
                 </BoardDescription>
-<!--                <HelpDocButton :getMarkDownInDocs="getMarkDownInDocs" :boardDetail="boardDetail"></HelpDocButton>-->
               </el-tab-pane>
             </el-tabs>
           </el-tab-pane>
@@ -38,9 +38,9 @@
                   isa: { label: 'ISA 基线', options: isaProfiles },
                   userspace: { label: '预装列表', options: userspaces },
                   installer: { label: '引导器', options: installerTypes }
-                }"></BoardFilter>
+                }" :open-image="openImage"
+                ></BoardFilter>
                 <BoardDescription></BoardDescription>
-<!--                <HelpDocButton :getMarkDownInDocs="getMarkDownInDocs" :boardDetail="boardDetail"></HelpDocButton>-->
               </el-tab-pane>
             </el-tabs>
           </el-tab-pane>
@@ -51,8 +51,7 @@
 </template>
 
 <script setup>
-// 脚本部分保持不变
-import { useRoute } from 'vue-router';
+import { useRoute ,useRouter} from 'vue-router';
 import { ref, computed, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import BoardDetail from "@/components/board/BoardDetail.vue";
@@ -62,6 +61,7 @@ import TopBackHome from "@/components/common/TopBackHome.vue";
 import BoardFilter from "@/components/board/BoardFilter.vue";
 import BoardDescription from "@/components/board/BoardDescription.vue";
 import HelpDocButton from "@/components/board/HelpDocButton.vue";
+import {useBoardStore} from "@/store/boardStore.js";
 const releaseTabs = ref('openEuler');
 const subTabs = ref('');
 const tabList = ref({ openEuler: [], others: [] });
@@ -72,6 +72,15 @@ const os = ref('openEuler');
 const version = ref('');
 const boardImageData = ref({});
 
+const router = useRouter();
+const boardStore = useBoardStore();
+
+const openImage = async () => {
+  boardStore.setBoardDetail(boardDetail.value);
+  await router.push({
+    path: "/image",
+  });
+};
 const filters = ref({
   kernel: {
     selected: ref([]),
@@ -100,6 +109,14 @@ const filters = ref({
     isIndeterminate: ref(true)
   }
 });
+
+const getMarkDownInDocs = () => {
+  const docs = boardDetail.value.os?.openEuler?.flatMap(osItem =>
+      osItem.imagesuites.flatMap(suite => suite.docs)
+  );
+
+  return Array.isArray(docs) ? [...new Set(docs)] : [];
+};
 
 const kernelVersions = computed(() =>
   boardImageData.value?.os?.[os.value]?.find(v => v.name === version.value)
@@ -134,27 +151,6 @@ const installerTypes = computed(() =>
 const imageSuites = computed(() =>
   boardImageData.value?.os?.[os.value]?.find(v => v.name === version.value)?.imagesuites || []
 );
-
-const groupedFiles = computed(() => {
-  let filteredSuites = imageSuites.value;
-  filteredSuites = filteredSuites
-    .filter(s => !filters.value.kernels.selected.length || s.kernel?.version === filters.value.kernels.selected[0])
-    .filter(s => !filters.value.isa.selected.length || s.isa?.profile === filters.value.isa.selected[0])
-    .filter(s => !filters.value.userspace.selected.length || s.userspace === filters.value.userspace.selected[0])
-    .filter(s => !filters.value.installer.selected.length || s.type === filters.value.installer.selected[0]);
-
-  return filteredSuites.flatMap(suite =>
-    suite.files.map(file => ({ name: file.group, items: [{ link: file.url, lists: file.lists || [] }] }))
-  );
-});
-
-const getMarkDownInDocs = () => {
-  const docs = boardDetail.value.os?.openEuler?.flatMap(osItem =>
-    osItem.imagesuites.flatMap(suite => suite.docs)
-  );
-
-  return Array.isArray(docs) ? [...new Set(docs)] : [];
-};
 
 const updateCheckState = (key) => {
   const filter = filters.value[key];
@@ -204,34 +200,6 @@ const fetchBoardDetail = async () => {
       return;
     }
     const data = await response.json();
-    // 模拟多个历史版本数据
-    const mockVersions = [
-      {
-        name: 'openEuler 24.03 LTS',
-        description: 'This is the base version',
-        historyVersions: [
-          { version: '24.03 LTS', changelog: 'Initial release', releaseDate: '2024-03-01' },
-          { version: '24.03 LTS Patch 1', changelog: 'Fixed some bugs', releaseDate: '2024-03-15' }
-        ]
-      },
-      {
-        name: 'openEuler 24.03 LTS SP1',
-        description: 'This is the service pack 1',
-        historyVersions: [
-          { version: '24.03 LTS SP1', changelog: 'Added new features', releaseDate: '2024-06-01' },
-          { version: '24.03 LTS SP1 Patch 1', changelog: 'Improved performance', releaseDate: '2024-06-15' }
-        ]
-      },
-      {
-        name: 'openEuler 24.03 LTS SP2',
-        description: 'This is the service pack 2',
-        historyVersions: [
-          { version: '24.03 LTS SP2', changelog: 'Enhanced security', releaseDate: '2024-09-01' },
-          { version: '24.03 LTS SP2 Patch 1', changelog: 'Updated dependencies', releaseDate: '2024-09-15' }
-        ]
-      }
-    ];
-    data.os.openEuler = mockVersions;
     tabList.value.openEuler = data.os.openEuler.map(o => o.name) || [];
     tabList.value.others = data.os.others?.map(o => o.name) || [];
     subTabs.value = tabList.value.openEuler.length? tabList.value.openEuler[0] : '';
