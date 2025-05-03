@@ -45,15 +45,11 @@ const goHome = () => router.push('/home');
   justify-content: center;
 
   .detail-search-container {
-    width: 50vw;
+    flex-grow: 0.95;
     display: flex;
-    justify-content: center;
-
-    .input-container {
-      width: 80%;
-    }
+    align-items: center;
+    position: relative;
   }
-
   .no-border-button {
     border: none !important;
   }
@@ -74,4 +70,15 @@ const goHome = () => router.push('/home');
 .prefix-icon {
   margin-right: 10px;
 }
+
+:deep(.el-input__wrapper) {
+  background-color: #f0f4f8;
+  border-radius: 24px;
+  border: none;
+}
+
+:deep(.el-input__suffix) {
+  margin-right: 4.5vh;
+}
+
 </style>

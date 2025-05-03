@@ -77,7 +77,6 @@ import CustomSearchIcon from "@/components/icon/CustomSearchIcon.vue";
 import { getProductList } from "@/api/get-json";
 import { ElMessage } from "element-plus";
 import CustomDropIcon from "@/components/icon/CustomDropIcon.vue";
-import { ArrowRight } from '@element-plus/icons-vue';
 import { useRouter } from "vue-router";
 import './style.scss'
 const searchCondition = reactive({

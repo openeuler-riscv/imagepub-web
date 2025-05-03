@@ -30,10 +30,12 @@
 .box-card {
   width: 90%;
   margin: 20px auto;
-  padding: 20px;
-  background: #fff;
-  border-radius: 12px;
-
+  background: linear-gradient(
+          to right top,
+          #f4fbff 10%,
+          #eaf7fe 25%,
+          #ffffff 50%
+  );
 }
 
 .board-container{
@@ -67,13 +69,6 @@
   background: rgba(1, 47, 166, 0.1);
   border-radius: 12px;
   transform: translateY(-2px);
-}
-
-.detail-search-container {
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  position: relative;
 }
 
 .input-container {
