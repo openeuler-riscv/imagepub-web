@@ -133,5 +133,119 @@ const handleFilterChange = (key) => {
 </script>
 
 <style scoped>
-/* 可以在这里添加 Filter 组件的样式 */
+
+:deep(.el-checkbox-button__inner) {
+  font-size: 14px;
+  font-weight: 400;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  border-radius: 5px !important;
+  background: #f3f7fd;
+  color: #222;
+  border: clamp(1px, 0.2vw, 2px) solid #e0e6ed;
+  transition: all 0.2s;
+  white-space: nowrap;
+  overflow: visible;
+  padding: 8px 16px;
+  min-width: 80px;
+  height: 36px;
+  line-height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:deep(.el-checkbox-button) {
+  margin-right: 12px;
+  margin-bottom: 10px;
+  display: inline-flex;
+}
+
+:deep(.el-checkbox-group) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+:deep(.el-checkbox-button.is-checked .el-checkbox-button__inner) {
+  background: #fff;
+  color: #1a3fa6;
+  border: clamp(1px, 0.2vw, 2px) solid #012fa6;
+  box-shadow: none;
+  font-weight: 500;
+}
+
+:deep(.el-checkbox-button__inner:hover) {
+  background: #fff;
+  border-color: #012fa6;
+  color: #1a3fa6;
+}
+
+:deep(.el-checkbox-button.is-checked .el-checkbox-button__inner:hover) {
+  background: #fff;
+  border-color: #012fa6;
+  color: #1a3fa6;
+}
+
+@media screen and (max-width: 900px) {
+  .filters {
+    padding: 0 2vw;
+  }
+  .filter-title {
+    font-size: clamp(14px, 2vw, 16px);
+    margin-bottom: 6px;
+  }
+  .filter-row {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: clamp(10px, 2vw, 18px);
+  }
+  .filter-label, .filter-label-center {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    margin-right: 0;
+    text-align: left;
+    min-width: auto;
+  }
+  .filter-label-center {
+    display: block;
+    width: 100%;
+    margin-bottom: 6px;
+    margin-left: 0;
+  }
+  :deep(.el-checkbox-button) {
+    margin: 0 !important;
+    flex: 0 1 auto;
+    min-width: calc(50% - 8px);
+    max-width: none;
+    box-sizing: border-box;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+  :deep(.el-checkbox-button__inner) {
+    font-size: 13px;
+    padding: 6px 12px;
+    width: 100%;
+    min-width: 60px;
+    height: 32px;
+    line-height: 20px;
+    background: #f8fafd;
+    white-space: nowrap;
+    overflow: visible;
+    border-radius: 7px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  :deep(.el-checkbox-button.is-checked .el-checkbox-button__inner) {
+    font-weight: 500;
+  }
+}
+@media (min-width: 769px) {
+  :deep(.el-checkbox-button__inner) {
+    background: #f3f7fd;
+  }
+}
 </style>

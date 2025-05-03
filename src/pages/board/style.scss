@@ -69,6 +69,7 @@
   transform: translateY(-2px);
 }
 
+
 .detail-search-container {
   flex-grow: 1;
   display: flex;
@@ -76,9 +77,11 @@
   position: relative;
 }
 
+
 .input-container {
   width: 100%;
 }
+
 .filter-label {
   min-width: 80px;
   text-align: right;
@@ -121,6 +124,13 @@
   gap: 0.5rem;
 }
 
+.filter-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #222;
+  text-align: left;
+  margin-bottom: 8px;
+}
 
 .file-item {
   display: flex;
@@ -140,3 +150,82 @@
   margin-bottom: 8px;
   width: 100%;
 }
+
+@media screen and (max-width: 768px) {
+  .detail-search-container {
+    width: 100vw;
+    max-width: 100vw;
+    min-width: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;   /* 纵向排列 */
+    align-items: center;
+    justify-content: center;
+    margin: 12px 0 16px 0;
+    padding: 0 2vw;
+  }
+  .input-container {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  :deep(.el-input__wrapper) {
+    width: 100% !important;
+    min-width: 0;
+    flex: 1 1 auto;
+    border-radius: 20px;
+    padding-right: 0;
+  }
+  :deep(.el-input__inner) {
+    width: 100% !important;
+    min-width: 0;
+    font-size: 15px;
+    padding: 0 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  /* 搜索按钮单独一行居中 */
+  .detail-search-container > .custom-search-icon,
+  .detail-search-container > svg {
+    margin-left: 0;
+    margin-top: 10px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+:deep(.el-input__wrapper) {
+  width: 100% !important;
+  min-width: 0;
+  border-radius: 20px;
+  padding-right: 0;
+  height: 40px;
+}
+
+:deep(.el-input__inner) {
+  width: 100% !important;
+  min-width: 0;
+  font-size: 16px;
+  padding: 0 14px;
+  height: 40px;
+  line-height: 40px;
+}
+
+.detail-search-container > .custom-search-icon,
+.detail-search-container > svg {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+

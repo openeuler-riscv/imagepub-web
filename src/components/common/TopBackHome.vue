@@ -2,16 +2,17 @@
   <div class="main-container">
     <div class="top-bar-container">
       <div class="input-wrapper">
-        <CustomLogoIcon class="prefix-icon" />
-        <div>
+        <div class="left-section">
+          <CustomLogoIcon class="prefix-icon" />
           <el-button @click="goHome" :icon="Back" round dark class="no-border-button">
             <span style="font-size: 1.25rem; font-family: PingFang SC-Regular">回首页</span>
           </el-button>
         </div>
-        <div class="spacer"></div>
         <div class="detail-search-container">
-          <el-input class="input-container" placeholder="板卡信息" size="large" />
-          <CustomSearchIcon />
+          <div class="search-box">
+            <el-input class="input-container" placeholder="板卡信息" size="large" />
+            <CustomSearchIcon class="search-icon" />
+          </div>
         </div>
       </div>
     </div>
@@ -29,11 +30,13 @@ const goHome = () => router.push('/home');
 
 </script>
 <style scoped>
+/* 主容器样式 */
 .main-container {
   display: flex;
   justify-content: center;
 }
 
+/* 顶部导航栏容器样式 */
 .top-bar-container {
   width: 90%;
   height: 7vh;
@@ -43,35 +46,140 @@ const goHome = () => router.push('/home');
   background-color: #ffffff;
   display: flex;
   justify-content: center;
-
-  .detail-search-container {
-    width: 50vw;
-    display: flex;
-    justify-content: center;
-
-    .input-container {
-      width: 80%;
-    }
-  }
-
-  .no-border-button {
-    border: none !important;
-  }
-
-  .no-border-button:hover {
-    color: #012fa6 !important;
-  }
 }
 
+/* 左侧区域样式 */
+.left-section {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* 输入区域包装容器样式 */
 .input-wrapper {
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 0 10px;
-  justify-content: space-between;
+  padding: 0 20px;
+  gap: 20px;
 }
 
+/* Logo图标样式 */
 .prefix-icon {
-  margin-right: 10px;
+  margin-right: 0;
+}
+
+/* 搜索区域容器样式 */
+.detail-search-container {
+  width: 50vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-box {
+  width: 80%;
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .input-container {
+    width: 100%;
+    :deep(.el-input__wrapper) {
+      border-radius: 20px;
+      padding-right: 40px;
+      box-shadow: 0 0 0 1px #e4e7ed;
+      
+      &:hover {
+        box-shadow: 0 0 0 1px #a8b4cc;
+      }
+      
+      &.is-focus {
+        box-shadow: 0 0 0 1px #409eff;
+      }
+    }
+  }
+}
+
+.search-icon {
+  position: absolute;
+  right: 12px;
+  top: 30%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: #606266;
+  
+  &:hover {
+    color: #409eff;
+  }
+}
+
+.no-border-button {
+  border: none !important;
+}
+
+.no-border-button:hover {
+  color: #012fa6 !important;
+}
+
+/* 移动端适配样式 */
+@media screen and (max-width: 768px) {
+  .top-bar-container {
+    width: 95%;
+    height: auto;
+    padding: 10px 0;
+    margin-top: 1vh;
+    
+    .detail-search-container {
+      width: 100%;
+      padding: 0 15px;
+      box-sizing: border-box;
+    }
+
+    .search-box {
+      width: 100%;
+      
+      .input-container {
+        :deep(.el-input__wrapper) {
+          padding-right: 35px;
+        }
+      }
+    }
+
+    .search-icon {
+      right: 10px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+  
+  .input-wrapper {
+    flex-direction: column;
+    gap: 12px;
+    padding: 8px;
+  }
+  
+  .left-section {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .spacer {
+    display: none;
+  }
+  
+  :deep(.el-button) {
+    padding: 8px 15px;
+    
+    span {
+      font-size: 1rem !important;
+    }
+  }
 }
 </style>
