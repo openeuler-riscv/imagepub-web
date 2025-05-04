@@ -17,7 +17,7 @@
                 v-model="filters.kernel.selected"
                 @change="handleKernelChange"
             >
-              <el-checkbox-button v-for="item in kernelOptions" :key="item" :label="item">{{ item }}</el-checkbox-button>
+              <el-checkbox-button v-for="item in kernelOptions" :key="item" :value="item">{{ item }}</el-checkbox-button>
             </el-checkbox-group>
           </div>
           <div style="display: flex; align-items: center; flex-wrap: wrap; margin-top: 8px">
@@ -33,7 +33,7 @@
                 v-model="filters.kernels.selected"
                 @change="handleFilterChange('kernels')"
             >
-              <el-checkbox-button v-for="item in kernelVersions" :key="item.version" :label="item.version">{{ item.version }}</el-checkbox-button>
+              <el-checkbox-button v-for="item in kernelVersions" :key="item.version" :value="item.version">{{ item.version }}</el-checkbox-button>
             </el-checkbox-group>
           </div>
         </el-main>
@@ -55,7 +55,7 @@
           <el-checkbox-button
               v-for="item in filter.options"
               :key="item.id || item"
-              :label="item.profile || item.userspace || item"
+              :value="item.profile || item.userspace || item"
           >{{ item.profile || item.userspace || item }}</el-checkbox-button>
         </el-checkbox-group>
       </div>
