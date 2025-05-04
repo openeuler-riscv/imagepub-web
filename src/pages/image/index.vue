@@ -1,7 +1,8 @@
 <template>
-  <div style="width: 100%;height: 100%;">
-    <TopBackHome />
-    <HelpDoc v-if="markdownURL!==''" :markdownURL="markdownURL" :boardDetail="boardDetail" />
+  <div class="image-container">
+      <TopBackHome />
+    <div>镜像下载列表</div>
+      <HelpDoc v-if="markdownURL!==''" :markdownURL="markdownURL" :boardDetail="boardDetail" />
   </div>
 </template>
 

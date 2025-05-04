@@ -63,7 +63,7 @@ const props = defineProps({
 const hoverRowIndex = ref(-1);
 
 const handleRowClick = async (row) => {
-  await props.openImage(row);
+  // await props.openImage(row);
 };
 
 const handleCellMouseEnter = (row, column, cell, event) => {

@@ -10,4 +10,8 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
 
+if (process.env.NODE_ENV !== 'development') {
+    console.log = function() {};
+}
+
 createApp(App).use(router).use(pinia).use(ElementPlus).mount('#app')

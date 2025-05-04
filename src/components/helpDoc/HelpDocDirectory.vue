@@ -1,7 +1,7 @@
 <template>
   <div class="document-list-container">
     <div class="related-list">
-      <DesriName name="相关文档"></DesriName>
+      <BoardInfoTitle name="相关文档"></BoardInfoTitle>
       <div class="related-list-item">文档1</div>
       <div class="related-list-item">文档2</div>
       <div class="related-list-item">文档3</div>
@@ -16,7 +16,7 @@
 <script setup>
 import { ref, computed, onMounted, watch, onUnmounted, nextTick } from "vue";
 import DocTree from "@/components/treeNode/DocTree.vue";
-import DesriName from "@/components/DesriName.vue";
+import BoardInfoTitle from "@/components/board/BoardInfoTitle.vue";
 const props = defineProps({
   markdownContent: {
     type: String,
