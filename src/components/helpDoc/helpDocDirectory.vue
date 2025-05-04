@@ -117,7 +117,6 @@ const parseTocFromMarkdown = (markdown) => {
     if (headingMatch) {
       const level = headingMatch[1].length;
       const text = headingMatch[2].trim();
-      console.log(headingMatch[1]);
 
       // 为每个级别的标题计数
       titleCounts[level] = (titleCounts[level] || 0) + 1;
@@ -232,7 +231,6 @@ const setupScrollListener = () => {
 onMounted(() => {
   if (props.markdownContent) {
     tocItems.value = parseTocFromMarkdown(props.markdownContent);
-    console.log('111111111111111111111111111' + tocItems.value);
 
   }
 
