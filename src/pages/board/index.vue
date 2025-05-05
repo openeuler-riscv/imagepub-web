@@ -72,10 +72,13 @@ const boardImageData = ref({});
 const router = useRouter();
 const boardStore = useBoardStore();
 
-const openImage = async () => {
+const openImage = async (row) => {
   boardStore.setBoardDetail(boardDetail.value);
   await router.push({
     path: "/image",
+    query: {
+      version: row.version,
+    }
   });
 };
 const filters = ref({
