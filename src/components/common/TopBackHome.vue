@@ -5,35 +5,44 @@
         <div class="left-section">
           <CustomLogoIcon class="prefix-icon" />
           <el-button @click="goHome" :icon="Back" round dark class="no-border-button">
-            <span style="font-size: 1.25rem; font-family: PingFang SC-Regular">回首页</span>
+            <span style="font-size: 1.25rem; font-family: PingFang SC-Regular">{{ t('backToHome') }}</span>
           </el-button>
         </div>
         <div class="detail-search-container">
           <div class="search-box">
-            <el-input class="input-container" placeholder="板卡信息" size="large" />
+            <el-input class="input-container" :placeholder="t('searchPlaceholder')" size="large" />
             <CustomSearchIcon class="search-icon" />
           </div>
         </div>
+        <el-button round @click="toggleLanguage">{{ t('toggleLanguage') }}</el-button>
       </div>
     </div>
   </div>
 </template>
-<script setup>
 
-import {Back} from "@element-plus/icons-vue";
+<script setup>
+import { Back } from "@element-plus/icons-vue";
 import CustomLogoIcon from "@/components/icon/CustomLogoIcon.vue";
 import CustomSearchIcon from "@/components/icon/CustomSearchIcon.vue";
-import {useRouter} from "vue-router";
+import { useRouter } from "vue-router";
+import { useI18n } from 'vue-i18n';
 
 const router = useRouter();
+const { t, locale } = useI18n();
+
 const goHome = () => router.push('/home');
 
+const toggleLanguage = () => {
+  locale.value = locale.value === 'zh' ? 'en' : 'zh';
+};
 </script>
+
 <style scoped>
 /* 主容器样式 */
 .main-container {
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .top-bar-container {
@@ -199,5 +208,4 @@ const goHome = () => router.push('/home');
 :deep(.el-input__suffix) {
   margin-right: 4.5vh;
 }
-
 </style>

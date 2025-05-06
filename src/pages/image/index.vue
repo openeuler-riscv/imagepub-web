@@ -14,7 +14,7 @@
           <el-table-column prop="hash.sha256" label="sha256" min-width="150"/>
           <el-table-column label="操作" min-width="50">
             <template #default="scope">
-              <el-button type="primary" @click="downloadFile(scope.row.url)" plain>下载</el-button>
+              <el-button  @click="downloadFile(scope.row.url)" plain>下载</el-button>
             </template>
           </el-table-column>
         </el-table>

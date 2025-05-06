@@ -6,48 +6,49 @@
     <BoardDetail :boardDetail="boardDetail"></BoardDetail>
     <div v-if="isDataLoaded" class="box-card">
       <div style="width: 100%">
-        <div class="filter-title">镜像选择</div>
-          <el-tabs v-model="releaseTabs" class="top-tabs" type="border-card">
-            <el-tab-pane name="openEuler" label="openEuler">
-              <el-tabs v-model="subTabs" class="sub-tabs" >
-                <el-tab-pane v-for="distro in tabList.openEuler" :key="distro" :label="distro" :name="distro">
+        <div class="filter-title">{{ t('imageSelection') }}</div>
+        <el-tabs v-model="releaseTabs" class="top-tabs" type="border-card">
+          <el-tab-pane name="openEuler" label="openEuler">
+            <el-tabs v-model="subTabs" class="sub-tabs" >
+              <el-tab-pane v-for="distro in tabList.openEuler" :key="distro" :label="distro" :name="distro">
 
-                  <BoardFilter :filters="filters" :kernelVersions="kernelVersions" :otherFilters="{
-                    isa: { label: 'ISA 基线', options: isaProfiles },
-                    userspace: { label: '预装列表', options: userspaces },
-                    installer: { label: '引导器', options: installerTypes }
+                <BoardFilter :filters="filters" :kernelVersions="kernelVersions" :otherFilters="{
+                    isa: { label: t('isaBaseline'), options: isaProfiles },
+                    userspace: { label: t('preInstalledList'), options: userspaces },
+                    installer: { label: t('bootLoader'), options: installerTypes }
                   }"></BoardFilter>
-                  <BoardDescription
-                      v-if="boardDetail && boardDetail.os && boardDetail.os.openEuler"
-                      :title="distro"
-                      :description="boardDetail.os.openEuler.find(o => o.name === distro).description"
-                      :historyVersions="boardDetail.os.openEuler.find(o => o.name === distro).historyVersions"
-                      :open-image="openImage"
-                  >
-                  </BoardDescription>
-                </el-tab-pane>
-              </el-tabs>
-            </el-tab-pane>
-            <el-tab-pane name="others" label="others">
-              <el-tabs v-model="subTabs" class="sub-tabs">
-                <el-tab-pane v-for="distro in tabList.others" :key="distro" :label="distro" :name="distro">
-                  <BoardFilter :filters="filters" :kernelVersions="kernelVersions" :otherFilters="{
-                    isa: { label: 'ISA 基线', options: isaProfiles },
-                    userspace: { label: '预装列表', options: userspaces },
-                    installer: { label: '引导器', options: installerTypes }
+                <BoardDescription
+                    v-if="boardDetail && boardDetail.os && boardDetail.os.openEuler"
+                    :title="distro"
+                    :description="boardDetail.os.openEuler.find(o => o.name === distro).description"
+                    :historyVersions="boardDetail.os.openEuler.find(o => o.name === distro).historyVersions"
+                    :open-image="openImage"
+                >
+                </BoardDescription>
+              </el-tab-pane>
+            </el-tabs>
+          </el-tab-pane>
+          <el-tab-pane name="others" label="others">
+            <el-tabs v-model="subTabs" class="sub-tabs">
+              <el-tab-pane v-for="distro in tabList.others" :key="distro" :label="distro" :name="distro">
+                <BoardFilter :filters="filters" :kernelVersions="kernelVersions" :otherFilters="{
+                    isa: { label: t('isaBaseline'), options: isaProfiles },
+                    userspace: { label: t('preInstalledList'), options: userspaces },
+                    installer: { label: t('bootLoader'), options: installerTypes }
                   }" :open-image="openImage"
-                  ></BoardFilter>
-                  <BoardDescription></BoardDescription>
-                </el-tab-pane>
-              </el-tabs>
-            </el-tab-pane>
-          </el-tabs>
-        </div>
+                ></BoardFilter>
+                <BoardDescription></BoardDescription>
+              </el-tab-pane>
+            </el-tabs>
+          </el-tab-pane>
+        </el-tabs>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
+// 这部分代码保持不变
 import { useRoute,useRouter } from 'vue-router';
 import { ref, computed, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
@@ -58,7 +59,9 @@ import TopBackHome from "@/components/common/TopBackHome.vue";
 import BoardFilter from "@/components/board/BoardFilter.vue";
 import BoardDescription from "@/components/board/BoardDescription.vue";
 import {useBoardStore} from "@/store/boardStore.js";
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const releaseTabs = ref('openEuler');
 const subTabs = ref('');
 const tabList = ref({ openEuler: [], others: [] });

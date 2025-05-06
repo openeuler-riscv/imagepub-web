@@ -18,25 +18,25 @@
         </div>
         <div class="info-list">
           <div class="info-item">
-            <BoardInfoTitle title="板卡信息" />
-            <el-row>厂商名称: {{ boardDetail?.vendor?.name }}</el-row>
-            <el-row>Soc型号: {{ boardDetail?.soc?.name }}</el-row>
-            <el-row>板卡类型: {{ boardDetail?.type }}</el-row>
+            <BoardInfoTitle :title="t('boardInfo')" />
+            <el-row>{{ t('vendorName') }}: {{ boardDetail?.vendor?.name }}</el-row>
+            <el-row>{{ t('socModel') }}: {{ boardDetail?.soc?.name }}</el-row>
+            <el-row>{{ t('boardType') }}: {{ boardDetail?.type }}</el-row>
           </div>
           <div class="info-item">
-            <BoardInfoTitle title="RAM配置" />
+            <BoardInfoTitle :title="t('ramConfig')" />
             <el-row>{{ getRamConfig() }}</el-row>
           </div>
           <div class="info-item">
-            <BoardInfoTitle title="存储接口" />
+            <BoardInfoTitle :title="t('storageInterface')" />
             <el-row>
               <el-col v-for="(item, index) in getStorageInterfaces()" :key="index" :span="24">
-                {{ item.type }}, {{ item.capacity || "NC" }}
+                {{ item.type }}, {{ item.capacity || t('notConfigured') }}
               </el-col>
             </el-row>
           </div>
           <div class="info-item">
-            <BoardInfoTitle title="高速接口" />
+            <BoardInfoTitle :title="t('highSpeedInterface')" />
             <el-row>
               <el-col v-for="(item, index) in getHighSpeedInterfaces()" :key="index" :span="24">
                 {{ item.type }} {{ item.nums ? `x${item.nums}` : "" }}
@@ -44,7 +44,7 @@
             </el-row>
           </div>
           <div class="info-item">
-            <BoardInfoTitle title="低速接口" />
+            <BoardInfoTitle :title="t('lowSpeedInterface')" />
             <el-row>
               <el-col v-for="(item, index) in getLowSpeedInterfaces()" :key="index" :span="24">
                 {{ item.type }} {{ item.nums ? `x${item.nums}` : "" }}
@@ -55,7 +55,7 @@
       </div>
     </div>
     <div v-else class="no-data提示">
-      <p>暂无板卡详情信息，请稍后重试。</p>
+      <p>{{ t('noBoardDetailInfo') }}</p>
     </div>
   </div>
 </template>
@@ -63,7 +63,9 @@
 <script setup>
 import BoardInfoTitle from "./BoardInfoTitle.vue";
 import { ref, watch } from "vue";
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const currentImageSrc = ref('');
 const props = defineProps({ boardDetail: {} });
 
@@ -78,7 +80,7 @@ watch(
 const getRamConfig = () =>
     props.boardDetail.hardware?.ram
         ? `${props.boardDetail.hardware.ram.type}, ${props.boardDetail.hardware.ram.capacity.join('/')}`
-        : 'NC';
+        : t('notConfigured');
 
 const getStorageInterfaces = () =>
     props.boardDetail.hardware?.storage || [];
@@ -112,13 +114,13 @@ const changeMainImage = (index) => {
   opacity: 1;
   display: flex;
   flex-wrap: wrap;
-  padding: 20px;
 }
 
 /* 板卡信息主区域，PC端为横向排列 */
 .board-info {
   margin-top: 20px;
   display: flex;
+  padding: 20px;
   width: 100%;
   border-radius: 20px;
   box-shadow: 0 3px 2px #012fa605, 0 7px 5px #012fa608, 0 12px 10px #012fa60a, 0 22px 18px #012fa60a;
