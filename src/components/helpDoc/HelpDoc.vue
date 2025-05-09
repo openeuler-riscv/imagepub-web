@@ -99,15 +99,20 @@ renderer.image = function (href, title, text) {
   return `<img src="${newHref}" alt="${text}" ${title ? `title="${title}"` : ""
     }>`;
 };
-const codeProxy = renderer.code;
 renderer.code = function (code) {
   function htmlUnescape(escapedStr) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(`${escapedStr}`, "text/html");
     return doc.body.firstChild.textContent;
   }
-  code.rwa = htmlUnescape(code.raw).replace("&quot", '"');
-  return codeProxy(code);
+  function trimCodeBlock(codestr) {
+    const startIndex = codestr.indexOf("\n") + 1;
+    const endIndex = codestr.lastIndexOf("\n");
+    return codestr.substring(startIndex, endIndex);
+  }
+  const code2 = htmlUnescape(code.raw).replace("&quot", '"');
+  const trimStr = trimCodeBlock(code2);
+  return `<pre><code class="language-shell">${trimStr}</code></pre>`;
 };
 
 // 设置自定义渲染器
@@ -167,12 +172,38 @@ onMounted(() => {
   overflow: auto;
   padding: 16px;
   max-height: 90vh;
+  margin-top: -30px;
+
+  /* 自定义滚动条样式 - 兼容多种浏览器 */
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+
+    &:hover {
+      background: #e0e0e0;
+    }
+  }
+
+  /* Firefox 支持 */
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 #f1f1f1;
+
+  /* IE/Edge 支持 */
+  -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 
-
-/* 办卡信息 */
+/* 板卡信息 */
 .board-info-2 {
-
   margin-top: 24px;
 
   .info-detail {
