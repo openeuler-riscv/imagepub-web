@@ -9,21 +9,20 @@
           <p class="version-info-item">更新日志: {{ currentVersionInfo.changelog }}</p>
         </div>
         <el-table v-if="mirrorList.length > 0" :data="mirrorList" style="width: 100%">
-          <el-table-column prop="url" label="镜像文件链接" min-width="150"/>
-          <el-table-column prop="tags" label="标签" min-width="60"/>
-          <el-table-column prop="hash.sha256" label="sha256" min-width="150"/>
+          <el-table-column prop="url" label="镜像文件链接" min-width="150" />
+          <el-table-column prop="tags" label="标签" min-width="60" />
+          <el-table-column prop="hash.sha256" label="sha256" min-width="150" />
           <el-table-column label="操作" min-width="50">
             <template #default="scope">
-              <el-button  @click="downloadFile(scope.row.url)" plain>下载</el-button>
+              <el-button @click="downloadFile(scope.row.url)" plain>下载</el-button>
             </template>
           </el-table-column>
         </el-table>
       </div>
     </div>
     <div class="bottom-container">
-      帮助文档
       <div class="help-container">
-        <HelpDoc v-if="markdownURL!== ''" :markdownURL="markdownURL" :boardDetail="boardDetail" />
+        <HelpDoc v-if="markdownURL !== ''" :markdownURL="markdownURL" :boardDetail="boardDetail" />
       </div>
     </div>
   </div>
@@ -48,18 +47,18 @@ const currentVersionInfo = ref(null);
 
 const extractDocs = (boardDetailData) => {
   return boardDetailData.value.os?.openEuler?.flatMap(osItem =>
-      osItem.imagesuites.flatMap(suite => suite.docs)
+    osItem.imagesuites.flatMap(suite => suite.docs)
   );
 };
 
 const processDocs = (docs) => {
-  return Array.isArray(docs)? [...new Set(docs)] : [];
+  return Array.isArray(docs) ? [...new Set(docs)] : [];
 };
 
 const updateMarkdownURL = () => {
   const docs = extractDocs(boardDetail);
   const processedDocs = processDocs(docs);
-  markdownURL.value = processedDocs.length > 0? processedDocs[0] : ''; // 增加默认值处理
+  markdownURL.value = processedDocs.length > 0 ? processedDocs[0] : ''; // 增加默认值处理
 };
 
 const extractMirrorFiles = () => {
@@ -116,7 +115,8 @@ const downloadFile = (url) => {
   width: 100%;
   display: flex;
   justify-content: center;
-  .version-and-mirror-list-container{
+
+  .version-and-mirror-list-container {
     width: 90%;
     background-color: #f9f9f9;
     border-radius: 10px;
@@ -134,14 +134,15 @@ const downloadFile = (url) => {
   margin-bottom: 5px;
 }
 
-.bottom-container{
+.bottom-container {
   width: 100%;
   padding: 20px;
   display: flex;
   justify-content: center;
-  .help-container{
-    width: 90%;
 
+  .help-container {
+    width: 100%;
+    margin: 40px 100px 0px 440px;
   }
 }
 </style>
