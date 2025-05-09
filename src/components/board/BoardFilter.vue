@@ -139,7 +139,7 @@ const handleFilterChange = (key) => {
   font-weight: 400;
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
   border-radius: 5px !important;
-  background: #f3f7fd;
+  background: #fff;
   color: #222;
   border: clamp(1px, 0.2vw, 2px) solid #e0e6ed;
   transition: all 0.2s;
@@ -168,7 +168,7 @@ const handleFilterChange = (key) => {
 }
 
 :deep(.el-checkbox-button.is-checked .el-checkbox-button__inner) {
-  background: #fff;
+  background: #cedbf5;
   color: #1a3fa6;
   border: clamp(1px, 0.2vw, 2px) solid #012fa6;
   box-shadow: none;
@@ -231,7 +231,7 @@ const handleFilterChange = (key) => {
     min-width: 60px;
     height: 32px;
     line-height: 20px;
-    background: #f8fafd;
+    background: #fff;
     white-space: nowrap;
     overflow: visible;
     border-radius: 7px !important;
@@ -245,7 +245,7 @@ const handleFilterChange = (key) => {
 }
 @media (min-width: 769px) {
   :deep(.el-checkbox-button__inner) {
-    background: #f3f7fd;
+    background: #fff;
   }
 }
 </style>

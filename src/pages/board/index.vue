@@ -363,4 +363,17 @@ onMounted(async () => {
   font-family: PingFang SC-Regular;
   color: inherit;
 }
+
+.filter-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #1a3fa6;
+  margin-bottom: 16px;
+  margin-top: 8px;
+  letter-spacing: 1px;
+  position: relative;
+  display: inline-block;
+  padding-left: 8px;
+  padding-bottom: 6px;
+}
 </style>
