@@ -332,6 +332,10 @@ onMounted(async () => {
   border-top: 1px solid #ebedf0;
 }
 
+:deep(.sub-tabs .el-tabs__nav-wrap::after) {
+  display: none !important;
+}
+
 :deep(.top-tabs + .sub-tabs-container) {
   margin-top: 0;
   border-top: none !important;
@@ -346,21 +350,26 @@ onMounted(async () => {
   border-bottom: none !important;
 }
 
-:deep(.el-tabs__item.is-active),
+:deep(.sub-tabs .el-tabs__active-bar) {
+  background-color: #e9ae43;
+}
+
 :deep(.el-tabs__item:hover) {
-  font-family: PingFang SC-Regular;
-  color: inherit;
+  color: #102e9f;
+}
+
+:deep(.el-tabs__item.is-active){
+  color: #102e9f;
 }
 
 :deep(.el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active),
 :deep(.el-tabs--border-card>.el-tabs__header .el-tabs__item:hover) {
-  color: #333;
-  background-color: #cddff3;
+  color: #102e9f;
 }
 
-:deep(.el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active),
-:deep(.el-tabs--border-card>.el-tabs__header .el-tabs__item:hover) {
-  font-family: PingFang SC-Regular;
-  color: inherit;
+:deep(.top-tabs.el-tabs--border-card) {
+  border-radius: 8px !important; 
+  overflow: hidden;
 }
+
 </style>
