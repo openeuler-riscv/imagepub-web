@@ -7,6 +7,7 @@ import './style.css'
 import { createPinia } from 'pinia';
 import { createI18n } from 'vue-i18n';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import messages from './i18n/locales'
 

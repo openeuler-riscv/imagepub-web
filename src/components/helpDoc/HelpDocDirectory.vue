@@ -257,10 +257,6 @@ onUnmounted(() => {
 }
 
 .document-list-container {
-  position: absolute;
-  left: -340px;
-  width: 290px;
-  top: 0px;
   background-color: #FFFFFF;
   border-radius: 10px;
   padding: 10px;

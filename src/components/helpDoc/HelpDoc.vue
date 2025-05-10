@@ -1,7 +1,9 @@
 <template>
   <div class="help-doc">
+    <div class="sidebar">
+      <helpDocDirectory :markdownContent="markdownContent" />
+    </div>
     <div class="markdown-body">
-      <!-- 板卡信息 -->
       <div class="board-info-2">
         <BoardInfoTitle name="板卡信息"></BoardInfoTitle>
         <div class="info-detail">
@@ -22,10 +24,6 @@
       <div v-html="parsedMarkdown"></div>
       源文件：{{ markdownURL }}
     </div>
-
-    <!-- 这里复用一下我在其他地方的组件 -->
-    <!-- 让我封装进去使用 -->
-    <helpDocDirectory :markdownContent="markdownContent" />
   </div>
 </template>
 
@@ -41,23 +39,23 @@ import "highlight.js/styles/github.css";
 import path from "path-browserify";
 import helpDocDirectory from "@/components/helpDoc/helpDocDirectory.vue";
 import BoardInfoTitle from "@/components/board/BoardInfoTitle.vue";
+
 const baseUrl = ref("");
 // 配置marked插件
 marked.use(
-  markedHighlight({
-    langPrefix: "hljs language-",
-    highlight(code, lang) {
-      const language = hljs.getLanguage(lang) ? lang : "plaintext";
-      return hljs.highlight(code, { language }).value;
-    },
-  })
+    markedHighlight({
+      langPrefix: "hljs language-",
+      highlight(code, lang) {
+        const language = hljs.getLanguage(lang) ? lang : "plaintext";
+        return hljs.highlight(code, { language }).value;
+      },
+    })
 );
 marked.setOptions({
   sanitize: true,
   breaks: true,
 });
 
-// 创建一个新的渲染器，继承默认渲染器的所有方法
 const renderer = new marked.Renderer({
   text(text) {
     console.log(text, "text");
@@ -65,11 +63,9 @@ const renderer = new marked.Renderer({
   },
 });
 
-// 标题计数器，用于生成唯一ID
 const titleCounts = {};
 
 renderer.heading = function ({ text, depth }) {
-  // 为每个级别的标题计数
   titleCounts[depth] = (titleCounts[depth] || 0) + 1;
   // 生成唯一ID
   let id;
@@ -96,9 +92,9 @@ renderer.image = function (href, title, text) {
   }
 
   const newHref = path.join(baseUrl.value, imageHref);
-  return `<img src="${newHref}" alt="${text}" ${title ? `title="${title}"` : ""
-    }>`;
+  return `<img src="${newHref}" alt="${text}" ${title ? `title="${title}"` : ""}>`;
 };
+
 renderer.code = function (code) {
   function htmlUnescape(escapedStr) {
     const parser = new DOMParser();
@@ -151,7 +147,7 @@ const fetchData = async () => {
     markdownContent.value = markdown.data;
     parseMarkdown();
   } catch (error) {
-    console.error("获取Markdown文件失败:", error);
+    console.error("获取Markdown文件", error);
     markdownContent.value = "无法加载Markdown内容";
     parsedMarkdown.value = "无法加载Markdown内容";
   }
@@ -165,51 +161,32 @@ onMounted(() => {
 
 <style scoped>
 .help-doc {
+  display: flex;
   position: relative;
 }
 
+.sidebar {
+  width: 15%;
+  min-width: 200px;
+  background-color: #f5f7fa;
+  padding: 16px;
+  border-right: 1px solid #e6e9ed;
+}
+
 .markdown-body {
+  flex: 1;
   overflow: auto;
   padding: 16px;
   max-height: 90vh;
-  margin-top: -30px;
-
-  /* 自定义滚动条样式 - 兼容多种浏览器 */
-  &::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 3px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 3px;
-
-    &:hover {
-      background: #e0e0e0;
-    }
-  }
-
-  /* Firefox 支持 */
-  scrollbar-width: thin;
-  scrollbar-color: #c1c1c1 #f1f1f1;
-
-  /* IE/Edge 支持 */
-  -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 
-/* 板卡信息 */
 .board-info-2 {
   margin-top: 24px;
+}
 
-  .info-detail {
-    display: flex;
-    margin-top: 16px;
-  }
+.info-detail {
+  display: flex;
+  margin-top: 16px;
 }
 
 #title {
@@ -221,13 +198,40 @@ onMounted(() => {
   font-size: 15px;
   margin-top: 4px;
   color: #333;
-
-  li {
-    margin-top: 10px;
-  }
 }
 
 #board-block {
   width: 33%;
+}
+
+/* 自定义滚动条样式 - 兼容多种浏览器 */
+.markdown-body::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.markdown-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.markdown-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.markdown-body::-webkit-scrollbar-thumb:hover {
+  background: #e0e0e0;
+}
+
+/* Firefox 支持 */
+.markdown-body {
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+/* IE/Edge 支持 */
+.markdown-body {
+  -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 </style>

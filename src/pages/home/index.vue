@@ -79,6 +79,7 @@ import { ElMessage } from "element-plus";
 import CustomDropIcon from "@/components/icon/CustomDropIcon.vue";
 import { useRouter } from "vue-router";
 import './style.scss'
+import TopBackHome from "@/components/common/TopBackHome.vue";
 const searchCondition = reactive({
   searchValue: "",
   socSearch: "",

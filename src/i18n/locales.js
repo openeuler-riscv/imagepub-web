@@ -2,7 +2,7 @@ const messages = {
     zh: {
         backToHome: '回首页',
         searchPlaceholder: '板卡信息',
-        toggleLanguage: '中英',
+        toggleLanguage: '中/英',
         boardInfo: '板卡信息',
         ramConfig: 'RAM配置',
         storageInterface: '存储接口',

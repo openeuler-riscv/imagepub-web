@@ -1,28 +1,83 @@
 <template>
   <div class="image-container">
     <TopBackHome />
-    <div class="top-container">
-      <div class="version-and-mirror-list-container">
-        <div v-if="currentVersionInfo">
-          <h2 class="version-info-title">版本信息</h2>
-          <p class="version-info-item">版本: {{ currentVersionInfo.version }}</p>
-          <p class="version-info-item">更新日志: {{ currentVersionInfo.changelog }}</p>
+    <div class="content-wrapper">
+      <div class="version-info-card">
+        <h2 class="version-info-title">版本信息</h2>
+        <div class="version-details">
+          <BoardInfoTitle title="版本"></BoardInfoTitle>
+          <div class="version-text">
+            {{ currentVersionInfo?.version }}
+            <el-button
+                @click="toggleContent"
+                class="help-toggle-btn"
+                :class="{ 'active': !helpVisible }"
+            >
+              {{ helpVisible ? '查看镜像列表' : '查看帮助文档' }}
+            </el-button>
+          </div>
         </div>
-        <el-table v-if="mirrorList.length > 0" :data="mirrorList" style="width: 100%">
-          <el-table-column prop="url" label="镜像文件地址" min-width="150" />
-          <el-table-column prop="tags" label="标签" min-width="60" />
-          <el-table-column prop="hash.sha256" label="sha256" min-width="150" />
-          <el-table-column label="操作" min-width="50">
-            <template #default="scope">
-              <el-button @click="downloadFile(scope.row.url)" plain>下载</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+        <div class="changelog">
+          <BoardInfoTitle title="更新日志"></BoardInfoTitle>
+          <div>{{ currentVersionInfo?.changelog }}</div>
+        </div>
       </div>
-    </div>
-    <div class="bottom-container">
-      <div class="help-container">
-        <HelpDoc v-if="markdownURL !== ''" :markdownURL="markdownURL" :boardDetail="boardDetail" />
+
+      <!-- 镜像列表和帮助文档区域 -->
+      <div class="content-toggle-area">
+        <div v-if="!helpVisible && mirrorList.length > 0" class="mirror-list-card">
+          <el-table
+              :data="mirrorList"
+              style="width: 100%"
+              class="mirror-table"
+          >
+            <el-table-column
+                prop="url"
+                label="镜像文件地址"
+                min-width="150"
+                label-class-name="el-table-custom-label"
+            />
+            <el-table-column
+                prop="tags"
+                label="标签"
+                min-width="60"
+                label-class-name="el-table-custom-label"
+            />
+            <el-table-column
+                prop="hash.sha256"
+                label="sha256"
+                min-width="150"
+                label-class-name="el-table-custom-label"
+            />
+            <el-table-column
+                label="操作"
+                min-width="50"
+                label-class-name="el-table-custom-label"
+            >
+              <template #default="scope">
+                <el-button
+                    @click="downloadFile(scope.row.url)"
+                    size="small"
+                    class="download-btn"
+                >
+                  <i class="fa fa-download mr-1"></i>下载
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+
+        <!-- 帮助文档 -->
+        <div class="bottom-container">
+          <div v-if="helpVisible" class="help-doc-card">
+            <h2 class="version-info-title">帮助文档</h2>
+            <HelpDoc
+                v-if="markdownURL !== ''"
+                :markdownURL="markdownURL"
+                :boardDetail="boardDetail"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -36,6 +91,7 @@ import { useBoardStore } from "@/store/boardStore.js";
 import { ref, watch, onMounted } from "vue";
 import { ElButton, ElTable, ElTableColumn } from 'element-plus';
 import { useRoute } from 'vue-router';
+import BoardInfoTitle from "@/components/board/BoardInfoTitle.vue";
 
 const boardStore = useBoardStore();
 const boardDetail = ref(boardStore.boardDetail);
@@ -44,10 +100,15 @@ const mirrorList = ref([]);
 const route = useRoute();
 const currentVersion = route.query.version;
 const currentVersionInfo = ref(null);
+const helpVisible = ref(false); // 默认不显示帮助文档
+
+const toggleContent = () => {
+  helpVisible.value = !helpVisible.value;
+}
 
 const extractDocs = (boardDetailData) => {
   return boardDetailData.value.os?.openEuler?.flatMap(osItem =>
-    osItem.imagesuites.flatMap(suite => suite.docs)
+      osItem.imagesuites.flatMap(suite => suite.docs)
   );
 };
 
@@ -58,7 +119,7 @@ const processDocs = (docs) => {
 const updateMarkdownURL = () => {
   const docs = extractDocs(boardDetail);
   const processedDocs = processDocs(docs);
-  markdownURL.value = processedDocs.length > 0 ? processedDocs[0] : ''; // 增加默认值处理
+  markdownURL.value = processedDocs.length > 0 ? processedDocs[0] : '';
 };
 
 const extractMirrorFiles = () => {
@@ -107,42 +168,3 @@ const downloadFile = (url) => {
   a.click();
 };
 </script>
-
-<style scoped>
-.top-container {
-  padding: 20px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-
-  .version-and-mirror-list-container {
-    width: 90%;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    padding: 10px;
-  }
-}
-
-.version-info-title {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-}
-
-.version-info-item {
-  font-size: 1rem;
-  margin-bottom: 5px;
-}
-
-.bottom-container {
-  width: 100%;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
-
-  .help-container {
-    width: 100%;
-    margin: 40px 100px 0px 440px;
-  }
-}
-</style>
