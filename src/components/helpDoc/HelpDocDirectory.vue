@@ -1,7 +1,7 @@
 <template>
   <div class="document-list-container">
     <div class="related-list">
-      <BoardInfoTitle name="相关文档"></BoardInfoTitle>
+      <BoardInfoTitle title="相关文档"></BoardInfoTitle>
       <div class="related-list-item">文档1</div>
       <div class="related-list-item">文档2</div>
       <div class="related-list-item">文档3</div>

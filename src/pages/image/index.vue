@@ -9,7 +9,7 @@
           <p class="version-info-item">更新日志: {{ currentVersionInfo.changelog }}</p>
         </div>
         <el-table v-if="mirrorList.length > 0" :data="mirrorList" style="width: 100%">
-          <el-table-column prop="url" label="镜像文件链接" min-width="150" />
+          <el-table-column prop="url" label="镜像文件地址" min-width="150" />
           <el-table-column prop="tags" label="标签" min-width="60" />
           <el-table-column prop="hash.sha256" label="sha256" min-width="150" />
           <el-table-column label="操作" min-width="50">
@@ -111,7 +111,6 @@ const downloadFile = (url) => {
 <style scoped>
 .top-container {
   padding: 20px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   width: 100%;
   display: flex;
   justify-content: center;
@@ -139,6 +138,7 @@ const downloadFile = (url) => {
   padding: 20px;
   display: flex;
   justify-content: center;
+  margin-top: 10px;
 
   .help-container {
     width: 100%;

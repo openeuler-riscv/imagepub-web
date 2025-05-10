@@ -3,37 +3,36 @@
     <h2 class="title">{{ props.title }}</h2>
     <p class="description">{{ props.description }}</p>
     <div v-if="props.historyVersions && props.historyVersions.length > 0">
-      <h4>历史版本</h4>
+      <h5>版本列表</h5>
       <el-table
           :data="props.historyVersions"
           border
           style="width: 100%;"
-          @row-click="handleRowClick"
       >
         <el-table-column
             prop="version"
             label="版本号"
-            min-width="200"
+            min-width="20"
             @cell-mouse-enter="handleCellMouseEnter"
             @cell-mouse-leave="handleCellMouseLeave"
         ></el-table-column>
         <el-table-column
             prop="changelog"
             label="变更日志"
-            min-width="600"
+            min-width="60"
             @cell-mouse-enter="handleCellMouseEnter"
             @cell-mouse-leave="handleCellMouseLeave"
         ></el-table-column>
         <el-table-column
             prop="releaseDate"
             label="发布时间"
-            min-width="200"
+            min-width="20"
             @cell-mouse-enter="handleCellMouseEnter"
             @cell-mouse-leave="handleCellMouseLeave"
         ></el-table-column>
         <el-table-column
             label="操作"
-            min-width="200"
+            min-width="20"
             @cell-mouse-enter="handleCellMouseEnter"
             @cell-mouse-leave="handleCellMouseLeave"
         >
@@ -48,7 +47,6 @@
 
 <script setup>
 import { ElTable, ElTableColumn, ElButton } from 'element-plus';
-import { ref } from 'vue';
 
 const props = defineProps({
   title: String,
@@ -60,14 +58,8 @@ const props = defineProps({
   openImage: Function,
 });
 
-const hoverRowIndex = ref(-1);
-
-const handleRowClick = async (row) => {
-  // await props.openImage(row);
-};
 
 const handleCellMouseEnter = (row, column, cell, event) => {
-  console.log("handleCellMouseEnter", 1);
   hoverRowIndex.value = rowIndex;
 };
 
