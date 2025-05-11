@@ -1,8 +1,20 @@
 <template>
   <div class="help-doc">
-    <div class="sidebar">
+    <div class="sidebar" :class="{ 'hidden': isMobile }">
       <helpDocDirectory :markdownContent="markdownContent" />
     </div>
+
+    <!-- 移动端目录按钮 -->
+    <button class="sidebar-toggle" v-show="isMobile" @click="toggleMobileSidebar">
+      <i class="fa fa-bars"></i>
+    </button>
+
+    <!-- 移动端侧边栏 -->
+    <div class="sidebar-mobile sidebar-overlay" v-show="isMobile && showMobileSidebar"
+      @click="showMobileSidebar = false">
+      <helpDocDirectory :markdownContent="markdownContent" />
+    </div>
+
     <div class="markdown-body">
       <div class="board-info-2">
         <BoardInfoTitle name="板卡信息"></BoardInfoTitle>
@@ -43,13 +55,13 @@ import BoardInfoTitle from "@/components/board/BoardInfoTitle.vue";
 const baseUrl = ref("");
 // 配置marked插件
 marked.use(
-    markedHighlight({
-      langPrefix: "hljs language-",
-      highlight(code, lang) {
-        const language = hljs.getLanguage(lang) ? lang : "plaintext";
-        return hljs.highlight(code, { language }).value;
-      },
-    })
+  markedHighlight({
+    langPrefix: "hljs language-",
+    highlight(code, lang) {
+      const language = hljs.getLanguage(lang) ? lang : "plaintext";
+      return hljs.highlight(code, { language }).value;
+    },
+  })
 );
 marked.setOptions({
   sanitize: true,
@@ -157,6 +169,30 @@ onMounted(() => {
   baseUrl.value = path.dirname(`/public/${props.markdownURL}`);
   fetchData();
 });
+
+// 响应式状态
+const showMobileSidebar = ref(false);
+const isMobile = ref(false);
+
+// 检测屏幕尺寸
+const checkScreenSize = () => {
+  isMobile.value = window.innerWidth < 768;
+  if (!isMobile.value) {
+    showMobileSidebar.value = false;
+  }
+};
+
+// 切换移动端侧边栏显示状态
+const toggleMobileSidebar = () => {
+  showMobileSidebar.value = !showMobileSidebar.value;
+};
+
+// 初始化和监听窗口大小变化
+onMounted(() => {
+  checkScreenSize();
+  window.addEventListener('resize', checkScreenSize);
+});
+
 </script>
 
 <style scoped>
@@ -211,27 +247,94 @@ onMounted(() => {
 }
 
 .markdown-body::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: transparent;
   border-radius: 3px;
 }
 
 .markdown-body::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
+  background: #e1e1e1;
   border-radius: 3px;
 }
 
 .markdown-body::-webkit-scrollbar-thumb:hover {
-  background: #e0e0e0;
+  background: #dddddd;
 }
 
 /* Firefox 支持 */
 .markdown-body {
   scrollbar-width: thin;
-  scrollbar-color: #c1c1c1 #f1f1f1;
+  scrollbar-color: #e1e1e1 transparent;
 }
 
 /* IE/Edge 支持 */
 .markdown-body {
   -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+.sidebar-mobile {
+  position: absolute;
+  right: 0px;
+  border-left: 1px solid #e5e7eb;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  width: 250px;
+  z-index: 20;
+  transform: translateX(100%);
+  animation: slideIn 0.3s forwards;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+.sidebar-toggle {
+  position: absolute;
+  top: -45px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background-color: #165DFF;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s;
+}
+
+.sidebar-toggle:active {
+  background-color: #0E42D2;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .sidebar-desktop {
+    display: none;
+  }
+
+  .content-area {
+    padding: 24px;
+    padding-top: 80px;
+  }
+
+  .markdown-body {
+    width: 90vw;
+  }
+
+  .help-document {
+    flex-direction: column;
+  }
 }
 </style>
