@@ -1,0 +1,455 @@
+[
+  {
+    "name": "F3",
+    "vendor": "Banana Pi",
+    "thumbnail": "resources/bananapi/f3/f3-official.jpg",
+    "soc": {
+      "name": "K1/M1",
+      "vendor": "SpacemiT"
+    },
+    "isa": [
+      "RVA20"
+    ],
+    "kernel": [
+      "VENDOR-6.6"
+    ],
+    "userspace": [
+      "Headless"
+    ],
+    "features": [
+      "UBOOT",
+      "BOOTSTD",
+      "FDT"
+    ],
+    "uri": "products/bananapi/f3.json",
+    "status": "SUPPORTED"
+  },
+  {
+    "name": "Pioneer",
+    "vendor": "Milk-V",
+    "thumbnail": "resources/milkv/pioneer/milk-v-pioneer-board_png_gallery-lg.jpg",
+    "soc": {
+      "name": "SG2042",
+      "vendor": "SOPHGO"
+    },
+    "isa": [
+      "RVA20"
+    ],
+    "kernel": [
+      "RVCK-6.6"
+    ],
+    "userspace": [
+      "Headless"
+    ],
+    "features": [
+      "LINUXBOOT",
+      "FDT",
+      "EFI"
+    ],
+    "uri": "products/milkv/pioneer.json",
+    "status": "SUPPORTED"
+  },
+  {
+    "name": "Megrez",
+    "vendor": "Milk-V",
+    "thumbnail": "resources/milkv/megrez/megrez-view.webp",
+    "soc": {
+      "name": "EIC7700X",
+      "vendor": "ESWin"
+    },
+    "isa": [],
+    "kernel": [],
+    "userspace": [],
+    "features": [],
+    "uri": "products/milkv/megrez.json",
+    "status": "WIP"
+  },
+  {
+    "name": "qemu-system",
+    "vendor": "Qemu",
+    "thumbnail": "resources/qemu/Qemu_logo.svg",
+    "soc": {
+      "name": "virt",
+      "vendor": "Qemu"
+    },
+    "isa": [
+      "RVA20"
+    ],
+    "kernel": [
+      "RVCK-6.6"
+    ],
+    "userspace": [
+      "Headless"
+    ],
+    "features": [
+      "EFI",
+      "FDT"
+    ],
+    "uri": "products/qemu/system.json",
+    "status": "SUPPORTED"
+  },
+  {
+    "name": "LicheePi 4A",
+    "vendor": "Sipeed",
+    "thumbnail": "resources/sipeed/lpi4a/lpi4a.png",
+    "soc": {
+      "name": "TH1520",
+      "vendor": "T-HEAD"
+    },
+    "isa": [
+      "RVA20"
+    ],
+    "kernel": [
+      "RVCK-6.6"
+    ],
+    "userspace": [
+      "Headless"
+    ],
+    "features": [
+      "UBOOT",
+      "FDT"
+    ],
+    "uri": "products/sipeed/licheepi_4a.json",
+    "status": "SUPPORTED"
+  },
+  {
+    "name": "MUSE Pi",
+    "vendor": "SpacemiT",
+    "thumbnail": "resources/spacemit/muse-pi/musepi_front.webp",
+    "soc": {
+      "name": "K1/M1",
+      "vendor": "SpacemiT"
+    },
+    "isa": [
+      "RVA20"
+    ],
+    "kernel": [
+      "VENDOR-6.6"
+    ],
+    "userspace": [
+      "Headless"
+    ],
+    "features": [
+      "UBOOT",
+      "BOOTSTD",
+      "FDT"
+    ],
+    "uri": "products/spacemit/muse_pi.json",
+    "status": "SUPPORTED"
+  },
+  {
+    "name": "MUSE Card",
+    "vendor": "SpacemiT",
+    "thumbnail": "resources/spacemit/muse-card/muse_card_official.webp",
+    "soc": {
+      "name": "K1/M1",
+      "vendor": "SpacemiT"
+    },
+    "isa": [
+      "RVA20"
+    ],
+    "kernel": [
+      "VENDOR-6.6"
+    ],
+    "userspace": [
+      "Headless"
+    ],
+    "features": [
+      "UBOOT",
+      "BOOTSTD",
+      "FDT"
+    ],
+    "uri": "products/spacemit/muse_card.json",
+    "status": "SUPPORTED"
+  },
+  {
+    "name": "VisionFive 2",
+    "vendor": "StarFive",
+    "thumbnail": "resources/starfive/vf2/vf2.jpg",
+    "soc": {
+      "name": "JH7110",
+      "vendor": "StarFive"
+    },
+    "isa": [],
+    "kernel": [],
+    "userspace": [],
+    "features": [],
+    "uri": "products/starfive/visionfive2.json",
+    "status": "WIP"
+  },
+  {
+    "name": "MUSE Card",
+    "vendor": "SpacemiT",
+    "thumbnail": "resources/spacemit/muse-card/muse_card_official.webp",
+    "soc": {
+      "name": "K1/M1",
+      "vendor": "SpacemiT"
+    },
+    "isa": [
+      "RVA20"
+    ],
+    "kernel": [
+      "VENDOR-6.6"
+    ],
+    "userspace": [
+      "Headless"
+    ],
+    "features": [
+      "UBOOT",
+      "BOOTSTD",
+      "FDT"
+    ],
+    "uri": "products/spacemit/muse_card.json",
+    "status": "SUPPORTED"
+  },
+  {
+    "name": "MUSE Card",
+    "vendor": "SpacemiT",
+    "thumbnail": "resources/spacemit/muse-card/muse_card_official.webp",
+    "soc": {
+      "name": "K1/M1",
+      "vendor": "SpacemiT"
+    },
+    "isa": [
+      "RVA20"
+    ],
+    "kernel": [
+      "VENDOR-6.6"
+    ],
+    "userspace": [
+      "Headless"
+    ],
+    "features": [
+      "UBOOT",
+      "BOOTSTD",
+      "FDT"
+    ],
+    "uri": "products/spacemit/muse_card.json",
+    "status": "SUPPORTED"
+  },
+  {
+    "name": "MUSE Card",
+    "vendor": "SpacemiT",
+    "thumbnail": "resources/spacemit/muse-card/muse_card_official.webp",
+    "soc": {
+      "name": "K1/M1",
+      "vendor": "SpacemiT"
+    },
+    "isa": [
+      "RVA20"
+    ],
+    "kernel": [
+      "VENDOR-6.6"
+    ],
+    "userspace": [
+      "Headless"
+    ],
+    "features": [
+      "UBOOT",
+      "BOOTSTD",
+      "FDT"
+    ],
+    "uri": "products/spacemit/muse_card.json",
+    "status": "SUPPORTED"
+  },
+  {
+    "name": "MUSE Card",
+    "vendor": "SpacemiT",
+    "thumbnail": "resources/spacemit/muse-card/muse_card_official.webp",
+    "soc": {
+      "name": "K1/M1",
+      "vendor": "SpacemiT"
+    },
+    "isa": [
+      "RVA20"
+    ],
+    "kernel": [
+      "VENDOR-6.6"
+    ],
+    "userspace": [
+      "Headless"
+    ],
+    "features": [
+      "UBOOT",
+      "BOOTSTD",
+      "FDT"
+    ],
+    "uri": "products/spacemit/muse_card.json",
+    "status": "SUPPORTED"
+  },
+  {
+    "name": "MUSE Card",
+    "vendor": "SpacemiT",
+    "thumbnail": "resources/spacemit/muse-card/muse_card_official.webp",
+    "soc": {
+      "name": "K1/M1",
+      "vendor": "SpacemiT"
+    },
+    "isa": [
+      "RVA20"
+    ],
+    "kernel": [
+      "VENDOR-6.6"
+    ],
+    "userspace": [
+      "Headless"
+    ],
+    "features": [
+      "UBOOT",
+      "BOOTSTD",
+      "FDT"
+    ],
+    "uri": "products/spacemit/muse_card.json",
+    "status": "SUPPORTED"
+  },
+  {
+    "name": "MUSE Card",
+    "vendor": "SpacemiT",
+    "thumbnail": "resources/spacemit/muse-card/muse_card_official.webp",
+    "soc": {
+      "name": "K1/M1",
+      "vendor": "SpacemiT"
+    },
+    "isa": [
+      "RVA20"
+    ],
+    "kernel": [
+      "VENDOR-6.6"
+    ],
+    "userspace": [
+      "Headless"
+    ],
+    "features": [
+      "UBOOT",
+      "BOOTSTD",
+      "FDT"
+    ],
+    "uri": "products/spacemit/muse_card.json",
+    "status": "SUPPORTED"
+  },
+  {
+    "name": "MUSE Card",
+    "vendor": "SpacemiT",
+    "thumbnail": "resources/spacemit/muse-card/muse_card_official.webp",
+    "soc": {
+      "name": "K1/M1",
+      "vendor": "SpacemiT"
+    },
+    "isa": [
+      "RVA20"
+    ],
+    "kernel": [
+      "VENDOR-6.6"
+    ],
+    "userspace": [
+      "Headless"
+    ],
+    "features": [
+      "UBOOT",
+      "BOOTSTD",
+      "FDT"
+    ],
+    "uri": "products/spacemit/muse_card.json",
+    "status": "SUPPORTED"
+  },
+  {
+    "name": "MUSE Card",
+    "vendor": "SpacemiT",
+    "thumbnail": "resources/spacemit/muse-card/muse_card_official.webp",
+    "soc": {
+      "name": "K1/M1",
+      "vendor": "SpacemiT"
+    },
+    "isa": [
+      "RVA20"
+    ],
+    "kernel": [
+      "VENDOR-6.6"
+    ],
+    "userspace": [
+      "Headless"
+    ],
+    "features": [
+      "UBOOT",
+      "BOOTSTD",
+      "FDT"
+    ],
+    "uri": "products/spacemit/muse_card.json",
+    "status": "SUPPORTED"
+  },
+  {
+    "name": "MUSE Card",
+    "vendor": "SpacemiT",
+    "thumbnail": "resources/spacemit/muse-card/muse_card_official.webp",
+    "soc": {
+      "name": "K1/M1",
+      "vendor": "SpacemiT"
+    },
+    "isa": [
+      "RVA20"
+    ],
+    "kernel": [
+      "VENDOR-6.6"
+    ],
+    "userspace": [
+      "Headless"
+    ],
+    "features": [
+      "UBOOT",
+      "BOOTSTD",
+      "FDT"
+    ],
+    "uri": "products/spacemit/muse_card.json",
+    "status": "SUPPORTED"
+  },
+  {
+    "name": "MUSE Card",
+    "vendor": "SpacemiT",
+    "thumbnail": "resources/spacemit/muse-card/muse_card_official.webp",
+    "soc": {
+      "name": "K1/M1",
+      "vendor": "SpacemiT"
+    },
+    "isa": [
+      "RVA20"
+    ],
+    "kernel": [
+      "VENDOR-6.6"
+    ],
+    "userspace": [
+      "Headless"
+    ],
+    "features": [
+      "UBOOT",
+      "BOOTSTD",
+      "FDT"
+    ],
+    "uri": "products/spacemit/muse_card.json",
+    "status": "SUPPORTED"
+  },
+  {
+    "name": "MUSE Card",
+    "vendor": "SpacemiT",
+    "thumbnail": "resources/spacemit/muse-card/muse_card_official.webp",
+    "soc": {
+      "name": "K1/M1",
+      "vendor": "SpacemiT"
+    },
+    "isa": [
+      "RVA20"
+    ],
+    "kernel": [
+      "VENDOR-6.6"
+    ],
+    "userspace": [
+      "Headless"
+    ],
+    "features": [
+      "UBOOT",
+      "BOOTSTD",
+      "FDT"
+    ],
+    "uri": "products/spacemit/muse_card.json",
+    "status": "SUPPORTED"
+  }
+]
