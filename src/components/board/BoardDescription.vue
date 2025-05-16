@@ -1,8 +1,5 @@
 <template>
   <div class="component-container">
-    <h2 class="title">{{ props.title }}</h2>
-    <p class="description">{{ props.description }}</p>
-
     <div v-if="props.historyVersions && props.historyVersions.length > 0" class="version-list">
       <div v-for="(version, index) in props.historyVersions" :key="index" class="version-card"
         @click="handleActionClick(version)" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
@@ -47,18 +44,6 @@ const handleActionClick = async (row) => {
   border-radius: 8px;
   border: 1px solid var(--el-border-color);
   box-shadow: var(--el-box-shadow-light);
-
-  .title {
-    font-size: 25px;
-    font-weight: bold;
-    margin-bottom: 8px;
-  }
-
-  .description {
-    font-size: 14px;
-    color: #777;
-    margin-bottom: 20px;
-  }
 
   .version-list {
     display: grid;
