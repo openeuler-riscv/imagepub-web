@@ -389,6 +389,8 @@ onMounted(async () => {
 
 :deep(.sub-tabs) .title {
   margin-top: 12px;
+  color: #102e9f;
+  font-size: 26px;
   margin-bottom: 8px;
 }
 

@@ -42,8 +42,8 @@ const handleActionClick = async (row) => {
 .component-container {
   padding: 20px;
   border-radius: 8px;
-  border: 1px solid var(--el-border-color);
-  box-shadow: var(--el-box-shadow-light);
+  //border: 1px solid var(--el-border-color);
+  //box-shadow: var(--el-box-shadow-light);
 
   .version-list {
     display: grid;
@@ -60,6 +60,9 @@ const handleActionClick = async (row) => {
 
     @media (min-width: 1440px) {
       grid-template-columns: repeat(4, 1fr);
+    }
+    @media (min-width: 2400px) {
+      grid-template-columns: repeat(5, 1fr);
     }
 
     .version-card {
@@ -92,7 +95,7 @@ const handleActionClick = async (row) => {
         .version-number {
           font-size: 18px;
           font-weight: 600;
-          color: #3b82f6;
+          color: #102e9f;
         }
 
         .release-date {
@@ -114,10 +117,26 @@ const handleActionClick = async (row) => {
       .changelog-content {
         font-size: 13px;
         color: #878787;
-        white-space: pre-wrap;
-        word-break: break-word;
         padding: 0 5px;
         font-weight: 400;
+        height: 150px;
+        overflow: hidden;
+        position: relative;
+
+        /* 允许文本换行 */
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      /* 在容器末尾添加渐变遮罩和省略号 */
+      .changelog-content::after {
+        content: "...";
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        padding-left: 40px;
+        background: linear-gradient(to right, transparent, white 70%);
+        pointer-events: none;
       }
     }
   }
