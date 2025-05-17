@@ -6,12 +6,15 @@
     <BoardDetail :boardDetail="boardDetail"></BoardDetail>
     <div v-if="isDataLoaded" class="box-card">
       <div style="width: 100%">
-        <div class="filter-title">{{ t('imageSelection') }}</div>
-        <el-tabs v-model="releaseTabs" class="top-tabs" type="border-card">
+        <!-- <div class="filter-title">{{ t('imageSelection') }}</div> -->
+        <el-tabs v-model="releaseTabs" class="top-tabs">
           <el-tab-pane name="openEuler" label="openEuler">
-            <el-tabs v-model="subTabs" class="sub-tabs" >
+            <el-tabs v-model="subTabs" class="sub-tabs" type="border-card">
               <el-tab-pane v-for="distro in tabList.openEuler" :key="distro" :label="distro" :name="distro">
-
+                <h2 class="title">{{ distro }}</h2>
+                <p class="description">
+                  {{ boardDetail?.os?.openEuler?.find(o => o.name === distro)?.description}}
+                </p>
                 <BoardFilter :filters="filters" :kernelVersions="kernelVersions" :otherFilters="{
                     isa: { label: t('isaBaseline'), options: isaProfiles },
                     userspace: { label: t('preInstalledList'), options: userspaces },
@@ -29,8 +32,9 @@
             </el-tabs>
           </el-tab-pane>
           <el-tab-pane name="others" label="others">
-            <el-tabs v-model="subTabs" class="sub-tabs">
+            <el-tabs v-model="subTabs" class="sub-tabs" type="border-card">
               <el-tab-pane v-for="distro in tabList.others" :key="distro" :label="distro" :name="distro">
+                <h2 class="title">{{ distro }}</h2>
                 <BoardFilter :filters="filters" :kernelVersions="kernelVersions" :otherFilters="{
                     isa: { label: t('isaBaseline'), options: isaProfiles },
                     userspace: { label: t('preInstalledList'), options: userspaces },
@@ -314,6 +318,11 @@ onMounted(async () => {
     background-color: #ebf4fb;
   }
 }
+.description {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 20px;
+  }
 
 :deep(.el-input__suffix) {
   margin-right: 4.5vh;
@@ -327,31 +336,23 @@ onMounted(async () => {
   margin: 10px;
 }
 
+:deep(.top-tabs .el-tabs__nav-wrap::after) {
+  position: static !important;
+}
+
+:deep(.top-tabs .el-tabs__active-bar) {
+  background-color: #102e9f;
+  height: 3px; /* 调整高度以加粗 */
+}
+
 :deep(.sub-tabs) {
   margin-top: 20px;
   border-top: 1px solid #ebedf0;
 }
 
-:deep(.sub-tabs .el-tabs__nav-wrap::after) {
-  display: none !important;
-}
-
 :deep(.top-tabs + .sub-tabs-container) {
   margin-top: 0;
   border-top: none !important;
-}
-
-:deep(.sub-tabs) {
-  margin-top: 0 !important;
-  border: none !important;
-}
-
-:deep(.sub-tabs .el-tabs__header) {
-  border-bottom: none !important;
-}
-
-:deep(.sub-tabs .el-tabs__active-bar) {
-  background-color: #e9ae43;
 }
 
 :deep(.el-tabs__item:hover) {
@@ -367,14 +368,14 @@ onMounted(async () => {
   color: #102e9f;
 }
 
-:deep(.top-tabs.el-tabs--border-card) {
+:deep(.sub-tabs.el-tabs--border-card) {
   border-radius: 8px !important;
   overflow: hidden;
 }
 
 
 .filter-title {
-  font-size: 22px;
+  font-size: 23;
   font-weight: bold;
   color: #1a3fa6;
   margin-bottom: 16px;
@@ -384,5 +385,24 @@ onMounted(async () => {
   display: inline-block;
   padding-left: 8px;
   padding-bottom: 6px;
+}
+
+:deep(.sub-tabs) .title {
+  margin-top: 12px;
+  margin-bottom: 8px;
+}
+
+:deep(.sub-tabs) .el-tabs__content {
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 0px;
+  margin-top: 0;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.top-tabs :deep(.el-tabs__item:not(.sub-tabs .el-tabs__item)) {
+  font-size: 18px;
+  font-weight: bold;
 }
 </style>

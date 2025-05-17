@@ -1,0 +1,296 @@
+{
+  "name": "Pioneer",
+  "vendor": {
+    "name": "Milk-V",
+    "homepage": "https://milkv.io/"
+  },
+  "soc": {
+    "name": "SG2042",
+    "vendor": {
+      "name": "SOPHGO",
+      "homepage": "https://sophgo.com/"
+    },
+    "harts": [
+      {
+        "name": "XuanTie C920",
+        "nums": 64,
+        "freq": "2GHz"
+      }
+    ]
+  },
+  "type": "mATX",
+  "status": "SUPPORTED",
+  "pictures": [
+    "resources/milkv/pioneer/milk-v-pioneer-board_png_gallery-lg.jpg",
+    "resources/milkv/pioneer/milk-v-box-angle_png_gallery-lg.jpg"
+  ],
+  "hardware": {
+    "ram": {
+      "type": "DDR4 DIMM x4",
+      "capacity": [
+        "NC"
+      ]
+    },
+    "storage": [
+      {
+        "type": "NOR Flash",
+        "capacity": [
+          "NC"
+        ]
+      },
+      {
+        "type": "eMMC",
+        "capacity": [
+          "NC"
+        ]
+      },
+      {
+        "type": "microSD",
+        "revision": "SDXC 3.0"
+      },
+      {
+        "type": "M.2",
+        "revision": "M-Key, PCIe3.0x4",
+        "nums": 2
+      },
+      {
+        "type": "SATA",
+        "revision": "3.0@6Gbps",
+        "nums": 5
+      }
+    ],
+    "connectivity": [
+      {
+        "type": "USB-A",
+        "revision": "3.0",
+        "nums": 8
+      },
+      {
+        "type": "Ethernet",
+        "revision": "2.5GbE",
+        "nums": 2
+      },
+      {
+        "type": "HDMI",
+        "revision": "2.0"
+      },
+      {
+        "type": "MIPI-CSI",
+        "revision": "2-lanes",
+        "nums": 2
+      },
+      {
+        "type": "MIPI-CSI",
+        "revision": "4-lanes"
+      },
+      {
+        "type": "MIPI-DSI",
+        "revision": "4-lanes"
+      }
+    ]
+  },
+  "os": {
+    "openEuler": [
+      {
+        "name": "24.03-LTS-SP1",
+        "description": "This is the service pack 2",
+        "historyVersions": [
+          {
+            "version": "24.03-LTS-SP2",
+            "changelog": "openEuler 24.03 LTS SP1 是基于6.6内核的24.03 LTS版本增强扩展版本，面向服务器、云、边缘计算和嵌入式场景，持续提供更多新特性和功能扩展，给开发者和用户带来全新的体验，服务更多的领域和更多的用户。openEuler 24.03 LTS SP1 是基于6.6内核的24.03 LTS版本增强扩展版本，面向服务器、云、边缘计算和嵌入式场景，持续提供更多新特性和功能扩展，给开发者和用户带来全新的体验，服务更多的领域和更多的用户。openEuler 24.03 LTS SP1 是基于6.6内核的24.03 LTS版本增强扩展版本，面向服务器、云、边缘计算和嵌入式场景，持续提供更多新特性和功能扩展，给开发者和用户带来全新的体验，服务更多的领域和更多的用户。",
+            "releaseDate": "2024-09-01",
+            "files": [
+              {
+                "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS/embedded_img/riscv64/SG2042/openEuler-24.03-LTS-riscv64-sg2042.img.zip",
+                "tags": [
+                  "system-image"
+                ],
+                "hash": {
+                  "sha256": "9d23fbad04ebdccb216991995963f8021674d7c9f3a5b6f222f35da82244e228"
+                }
+              },
+              {
+                "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS/embedded_img/riscv64/SG2042/openEuler-24.03-LTS-riscv64-sg2042.img.zip",
+                "tags": [
+                  "system-image"
+                ],
+                "hash": {
+                  "sha256": "9d23fbad04ebdccb216991995963f8021674d7c9f3a5b6f222f35da82244e228"
+                }
+              }
+            ]
+          },
+          {
+            "version": "24.03-LTS-SP2-Patch1",
+            "changelog": "openEuler 24.03 LTS SP1 是基于6.6内核的24.03 LTS版本增强扩展版本，面向服务器、云、边缘计算和嵌入式场景，持续提供更多新特性和功能扩展，给开发者和用户带来全新的体验，服务更多的领域和更多的用户。",
+            "releaseDate": "2024-09-15"
+          }
+        ],
+        "imagesuites": [
+          {
+            "name": "sg2042-24.03.sp1",
+            "kernel": {
+              "type": "RVCK",
+              "branch": "6.6",
+              "version": "6.6.0-72.0.0.76.oe2403sp1"
+            },
+            "userspace": "Headless",
+            "isa": {
+              "profile": "RVA20",
+              "extensions": []
+            },
+            "type": "Installer",
+            "features": [
+              "LINUXBOOT",
+              "FDT"
+            ],
+            "files": [
+              {
+                "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS-SP1/embedded_img/riscv64/SG2042/openEuler-24.03-LTS-SP1-riscv64-sg2042.img.zip",
+                "tags": [
+                  "system-image"
+                ],
+                "hash": {
+                  "sha256": "9a99c6a227eaf034f6cb0e44f342a5f3824d08c3f9fc4f58532f44e156f63f47"
+                }
+              },
+              {
+                "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS-SP1/embedded_img/riscv64/SG2042/sg2042_firmware_linuxboot.img.zip",
+                "tags": [
+                  "firmware"
+                ],
+                "hash": {
+                  "sha256": "1d1e47ce2cbbeda528c4338030f914c4905af89fc939783e3ff80fefa935c57d"
+                }
+              }
+            ],
+            "docs": [
+              "docs/milkv/pioneer-oerv-linuxboot.md"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "24.03-LTS",
+        "description": "This is the service pack 2",
+        "historyVersions": [
+          {
+            "version": "24.03-LTS-SP3",
+            "changelog": "Enhanced security",
+            "releaseDate": "2024-09-01",
+            "files": [
+              {
+                "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS/embedded_img/riscv64/SG2042/openEuler-24.03-LTS-riscv64-sg2042.img.zip",
+                "tags": [
+                  "system-image"
+                ],
+                "hash": {
+                  "sha256": "9d23fbad04ebdccb216991995963f8021674d7c9f3a5b6f222f35da82244e228"
+                }
+              },
+              {
+                "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS/embedded_img/riscv64/SG2042/openEuler-24.03-LTS-riscv64-sg2042.img.zip",
+                "tags": [
+                  "system-image"
+                ],
+                "hash": {
+                  "sha256": "9d23fbad04ebdccb216991995963f8021674d7c9f3a5b6f222f35da82244e228"
+                }
+              }
+            ]
+          },
+          {
+            "version": "24.03-LTS-SP2-Patch0",
+            "changelog": "Updated dependencies",
+            "releaseDate": "2024-09-15"
+          }
+        ],
+        "imagesuites": [
+          {
+            "name": "sg2042-24.03",
+            "kernel": {
+              "type": "RVCK",
+              "branch": "6.6",
+              "version": "6.6.0-27.0.0.31.oe2403"
+            },
+            "userspace": "Headless",
+            "isa": {
+              "profile": "RVA20",
+              "extensions": []
+            },
+            "type": "Installer",
+            "features": [
+              "LINUXBOOT",
+              "FDT"
+            ],
+            "files": [
+              {
+                "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS/embedded_img/riscv64/SG2042/openEuler-24.03-LTS-riscv64-sg2042.img.zip",
+                "tags": [
+                  "system-image"
+                ],
+                "hash": {
+                  "sha256": "9d23fbad04ebdccb216991995963f8021674d7c9f3a5b6f222f35da82244e228"
+                }
+              },
+              {
+                "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS/embedded_img/riscv64/SG2042/sg2042_firmware_linuxboot.img.zip",
+                "tags": [
+                  "firmware"
+                ],
+                "hash": {
+                  "sha256": "1d1e47ce2cbbeda528c4338030f914c4905af89fc939783e3ff80fefa935c57d"
+                }
+              }
+            ],
+            "docs": [
+              "docs/milkv/pioneer-oerv-linuxboot.md"
+            ]
+          },
+          {
+            "name": "official-24.03",
+            "kernel": {
+              "type": "RVCK",
+              "branch": "6.6",
+              "version": "6.6.0-27.0.0.31.oe2403"
+            },
+            "userspace": "Headless",
+            "isa": {
+              "profile": "RVA20",
+              "extensions": []
+            },
+            "type": "Installer",
+            "features": [
+              "EFI",
+              "FDT"
+            ],
+            "files": [
+              {
+                "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS/embedded_img/riscv64/SG2042/sg2042_firmware_uefi.img.zip",
+                "tags": [
+                  "firmware",
+                  "milkv/pioneer"
+                ],
+                "hash": {
+                  "sha256": "d7a936304bc01dfb8ccb47dc6df6527aecba4886940313355f68283dbc32fdf5"
+                }
+              },
+              {
+                "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS/ISO/riscv64/openEuler-24.03-LTS-riscv64-dvd.iso",
+                "tags": [
+                  "os-installer"
+                ],
+                "hash": {
+                  "sha256": "f49a5da648c53af30aa1a5bcc784685d75baca08743c840889bff32655b6a4e1"
+                }
+              }
+            ],
+            "docs": [
+              "docs/milkv/pioneer-oerv2403-uefi.md"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

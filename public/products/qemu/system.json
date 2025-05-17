@@ -1,0 +1,153 @@
+{
+  "name": "qemu-system-new",
+  "vendor": {
+    "name": "Qemu New",
+    "homepage": "https://www.qemu-new.org/"
+  },
+  "soc": {
+    "name": "virt-new",
+    "vendor": {
+      "name": "Qemu New",
+      "homepage": "https://www.qemu-new.org/"
+    },
+    "harts": []
+  },
+  "type": "Emulated",
+  "status": "SUPPORTED",
+  "pictures": [
+    "resources/qemu/Qemu_new_logo.svg"
+  ],
+  "os": {
+    "openEuler": [
+      {
+        "name": "24.04-LTS-SP2",
+        "imagesuites": [
+          {
+            "name": "qemu-virt-24.04.sp2",
+            "kernel": {
+              "type": "RVCK",
+              "branch": "6.7",
+              "versions": [
+                "6.7.0-80.0.0.80.oe2404",
+                "6.7.0-70.0.0.70.oe2404"
+              ]
+            },
+            "userspace": [
+              "Headless",
+              "Graphical",
+              "Minimal"
+            ],
+            "isa": [
+              {
+                "profile": "RVA20",
+                "extensions": ["Zmmul", "Zma", "Zcb"]
+              },
+              {
+                "profile": "RVA21",
+                "extensions": []
+              }
+            ],
+            "type": "Installer",
+            "features": [
+              "EFI",
+              "FDT",
+              "SMP"
+            ],
+            "files": [
+              {
+                "url": "https://mirror.iscas.ac.cn/openeuler/mirror-group/sp2/firmware/RISCV_VIRT_CODE_NEW.fd",
+                "tags": ["firmware"],
+                "hash": {
+                  "sha256": "a1b2c3d4..."
+                },
+                "group": "RISCV_VIRT_CODE_NEW.fd",
+                "lists": [
+                  "https://mirror.iscas.ac.cn/openeuler/mirror-group/sp2/firmware/RISCV_VIRT_CODE_NEW.fd_2.0.1",
+                  "https://mirror.iscas.ac.cn/openeuler/mirror-group/sp2/firmware/RISCV_VIRT_CODE_NEW.fd_2.0.0",
+                  "https://mirror.iscas.ac.cn/openeuler/mirror-group/sp2/firmware/RISCV_VIRT_CODE_NEW.fd_1.9.9"
+                ]
+              },
+              {
+                "url": "https://mirror.iscas.ac.cn/openeuler/mirror-group/sp2/system-image/openEuler-24.04-LTS-SP2-riscv64.qcow2.xz",
+                "tags": ["system-image"],
+                "hash": {
+                  "sha256": "b2c3d4e5..."
+                },
+                "group": "openEuler-24.04-LTS-SP2-riscv64.qcow2.xz",
+                "lists": [
+                  "https://mirror.iscas.ac.cn/openeuler/mirror-group/sp2/system-image/openEuler-24.04-LTS-SP2-riscv64.qcow2.xz_2.0.1",
+                  "https://mirror.iscas.ac.cn/openeuler/mirror-group/sp2/system-image/openEuler-24.04-LTS-SP2-riscv64.qcow2.xz_2.0.0",
+                  "https://mirror.iscas.ac.cn/openeuler/mirror-group/sp2/system-image/openEuler-24.04-LTS-SP2-riscv64.qcow2.xz_1.9.9"
+                ]
+              }
+            ],
+            "docs": [
+              "docs/qemu/qemu-system-fdt-new.md"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "24.04-LTS",
+        "imagesuites": [
+          {
+            "name": "qemu-virt-24.04",
+            "kernel": {
+              "type": "RVCK",
+              "branch": "6.7",
+              "versions": [
+                "6.7.0-30.0.0.35.oe2404"
+              ]
+            },
+            "userspace": [
+              "Headless",
+              "Minimal"
+            ],
+            "isa": [
+              {
+                "profile": "RVA20",
+                "extensions": []
+              }
+            ],
+            "type": "Installer",
+            "features": [
+              "EFI",
+              "FDT"
+            ],
+            "files": [
+              {
+                "url": "https://mirror.iscas.ac.cn/openeuler/mirror-group/lts/firmware/RISCV_VIRT_CODE_NEW_LTS.fd",
+                "tags": ["firmware"],
+                "hash": {
+                  "sha256": "d4e5f6g7..."
+                },
+                "group": "RISCV_VIRT_CODE_NEW_LTS.fd",
+                "lists": [
+                  "https://mirror.iscas.ac.cn/openeuler/mirror-group/lts/firmware/RISCV_VIRT_CODE_NEW_LTS.fd_1.1.0",
+                  "https://mirror.iscas.ac.cn/openeuler/mirror-group/lts/firmware/RISCV_VIRT_CODE_NEW_LTS.fd_1.0.9",
+                  "https://mirror.iscas.ac.cn/openeuler/mirror-group/lts/firmware/RISCV_VIRT_CODE_NEW_LTS.fd_1.0.8"
+                ]
+              },
+              {
+                "url": "https://mirror.iscas.ac.cn/openeuler/mirror-group/lts/system-image/openEuler-24.04-LTS-riscv64.qcow2.xz",
+                "tags": ["system-image"],
+                "hash": {
+                  "sha256": "e5f6g7h8..."
+                },
+                "group": "openEuler-24.04-LTS-riscv64.qcow2.xz",
+                "lists": [
+                  "https://mirror.iscas.ac.cn/openeuler/mirror-group/lts/system-image/openEuler-24.04-LTS-riscv64.qcow2.xz_1.1.0",
+                  "https://mirror.iscas.ac.cn/openeuler/mirror-group/lts/system-image/openEuler-24.04-LTS-riscv64.qcow2.xz_1.0.9",
+                  "https://mirror.iscas.ac.cn/openeuler/mirror-group/lts/system-image/openEuler-24.04-LTS-riscv64.qcow2.xz_1.0.8"
+                ]
+              }
+            ],
+            "docs": [
+              "docs/qemu/qemu-system-fdt-new-lts.md"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
