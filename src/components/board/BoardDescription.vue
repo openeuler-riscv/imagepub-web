@@ -8,7 +8,7 @@
           <div class="release-date">{{ version.releaseDate }}</div>
         </div>
 
-        <div class="changelog-title">{{t('changeLog')}}</div>
+        <div class="changelog-title">{{ t('changeLog') }}</div>
         <div class="changelog-content">
           {{ version.changelog || '无变更说明' }}
         </div>
@@ -19,9 +19,9 @@
 </template>
 
 <script setup>
-import {useI18n} from "vue-i18n";
+import { useI18n } from "vue-i18n";
 
-const {t} = useI18n()
+const { t } = useI18n()
 const props = defineProps({
   title: String,
   description: String,
@@ -61,6 +61,7 @@ const handleActionClick = async (row) => {
     @media (min-width: 1440px) {
       grid-template-columns: repeat(4, 1fr);
     }
+
     @media (min-width: 2400px) {
       grid-template-columns: repeat(5, 1fr);
     }
@@ -72,8 +73,19 @@ const handleActionClick = async (row) => {
         0 2px 4px rgba(0, 0, 0, 0.1),
         0 -1px 2px rgba(0, 0, 0, 0.05);
       padding: 16px;
-      transition: box-shadow 0.3s ease;
+      transition: all 0.3s ease;
       cursor: pointer;
+      transform-origin: center bottom;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: -8px;
+        pointer-events: auto;
+      }
 
       &:hover {
         box-shadow:
