@@ -36,7 +36,11 @@
                 :label="t('imageFile')"
                 min-width="150"
                 label-class-name="el-table-custom-label"
-            />
+            >
+              <template #default="{ row }">
+                {{ row.url.split('/').pop() }}
+              </template>
+            </el-table-column>
             <el-table-column
                 prop="tags"
                 :label="t('tag')"
