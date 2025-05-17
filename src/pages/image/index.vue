@@ -3,9 +3,9 @@
     <TopBackHome />
     <div class="content-wrapper">
       <div class="version-info-card">
-        <h2 class="version-info-title">版本信息</h2>
+        <h2 class="version-info-title">{{t('versionInfo')}}</h2>
         <div class="version-details">
-          <BoardInfoTitle title="版本"></BoardInfoTitle>
+          <BoardInfoTitle :title="t('version')"></BoardInfoTitle>
           <div class="version-text">
             {{ currentVersionInfo?.version }}
             <el-button
@@ -13,12 +13,12 @@
                 class="help-toggle-btn"
                 :class="{ 'active': !helpVisible }"
             >
-              {{ helpVisible ? '查看镜像列表' : '查看帮助文档' }}
+              {{ helpVisible ? t('checkImageList') : t('viewHelpDocumentation') }}
             </el-button>
           </div>
         </div>
         <div class="changelog">
-          <BoardInfoTitle title="更新日志"></BoardInfoTitle>
+          <BoardInfoTitle :title="t('changeLog')"></BoardInfoTitle>
           <div>{{ currentVersionInfo?.changelog }}</div>
         </div>
       </div>
@@ -33,13 +33,13 @@
           >
             <el-table-column
                 prop="url"
-                label="镜像文件地址"
+                :label="t('imageFile')"
                 min-width="150"
                 label-class-name="el-table-custom-label"
             />
             <el-table-column
                 prop="tags"
-                label="标签"
+                :label="t('tag')"
                 min-width="60"
                 label-class-name="el-table-custom-label"
             />
@@ -50,7 +50,7 @@
                 label-class-name="el-table-custom-label"
             />
             <el-table-column
-                label="操作"
+                :label="t('operation')"
                 min-width="50"
                 label-class-name="el-table-custom-label"
             >
@@ -60,7 +60,7 @@
                     size="small"
                     class="download-btn"
                 >
-                  <i class="fa fa-download mr-1"></i>下载
+                  <i class="fa fa-download mr-1"></i>{{t('download')}}
                 </el-button>
               </template>
             </el-table-column>
@@ -70,7 +70,7 @@
         <!-- 帮助文档 -->
         <div class="bottom-container">
           <div v-if="helpVisible" class="help-doc-card">
-            <h2 class="version-info-title">帮助文档</h2>
+            <h2 class="version-info-title">{{t('documentation')}}</h2>
             <HelpDoc
                 v-if="markdownURL !== ''"
                 :markdownURL="markdownURL"
@@ -92,7 +92,9 @@ import { ref, watch, onMounted } from "vue";
 import { ElButton, ElTable, ElTableColumn } from 'element-plus';
 import { useRoute } from 'vue-router';
 import BoardInfoTitle from "@/components/board/BoardInfoTitle.vue";
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n()
 const boardStore = useBoardStore();
 const boardDetail = ref(boardStore.boardDetail);
 const markdownURL = ref('');

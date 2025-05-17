@@ -147,10 +147,6 @@ const installerTypes = computed(() =>
         ?.imagesuites.map(s => s.type).filter(Boolean) || [])]
 );
 
-const imageSuites = computed(() =>
-    boardImageData.value?.os?.[os.value]?.find(v => v.name === version.value)?.imagesuites || []
-);
-
 const updateCheckState = (key) => {
   const filter = filters.value[key];
   const allItems = key === 'kernel'

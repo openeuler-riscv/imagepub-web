@@ -79,21 +79,19 @@
 }
 
 .filter-label {
-  min-width: 80px;
+  min-width: 135px;
   text-align: right;
-  margin-right: 1rem;
+  margin-right: 0.2rem;
   font-weight: 500;
 }
 .filter-label-center {
-  min-width: 80px;
+  min-width: 135px;
   text-align: center;
-  margin-right: 1rem;
+  margin-right: 0.2rem;
   font-weight: 500;
 }
 
 .filter-label.adjusted-position {
-  margin-left: 2px;  /* 向右移动 */
-  margin-top: 10px;   /* 向下移动 */
   padding: 2px;
   position: relative;
   left: 5px;

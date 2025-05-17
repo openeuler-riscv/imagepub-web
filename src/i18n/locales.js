@@ -22,7 +22,17 @@ const messages = {
         kernelVersion: '内核版本：',
         versionLabel: '版本标签',
         all: '全部',
-        versionNumber: '版本号'
+        versionNumber: '版本号',
+        changeLog: '变更日志',
+        versionInfo: '版本信息',
+        version: '版本',
+        imageFile: '镜像文件',
+        tag:'标签',
+        operation:'操作',
+        download:'下载',
+        checkImageList:'查看镜像列表',
+        viewHelpDocumentation:'查看帮助文档',
+        documentation:"帮助文档",
     },
     en: {
         backToHome: 'Back to Home',
@@ -47,7 +57,17 @@ const messages = {
         kernelVersion: 'Kernel Version:',
         versionLabel: 'Version Label',
         all: 'All',
-        versionNumber: 'Version Number'
+        versionNumber: 'Version Number',
+        changeLog: 'Change Log',
+        versionInfo: 'Version Info',
+        version: 'version',
+        imageFile: 'Image File',
+        tag: 'Tag',
+        operation:'Operation',
+        download:'Download',
+        checkImageList:'Check the image list',
+        viewHelpDocumentation:'View the help documentation',
+        documentation:"Documentation",
     }
 };
 

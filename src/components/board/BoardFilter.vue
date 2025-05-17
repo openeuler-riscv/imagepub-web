@@ -2,16 +2,18 @@
   <div class="filters">
     <div class="filter-row">
       <el-container>
-        <el-aside width="106px"><span class="filter-label adjusted-position">内核版本：</span></el-aside>
+        <span class="filter-label adjusted-position" style="display: inline-block; width: 130px;">
+          {{ t('kernelVersion') }}
+        </span>
         <el-main :style="{ padding: '0', textAlign: 'left' }">
           <div style="display: flex; align-items: center; flex-wrap: wrap;">
-            <span class="filter-label-center">版本标签</span>
+            <span class="filter-label-center">{{t('versionLabel')}}</span>
             <el-checkbox-button
                 v-model="filters.kernel.checkAll"
                 :indeterminate="filters.kernel.isIndeterminate"
                 @change="handleKernelCheckAll"
                 style="margin-right: 15px;"
-            >全部</el-checkbox-button>
+            >{{t('all')}}</el-checkbox-button>
 
             <el-checkbox-group
                 v-model="filters.kernel.selected"
@@ -21,13 +23,13 @@
             </el-checkbox-group>
           </div>
           <div style="display: flex; align-items: center; flex-wrap: wrap; margin-top: 8px">
-            <span class="filter-label-center">版本号</span>
+            <span class="filter-label-center">{{t('versionNumber')}}</span>
             <el-checkbox-button
                 v-model="filters.kernels.checkAll"
                 :indeterminate="filters.kernels.isIndeterminate"
                 @change="handleFilterCheckAll('kernels')"
                 style="margin-right: 15px;"
-            >全部</el-checkbox-button>
+            >{{t('all')}}</el-checkbox-button>
 
             <el-checkbox-group
                 v-model="filters.kernels.selected"
@@ -47,7 +49,7 @@
             :indeterminate="filters[key].isIndeterminate"
             @change="handleFilterCheckAll(key)"
             style="margin-right: 15px;"
-        >全部</el-checkbox-button>
+        >{{t('all')}}</el-checkbox-button>
         <el-checkbox-group
             v-model="filters[key].selected"
             @change="handleFilterChange(key)"
@@ -64,8 +66,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import {useI18n} from "vue-i18n";
 
+const { t } = useI18n();
 const props = defineProps({
   filters: {
     type: Object,
@@ -188,32 +191,6 @@ const handleFilterChange = (key) => {
 }
 
 @media screen and (max-width: 900px) {
-  .filters {
-    padding: 0 2vw;
-  }
-  .filter-title {
-    font-size: clamp(14px, 2vw, 16px);
-    margin-bottom: 6px;
-  }
-  .filter-row {
-    flex-direction: column;
-    align-items: flex-start;
-    margin-bottom: clamp(10px, 2vw, 18px);
-  }
-  .filter-label, .filter-label-center {
-    font-size: 15px;
-    font-weight: 500;
-    margin-bottom: 6px;
-    margin-right: 0;
-    text-align: left;
-    min-width: auto;
-  }
-  .filter-label-center {
-    display: block;
-    width: 100%;
-    margin-bottom: 6px;
-    margin-left: 0;
-  }
   :deep(.el-checkbox-button) {
     margin: 0 !important;
     flex: 0 1 auto;
