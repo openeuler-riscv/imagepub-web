@@ -3,6 +3,9 @@
     <div class="tree-header">目录</div>
     <div class="search-box">
       <input type="text" v-model="searchQuery" placeholder="搜索目录..." class="search-input" />
+      <!-- Assuming you might want icons later, keeping placeholders -->
+      <!-- <i class="fa fa-search search-icon"></i> -->
+      <!-- <i v-if="searchQuery" class="fa fa-times-circle clear-icon" @click="searchQuery = ''"></i> -->
     </div>
     <div class="tree-container">
       <ul class="tree-list" v-if="filteredItems.length > 0">
@@ -67,14 +70,18 @@ const filterItemsByQuery = (items, query) => {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  background-color: var(--theme-card);
+  color: var(--theme-text);
+  transition: background-color 0.3s, color 0.3s;
 
   .tree-header {
     font-size: 18px;
     font-weight: 600;
-    color: #012fa6;
+    color: var(--el-color-primary);
     margin-bottom: 12px;
     padding-bottom: 8px;
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid var(--theme-border);
+    transition: color 0.3s, border-color 0.3s;
   }
 
   .search-box {
@@ -86,38 +93,41 @@ const filterItemsByQuery = (items, query) => {
 
     .search-input {
       padding: 8px 30px 8px 10px;
-      border: 1px solid #e5e5e5;
+      border: 1px solid var(--theme-border);
       border-radius: 4px;
       font-size: 14px;
       outline: none;
-      transition: border-color 0.2s;
+      background-color: var(--theme-input);
+      color: var(--theme-text);
+      transition: border-color 0.3s, background-color 0.3s, color 0.3s;
 
       &:focus {
-        border-color: #012fa6;
+        border-color: var(--el-color-primary);
+      }
+
+      &::placeholder {
+        color: var(--theme-text-secondary);
       }
     }
 
-    .search-icon {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #999;
-      font-size: 14px;
-      pointer-events: none;
-    }
-
+    .search-icon,
     .clear-icon {
       position: absolute;
       right: 10px;
       top: 50%;
       transform: translateY(-50%);
-      color: #999;
+      color: var(--theme-text-secondary);
       font-size: 14px;
+      pointer-events: none; /* Make icon non-interactive */
+      transition: color 0.3s;
+    }
+
+    .clear-icon {
+      pointer-events: auto; /* Make clear icon interactive */
       cursor: pointer;
 
       &:hover {
-        color: #012fa6;
+        color: var(--el-color-primary);
       }
     }
   }
@@ -127,9 +137,9 @@ const filterItemsByQuery = (items, query) => {
     overflow-y: auto;
     padding-right: 5px;
 
+    /* Scrollbar styles */
     &::-webkit-scrollbar {
       width: 4px;
-      background: transparent;
     }
 
     &::-webkit-scrollbar-track {
@@ -137,9 +147,18 @@ const filterItemsByQuery = (items, query) => {
     }
 
     &::-webkit-scrollbar-thumb {
-      background: #e5e5e5;
+      background: var(--theme-scrollbar);
       border-radius: 3px;
+      transition: background 0.3s;
     }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: var(--theme-scrollbar-hover);
+    }
+
+    /* Firefox scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: var(--theme-scrollbar) transparent;
 
     .tree-list {
       list-style-type: none;
@@ -149,9 +168,10 @@ const filterItemsByQuery = (items, query) => {
 
     .no-results {
       padding: 15px 0;
-      color: #999;
+      color: var(--theme-text-secondary);
       text-align: center;
       font-size: 14px;
+      transition: color 0.3s;
     }
   }
 }

@@ -8,11 +8,7 @@
           <BoardInfoTitle title="版本"></BoardInfoTitle>
           <div class="version-text">
             {{ currentVersionInfo?.version }}
-            <el-button
-                @click="toggleContent"
-                class="help-toggle-btn"
-                :class="{ 'active': !helpVisible }"
-            >
+            <el-button @click="toggleContent" class="help-toggle-btn" :class="{ 'active': !helpVisible }">
               {{ helpVisible ? '查看镜像列表' : '查看帮助文档' }}
             </el-button>
           </div>
@@ -26,40 +22,14 @@
       <!-- 镜像列表和帮助文档区域 -->
       <div class="content-toggle-area">
         <div v-if="!helpVisible && mirrorList.length > 0" class="mirror-list-card">
-          <el-table
-              :data="mirrorList"
-              style="width: 100%"
-              class="mirror-table"
-          >
-            <el-table-column
-                prop="url"
-                label="镜像文件地址"
-                min-width="150"
-                label-class-name="el-table-custom-label"
-            />
-            <el-table-column
-                prop="tags"
-                label="标签"
-                min-width="60"
-                label-class-name="el-table-custom-label"
-            />
-            <el-table-column
-                prop="hash.sha256"
-                label="sha256"
-                min-width="150"
-                label-class-name="el-table-custom-label"
-            />
-            <el-table-column
-                label="操作"
-                min-width="50"
-                label-class-name="el-table-custom-label"
-            >
+          <el-table :data="mirrorList" style="width: 100%" class="mirror-table">
+            <el-table-column prop="url" label="镜像文件地址" min-width="150" label-class-name="el-table-custom-label" />
+            <el-table-column prop="tags" label="标签" min-width="60" label-class-name="el-table-custom-label" />
+            <el-table-column prop="hash.sha256" label="sha256" min-width="150"
+              label-class-name="el-table-custom-label" />
+            <el-table-column label="操作" min-width="50" label-class-name="el-table-custom-label">
               <template #default="scope">
-                <el-button
-                    @click="downloadFile(scope.row.url)"
-                    size="small"
-                    class="download-btn"
-                >
+                <el-button @click="downloadFile(scope.row.url)" size="small" class="download-btn">
                   <i class="fa fa-download mr-1"></i>下载
                 </el-button>
               </template>
@@ -71,11 +41,7 @@
         <div class="bottom-container">
           <div v-if="helpVisible" class="help-doc-card">
             <h2 class="version-info-title">帮助文档</h2>
-            <HelpDoc
-                v-if="markdownURL !== ''"
-                :markdownURL="markdownURL"
-                :boardDetail="boardDetail"
-            />
+            <HelpDoc v-if="markdownURL !== ''" :markdownURL="markdownURL" :boardDetail="boardDetail" />
           </div>
         </div>
       </div>
@@ -108,7 +74,7 @@ const toggleContent = () => {
 
 const extractDocs = (boardDetailData) => {
   return boardDetailData.value.os?.openEuler?.flatMap(osItem =>
-      osItem.imagesuites.flatMap(suite => suite.docs)
+    osItem.imagesuites.flatMap(suite => suite.docs)
   );
 };
 

@@ -4,6 +4,8 @@ import router from './router'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import './style.css'
+import './styles/variables.css'
+import './styles/theme.css'
 import { createPinia } from 'pinia';
 import { createI18n } from 'vue-i18n';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';

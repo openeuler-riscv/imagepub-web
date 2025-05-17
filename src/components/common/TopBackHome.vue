@@ -14,7 +14,10 @@
             <CustomSearchIcon class="search-icon" />
           </div>
         </div>
-        <el-button round @click="toggleLanguage">{{ t('toggleLanguage') }}</el-button>
+        <div class="right-section">
+          <DarkModeButton />
+          <el-button round @click="toggleLanguage">{{ t('toggleLanguage') }}</el-button>
+        </div>
       </div>
     </div>
   </div>
@@ -24,11 +27,17 @@
 import { Back } from "@element-plus/icons-vue";
 import CustomLogoIcon from "@/components/icon/CustomLogoIcon.vue";
 import CustomSearchIcon from "@/components/icon/CustomSearchIcon.vue";
+import DarkModeButton from "@/components/common/DarkModeButton.vue";
 import { useRouter } from "vue-router";
 import { useI18n } from 'vue-i18n';
+import { useDarkModeStore } from '@/stores/darkMode';
 
 const router = useRouter();
 const { t, locale } = useI18n();
+const darkModeStore = useDarkModeStore();
+
+// 初始化主题
+darkModeStore.initTheme();
 
 const goHome = () => router.push('/home');
 
@@ -49,7 +58,7 @@ const toggleLanguage = () => {
   width: 90%;
   height: 7vh;
   margin-top: 2vh;
-  border: 1px solid #f1faff;
+  /* border: 1px solid #f1faff; */
   border-radius: 24px;
   background-color: #ffffff;
   display: flex;
@@ -207,5 +216,39 @@ const toggleLanguage = () => {
 
 :deep(.el-input__suffix) {
   margin-right: 4.5vh;
+}
+
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* 使用主题变量 */
+.top-bar-container {
+  background-color: var(--theme-card);
+  border-color: var(--theme-border);
+  color: var(--theme-text);
+}
+
+.search-box .input-container :deep(.el-input__wrapper) {
+  background-color: var(--theme-input);
+  box-shadow: 0 0 0 1px var(--theme-border);
+}
+
+.search-box .input-container :deep(.el-input__wrapper:hover) {
+  box-shadow: 0 0 0 1px var(--theme-hover);
+}
+
+.search-box .input-container :deep(.el-input__wrapper.is-focus) {
+  box-shadow: 0 0 0 1px var(--el-color-primary);
+}
+
+.search-icon {
+  color: var(--theme-text);
+}
+
+.search-icon:hover {
+  color: var(--el-color-primary);
 }
 </style>
