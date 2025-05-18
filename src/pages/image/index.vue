@@ -114,7 +114,7 @@ const toggleContent = () => {
 
 const extractDocs = (boardDetailData) => {
   return boardDetailData.value.os?.openEuler?.flatMap(osItem =>
-      osItem.imagesuites.flatMap(suite => suite.docs)
+    osItem.imagesuites.flatMap(suite => suite.docs)
   );
 };
 

@@ -231,9 +231,9 @@ onMounted(async () => {
 
 <style scoped>
 :deep(.el-checkbox-button.is-checked) {
-  --el-checkbox-button-checked-bg-color: #ebf4fb;
-  --el-checkbox-button-checked-text-color: #333;
-  --el-checkbox-button-checked-border-color: #cddff3;
+  --el-checkbox-button-checked-bg-color: var(--theme-hover);
+  --el-checkbox-button-checked-text-color: var(--el-color-primary);
+  --el-checkbox-button-checked-border-color: var(--el-color-primary);
 }
 
 :deep(.el-checkbox-button__inner) {
@@ -247,19 +247,15 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: center;
+  background: var(--theme-input) !important;
+  color: var(--theme-text) !important;
+  border: 1px solid var(--theme-border) !important;
 }
 
 :deep(.el-checkbox-button:not(.is-checked) .el-checkbox-button__inner) {
-  border: 1px solid #dcdfe6;
-}
-
-:deep(.el-checkbox-button.is-checked .el-checkbox-button__inner) {
-  border: 1px solid #cddff3;
-  box-shadow: none !important;
-}
-
-:deep(.el-checkbox-button__inner) {
-  border-left-color: rgb(220, 223, 230);
+  border: 1px solid var(--theme-border) !important;
+  background: var(--theme-input) !important;
+  color: var(--theme-text) !important;
 }
 
 :deep(.el-checkbox-group) {
@@ -279,9 +275,103 @@ onMounted(async () => {
 }
 
 :deep(.el-input__wrapper) {
-  background-color: #f0f4f8;
+  background-color: var(--theme-input) !important;
   border-radius: 24px;
   border: none;
+  color: var(--theme-text) !important;
+}
+
+:deep(.el-input__suffix) {
+  margin-right: 4.5vh;
+}
+
+:deep(.el-row) {
+  font-size: 0.9rem;
+}
+
+:deep(.el-tabs--border-card) {
+  background: var(--theme-card) !important;
+  border: 1px solid var(--theme-border) !important;
+  color: var(--theme-text) !important;
+}
+
+:deep(.el-tabs__header) {
+  background: var(--theme-card) !important;
+}
+
+:deep(.el-tabs__nav) {
+  background: var(--theme-card) !important;
+}
+
+:deep(.el-tabs__content) {
+  background: var(--theme-card) !important;
+}
+
+:deep(.el-tab-pane) {
+  background: var(--theme-card) !important;
+  color: var(--theme-text) !important;
+}
+
+:deep(.el-tabs__item) {
+  background: var(--theme-card) !important;
+  color: var(--theme-text) !important;
+  border: none !important;
+}
+
+:deep(.el-tabs__item.is-active),
+:deep(.el-tabs__item:hover) {
+  color: var(--el-color-primary) !important;
+  background: var(--theme-hover) !important;
+}
+
+:deep(.el-tabs__active-bar) {
+  background-color: var(--el-color-primary) !important;
+}
+
+:deep(.el-card) {
+  background: var(--theme-card) !important;
+  color: var(--theme-text) !important;
+  border: 1px solid var(--theme-border) !important;
+}
+
+:deep(.el-table) {
+  background: var(--theme-card) !important;
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+}
+:deep(.el-table th) {
+  background: var(--theme-card) !important;
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+}
+:deep(.el-table td) {
+  background: var(--theme-card) !important;
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+}
+
+:deep(.el-table__body tr:hover) {
+  background-color: var(--theme-hover) !important;
+  color: var(--theme-text) !important;
+}
+
+.filter-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--el-color-primary);
+  margin-bottom: 16px;
+  margin-top: 8px;
+  letter-spacing: 1px;
+  position: relative;
+  display: inline-block;
+  padding-left: 8px;
+  padding-bottom: 6px;
+}
+
+.detail-container {
+  background: var(--theme-bg);
+  min-height: 100vh;
+  transition: background 0.3s;
 }
 
 /* 移动端适配样式 */
@@ -344,6 +434,10 @@ onMounted(async () => {
 :deep(.sub-tabs) {
   margin-top: 20px;
   border-top: 1px solid #ebedf0;
+}
+
+:deep(.sub-tabs .el-tabs__nav-wrap::after) {
+  display: none !important;
 }
 
 :deep(.top-tabs + .sub-tabs-container) {
