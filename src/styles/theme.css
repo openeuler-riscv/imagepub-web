@@ -30,7 +30,7 @@
 }
 
 /* 基础样式 */
-body {
+/* body {
   background-color: var(--theme-bg);
   color: var(--theme-text);
   transition: background-color 0.3s, color 0.3s;
@@ -38,7 +38,7 @@ body {
 
 #app {
   background: none !important;
-}
+} */
 
 /* Element Plus 组件适配 */
 .el-card {

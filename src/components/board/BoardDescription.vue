@@ -40,6 +40,28 @@ const handleActionClick = async (row) => {
 </script>
 
 <style scoped lang="scss">
+/* 添加暗黑模式变量 */
+:root {
+  --theme-border: #e9ecef;
+  --theme-card: #ffffff;
+  --theme-text: #333333;
+  --theme-text-secondary: #777777;
+  --theme-hover-bg: rgba(1, 47, 166, 0.1);
+  --theme-hover-color: #012fa6;
+  --theme-gradient-end-color: var(--theme-card); // 渐变结束颜色与卡片背景一致
+}
+
+/* 暗黑模式变量 */
+html.dark {
+  --theme-border: #4c4d4f;
+  --theme-card: #2b2b2b;
+  --theme-text: #e5eaf3;
+  --theme-text-secondary: #a8abb2;
+  --theme-hover-bg: rgba(64, 158, 255, 0.1);
+  --theme-hover-color: #409eff;
+  --theme-gradient-end-color: var(--theme-card); // 渐变结束颜色与卡片背景一致
+}
+
 .component-container {
   padding: 20px;
   border-radius: 8px;
@@ -49,11 +71,8 @@ const handleActionClick = async (row) => {
   display: grid;
   grid-template-columns: 1fr;
   gap: 16px;
-  border: 1px solid var(--theme-border);
-  background: var(--theme-card);
-  color: var(--theme-text);
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);
-  transition: background 0.3s, color 0.3s, border-color 0.3s;
+  transition: box-shadow 0.3s ease;
 
   @media (min-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
@@ -79,9 +98,9 @@ const handleActionClick = async (row) => {
     0 2px 4px rgba(0, 0, 0, 0.1),
     0 -1px 2px rgba(0, 0, 0, 0.05);
   padding: 16px;
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
   cursor: pointer;
-  border: 1px solid white;
+  border: 1px solid var(--theme-border);
 
   &:hover {
     box-shadow:
@@ -115,7 +134,7 @@ const handleActionClick = async (row) => {
 
     .release-date {
       font-size: 11px;
-      color: var(--theme-text);
+      color: var(--theme-text-secondary);
       position: absolute;
       bottom: 3px;
       right: 8px;
@@ -145,7 +164,7 @@ const handleActionClick = async (row) => {
 
   .description {
     font-size: 14px;
-    color: var(--theme-text);
+    color: var(--theme-text-secondary);
     opacity: 0.7;
     margin-bottom: 20px;
   }
@@ -157,13 +176,13 @@ const handleActionClick = async (row) => {
     bottom: 0;
     right: 0;
     padding-left: 40px;
-    background: linear-gradient(to right, transparent, var(--theme-card) 70%);
+    background: linear-gradient(to right, transparent, var(--theme-gradient-end-color) 70%);
     pointer-events: none;
   }
 }
 
-.el-table__body tr:hover {
-  background-color: var(--theme-hover) !important;
+:deep(.el-table__body tr:hover) {
+  background-color: var(--theme-hover-bg) !important;
   color: var(--theme-text) !important;
   transition: background 0.3s, color 0.3s;
 }

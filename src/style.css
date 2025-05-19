@@ -2,21 +2,32 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    background: var(--theme-bg);
+    /* background: var(--theme-bg); */
 }
 
 #app {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     width: 98%;
     min-height: 100vh; /* 关键修复：确保最小高度填满屏幕 */
-    background: none;
+    /* background: none; */
+    background: linear-gradient(
+            to right top,
+            #f4fbff 10%,
+            #eaf7fe 25%,
+            #ffffff 50%
+    );
 }
 
 .light {
-    background: var(--theme-bg);
+    background: linear-gradient(
+            to right top,
+            #f4fbff 10%,
+            #eaf7fe 25%,
+            #ffffff 50%
+    );
 }
 
-.dark {
-    background: var(--theme-bg);
-}
+/* .dark {
+    background: #000000;
+} */
 
