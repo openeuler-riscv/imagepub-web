@@ -2,7 +2,7 @@
   <div class="component-container">
     <div v-if="props.historyVersions && props.historyVersions.length > 0" class="version-list">
       <div v-for="(version, index) in props.historyVersions" :key="index" class="version-card"
-           @click="handleActionClick(version)" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
+        @click="handleActionClick(version)" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
         <div class="version-header">
           <div class="version-number">v{{ version.version }}</div>
           <div class="release-date">{{ version.releaseDate }}</div>
@@ -18,12 +18,6 @@
   </div>
 </template>
 
-<<<<<<< HEAD
-=======
-
-<script setup>
-import {useI18n} from "vue-i18n";
->>>>>>> upstream/dev
 
 <script setup>
 import { useI18n } from "vue-i18n";
