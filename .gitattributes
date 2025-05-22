@@ -1,0 +1,20 @@
+* text eol=lf# ========== 全局配置 ==========
+* text=auto
+* whitespace=fix
+* diff=whitespace
+
+# ========== 前端文件类型 ==========
+*.js    text eol=lf
+*.ts    text eol=lf
+*.vue   text eol=lf
+*.css   text eol=lf
+*.scss  text eol=lf
+*.html  text eol=lf
+*.json  text eol=lf
+*.md    text eol=lf
+
+# ========== 忽略规则 ==========
+*.{js,ts,vue,css,scss,html,json,md} diff=mergeoptions
+
+# ========== 二进制文件 ==========
+*.{png,jpg,jpeg,gif,bmp,svg,ico,woff,woff2,eot,ttf} binary
