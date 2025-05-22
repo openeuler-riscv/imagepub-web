@@ -1,18 +1,17 @@
 <template>
-  <el-button
-    class="theme-button"
-    :class="{ 'is-dark': isDark }"
-    @click="store.toggleDarkMode"
-    circle
-  >
-    <el-icon v-if="isDark"><Sunny /></el-icon>
-    <el-icon v-else><Moon /></el-icon>
+  <el-button class="theme-button" :class="{ 'is-dark': isDark }" @click="store.toggleDarkMode" circle>
+    <el-icon v-if="isDark">
+      <Sunny />
+    </el-icon>
+    <el-icon v-else>
+      <Moon />
+    </el-icon>
   </el-button>
 </template>
 
 <script setup>
 import { Sunny, Moon } from '@element-plus/icons-vue'
-import { useDarkModeStore } from '@/stores/darkMode'
+import { useDarkModeStore } from '@/store/darkMode'
 import { storeToRefs } from 'pinia'
 
 const store = useDarkModeStore()
@@ -39,4 +38,4 @@ const { isDark } = storeToRefs(store)
 :deep(.el-icon) {
   font-size: 18px;
 }
-</style> 
+</style>
