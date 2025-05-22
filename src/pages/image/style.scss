@@ -1,7 +1,13 @@
-.image-container{
+.image-container {
   width: 100%;
   height: 100%;
+  min-height: 100vh;
+  padding-bottom: 50px;
+  background-color: var(--theme-bg);
+  color: var(--theme-text);
+  transition: background-color 0.3s, color 0.3s;
 }
+
 .top-container {
   padding: 20px;
   width: 100%;
@@ -35,28 +41,24 @@
   justify-content: center;
 
   .help-doc-card {
-    background-color: #ffffff;
+    background-color: var(--theme-card);
     border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px var(--theme-shadow);
     width: 100%;
     padding: 10px;
     transition: all 0.3s ease;
   }
 }
 
-.el-table-custom-label{
-  color: #1a3fa6;
+.el-table-custom-label {
+  color: var(--theme-text);
   font-size: 1rem;
 }
-.text-indent-2{
+
+.text-indent-2 {
   text-indent: 2rem;
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
-}
-
-.image-container {
-  width: 100%;
-  min-height: 100vh;
-  padding-bottom: 50px;
+  color: var(--theme-text-secondary);
 }
 
 .content-wrapper {
@@ -67,11 +69,10 @@
 
 /* 卡片样式 */
 .version-info-card,
-.mirror-list-card,
- {
-  background-color: #ffffff;
+.mirror-list-card {
+  background-color: var(--theme-card);
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px var(--theme-shadow);
   padding: 25px;
   margin-bottom: 25px;
   transition: all 0.3s ease;
@@ -80,14 +81,14 @@
 .version-info-card:hover,
 .mirror-list-card:hover,
 .help-doc-card:hover {
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 30px var(--theme-shadow);
 }
 
 /* 版本信息区域 */
 .version-info-title {
   font-size: 24px;
   font-weight: 600;
-  color: #1a3fa6;
+  color: var(--theme-text);
   margin-bottom: 15px;
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
 }
@@ -95,6 +96,7 @@
 .version-details,
 .changelog {
   margin-bottom: 15px;
+  color: var(--theme-text);
 }
 
 .version-text {
@@ -102,18 +104,29 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px 0;
-  border-bottom: 1px solid #e6e9ed;
+  border-bottom: 1px solid var(--theme-border);
+  color: var(--theme-text);
 }
 
 .changelog div {
   padding: 10px 0;
   line-height: 1.6;
-  color: #333;
+  color: var(--theme-text-secondary);
+}
+
+.no-border {
+  border: none !important;
+}
+
+.no-border:hover,
+.no-border:focus {
+  border: none !important;
+  outline: none !important;
 }
 
 /* 帮助文档切换按钮 */
 .help-toggle-btn {
-  background-color: #1a3fa6;
+  background-color: var(--el-color-primary);
   color: white;
   border: none;
   border-radius: 6px;
@@ -124,26 +137,55 @@
 }
 
 .help-toggle-btn:hover {
-  background-color: #0f2b7a;
+  background-color: var(--el-color-primary-light-1);
   transform: translateY(-1px);
 }
 
 .help-toggle-btn.active {
-  background-color: #e74c3c;
+  background-color: var(--theme-card);
+  color: var(--theme-text);
+  border: 1px solid var(--theme-border);
 }
 
 .help-toggle-btn.active:hover {
-  background-color: #c0392b;
+  background-color: var(--theme-hover);
+  border-color: var(--el-color-primary);
+  color: var(--el-color-primary);
 }
 
 /* 表格样式 */
 .mirror-table {
   border-radius: 8px;
   overflow: hidden;
+
+  /* Element Plus Table Dark Mode */
+  :deep(.el-table) {
+    background-color: var(--theme-card) !important;
+    color: var(--theme-text) !important;
+    border-color: var(--theme-border) !important;
+  }
+
+  :deep(.el-table th) {
+    background-color: var(--theme-table-header) !important;
+    color: var(--theme-text) !important;
+    border-color: var(--theme-border) !important;
+  }
+
+  :deep(.el-table td) {
+    background-color: var(--theme-table-row) !important;
+    color: var(--theme-text) !important;
+    border-color: var(--theme-border) !important;
+  }
+
+  :deep(.el-table__body tr:hover) {
+    background-color: var(--theme-hover) !important;
+    color: var(--theme-text) !important;
+  }
+
 }
 
 .el-table-custom-label {
-  color: #1a3fa6;
+  color: var(--theme-text);
   font-weight: 500;
   font-size: 16px;
 }
@@ -154,7 +196,7 @@
 
 .download-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(26, 63, 166, 0.3);
+  box-shadow: 0 2px 8px var(--theme-shadow);
 }
 
 /* 内容切换区域 */

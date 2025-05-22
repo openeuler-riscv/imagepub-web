@@ -1,0 +1,61 @@
+:root {
+  /* 浅色主题变量 */
+  --app-bg: #ffffff;
+  --app-text: #333333;
+  --app-border: #e4e7ed;
+  --app-hover: #f5f7fa;
+  --app-card-bg: #ffffff;
+  --app-input-bg: #f5f7fa;
+  --app-shadow: rgba(0, 0, 0, 0.1);
+}
+
+:root.dark {
+  /* 深色主题变量 */
+  --app-bg: #1a1a1a;
+  --app-text: #ffffff;
+  --app-border: #4c4d4f;
+  --app-hover: #2c2c2c;
+  --app-card-bg: #2c2c2c;
+  --app-input-bg: #2c2c2c;
+  --app-shadow: rgba(0, 0, 0, 0.3);
+}
+
+/* 全局过渡效果 */
+* {
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+/* 基础样式 */
+body {
+  background-color: var(--app-bg);
+  color: var(--app-text);
+}
+
+/* Element Plus 组件适配 */
+.el-card {
+  background-color: var(--app-card-bg) !important;
+  border-color: var(--app-border) !important;
+}
+
+.el-input__wrapper {
+  background-color: var(--app-input-bg) !important;
+}
+
+.el-button:not(.dark-switch) {
+  background-color: var(--app-card-bg) !important;
+  border-color: var(--app-border) !important;
+  color: var(--app-text) !important;
+}
+
+.el-menu {
+  background-color: var(--app-card-bg) !important;
+  border-color: var(--app-border) !important;
+}
+
+.el-menu-item {
+  color: var(--app-text) !important;
+}
+
+.el-menu-item:hover {
+  background-color: var(--app-hover) !important;
+} 

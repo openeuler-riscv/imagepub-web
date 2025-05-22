@@ -7,35 +7,23 @@
         </span>
         <el-main :style="{ padding: '0', textAlign: 'left' }">
           <div style="display: flex; align-items: center; flex-wrap: wrap;">
-            <span class="filter-label-center">{{t('versionLabel')}}</span>
-            <el-checkbox-button
-                v-model="filters.kernel.checkAll"
-                :indeterminate="filters.kernel.isIndeterminate"
-                @change="handleKernelCheckAll"
-                style="margin-right: 15px;"
-            >{{t('all')}}</el-checkbox-button>
+            <span class="filter-label-center">{{ t('versionLabel') }}</span>
+            <el-checkbox-button v-model="filters.kernel.checkAll" :indeterminate="filters.kernel.isIndeterminate"
+              @change="handleKernelCheckAll" style="margin-right: 15px;">{{ t('all') }}</el-checkbox-button>
 
-            <el-checkbox-group
-                v-model="filters.kernel.selected"
-                @change="handleKernelChange"
-            >
-              <el-checkbox-button v-for="item in kernelOptions" :key="item" :value="item">{{ item }}</el-checkbox-button>
+            <el-checkbox-group v-model="filters.kernel.selected" @change="handleKernelChange">
+              <el-checkbox-button v-for="item in kernelOptions" :key="item" :value="item">{{ item
+                }}</el-checkbox-button>
             </el-checkbox-group>
           </div>
           <div style="display: flex; align-items: center; flex-wrap: wrap; margin-top: 8px">
-            <span class="filter-label-center">{{t('versionNumber')}}</span>
-            <el-checkbox-button
-                v-model="filters.kernels.checkAll"
-                :indeterminate="filters.kernels.isIndeterminate"
-                @change="handleFilterCheckAll('kernels')"
-                style="margin-right: 15px;"
-            >{{t('all')}}</el-checkbox-button>
+            <span class="filter-label-center">{{ t('versionNumber') }}</span>
+            <el-checkbox-button v-model="filters.kernels.checkAll" :indeterminate="filters.kernels.isIndeterminate"
+              @change="handleFilterCheckAll('kernels')" style="margin-right: 15px;">{{ t('all') }}</el-checkbox-button>
 
-            <el-checkbox-group
-                v-model="filters.kernels.selected"
-                @change="handleFilterChange('kernels')"
-            >
-              <el-checkbox-button v-for="item in kernelVersions" :key="item.version" :value="item.version">{{ item.version }}</el-checkbox-button>
+            <el-checkbox-group v-model="filters.kernels.selected" @change="handleFilterChange('kernels')">
+              <el-checkbox-button v-for="item in kernelVersions" :key="item.version" :value="item.version">{{
+                item.version }}</el-checkbox-button>
             </el-checkbox-group>
           </div>
         </el-main>
@@ -44,21 +32,12 @@
     <div class="filter-row" v-for="(filter, key) in otherFilters" :key="key">
       <span class="filter-label">{{ filter.label }}：</span>
       <div style="display: flex; align-items: center; flex-wrap: wrap;">
-        <el-checkbox-button
-            v-model="filters[key].checkAll"
-            :indeterminate="filters[key].isIndeterminate"
-            @change="handleFilterCheckAll(key)"
-            style="margin-right: 15px;"
-        >{{t('all')}}</el-checkbox-button>
-        <el-checkbox-group
-            v-model="filters[key].selected"
-            @change="handleFilterChange(key)"
-        >
-          <el-checkbox-button
-              v-for="item in filter.options"
-              :key="item.id || item"
-              :value="item.profile || item.userspace || item"
-          >{{ item.profile || item.userspace || item }}</el-checkbox-button>
+        <el-checkbox-button v-model="filters[key].checkAll" :indeterminate="filters[key].isIndeterminate"
+          @change="handleFilterCheckAll(key)" style="margin-right: 15px;">{{ t('all') }}</el-checkbox-button>
+        <el-checkbox-group v-model="filters[key].selected" @change="handleFilterChange(key)">
+          <el-checkbox-button v-for="item in filter.options" :key="item.id || item"
+            :value="item.profile || item.userspace || item">{{ item.profile || item.userspace || item
+            }}</el-checkbox-button>
         </el-checkbox-group>
       </div>
     </div>
@@ -66,7 +45,7 @@
 </template>
 
 <script setup>
-import {useI18n} from "vue-i18n";
+import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
 const props = defineProps({
@@ -102,8 +81,8 @@ const props = defineProps({
 const updateCheckState = (key) => {
   const filter = props.filters[key];
   const allItems = key === 'kernel'
-      ? props.kernelOptions
-      : key === 'kernels' ? props.kernelVersions.map(v => v.version) : props.otherFilters[key].options.map(v => v.profile || v.userspace || v);
+    ? props.kernelOptions
+    : key === 'kernels' ? props.kernelVersions.map(v => v.version) : props.otherFilters[key].options.map(v => v.profile || v.userspace || v);
 
   const checkedCount = filter.selected.length;
   filter.checkAll = checkedCount === allItems.length;
@@ -124,8 +103,8 @@ const handleKernelChange = (value) => {
 const handleFilterCheckAll = (key) => {
   const filter = props.filters[key];
   const allOptions = key === 'kernel'
-      ? props.kernelOptions
-      : key === 'kernels' ? props.kernelVersions.map(v => v.version) : props.otherFilters[key].options.map(v => v.profile || v.userspace || v);
+    ? props.kernelOptions
+    : key === 'kernels' ? props.kernelVersions.map(v => v.version) : props.otherFilters[key].options.map(v => v.profile || v.userspace || v);
   filter.selected = filter.checkAll ? allOptions : [];
   updateCheckState(key);
 };
@@ -136,15 +115,31 @@ const handleFilterChange = (key) => {
 </script>
 
 <style scoped>
+.filter-label,
+.filter-label-center {
+  font-size: 16px;
+  font-weight: 500;
+  margin-right: 10px;
+  min-width: 90px;
+  text-align: right;
+  color: var(--theme-text);
+}
+
+/* Dark mode specific color for labels */
+.dark .filter-label,
+.dark .filter-label-center {
+  color: #cccccc !important;
+  /* Adjusted color for dark mode */
+}
 
 :deep(.el-checkbox-button__inner) {
   font-size: 14px;
   font-weight: 400;
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
   border-radius: 5px !important;
-  background: #fff;
-  color: #222;
-  border: clamp(1px, 0.2vw, 2px) solid #e0e6ed;
+  background: var(--theme-input) !important;
+  color: var(--theme-text) !important;
+  border: clamp(1px, 0.2vw, 2px) solid var(--theme-border) !important;
   transition: all 0.2s;
   white-space: nowrap;
   overflow: visible;
@@ -171,26 +166,60 @@ const handleFilterChange = (key) => {
 }
 
 :deep(.el-checkbox-button.is-checked .el-checkbox-button__inner) {
-  background: #cedbf5;
-  color: #1a3fa6;
-  border: clamp(1px, 0.2vw, 2px) solid #012fa6;
+  background: var(--theme-hover) !important;
+  color: var(--el-color-primary) !important;
+  border: clamp(1px, 0.2vw, 2px) solid var(--el-color-primary) !important;
   box-shadow: none;
   font-weight: 500;
 }
 
 :deep(.el-checkbox-button__inner:hover) {
-  background: #fff;
-  border-color: #012fa6;
-  color: #1a3fa6;
+  background: var(--theme-hover) !important;
+  border-color: var(--el-color-primary) !important;
+  color: var(--el-color-primary) !important;
 }
 
 :deep(.el-checkbox-button.is-checked .el-checkbox-button__inner:hover) {
-  background: #fff;
-  border-color: #012fa6;
-  color: #1a3fa6;
+  background: var(--theme-hover) !important;
+  border-color: var(--el-color-primary) !important;
+  color: var(--el-color-primary) !important;
 }
 
 @media screen and (max-width: 900px) {
+  .filters {
+    padding: 0 2vw;
+  }
+
+  .filter-title {
+    font-size: clamp(14px, 2vw, 16px);
+    margin-bottom: 6px;
+  }
+
+  .filter-row {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: clamp(10px, 2vw, 18px);
+  }
+
+  .filter-label,
+  .filter-label-center {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    margin-right: 0;
+    text-align: left;
+    min-width: auto;
+    color: var(--theme-text);
+    /* Ensure mobile also uses theme variable by default */
+  }
+
+  .filter-label-center {
+    display: block;
+    width: 100%;
+    margin-bottom: 6px;
+    margin-left: 0;
+  }
+
   :deep(.el-checkbox-button) {
     margin: 0 !important;
     flex: 0 1 auto;
@@ -201,6 +230,7 @@ const handleFilterChange = (key) => {
     align-items: center;
     justify-content: center;
   }
+
   :deep(.el-checkbox-button__inner) {
     font-size: 13px;
     padding: 6px 12px;
@@ -208,7 +238,8 @@ const handleFilterChange = (key) => {
     min-width: 60px;
     height: 32px;
     line-height: 20px;
-    background: #fff;
+    background: var(--theme-input) !important;
+    color: var(--theme-text) !important;
     white-space: nowrap;
     overflow: visible;
     border-radius: 7px !important;
@@ -216,13 +247,16 @@ const handleFilterChange = (key) => {
     align-items: center;
     justify-content: center;
   }
+
   :deep(.el-checkbox-button.is-checked .el-checkbox-button__inner) {
     font-weight: 500;
   }
 }
+
 @media (min-width: 769px) {
   :deep(.el-checkbox-button__inner) {
-    background: #fff;
+    background: var(--theme-input) !important;
+    color: var(--theme-text) !important;
   }
 }
 </style>

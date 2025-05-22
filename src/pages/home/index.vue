@@ -139,6 +139,33 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
+.home-container {
+  min-height: 100vh;
+  background: var(--theme-bg);
+  transition: background 0.3s;
+  // 可选：加渐变
+  // background: linear-gradient(135deg, var(--theme-bg) 80%, #222 100%);
+}
+
+.product-card {
+  background: var(--theme-card) !important;
+  color: var(--theme-text) !important;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.08);
+  transition: background 0.3s, color 0.3s;
+}
+
+.product-name, .product-vendor {
+  color: var(--theme-text) !important;
+  transition: color 0.3s;
+}
+
+.input-container :deep(.el-input__wrapper) {
+  background: var(--theme-input) !important;
+  color: var(--theme-text) !important;
+  transition: background 0.3s, color 0.3s;
+}
+
 :deep(.el-input__prefix) {
   margin-left: 15px;
 }

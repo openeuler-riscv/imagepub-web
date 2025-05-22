@@ -1,0 +1,95 @@
+/* 主题变量 */
+:root {
+  /* 浅色主题 */
+  --theme-bg: #f4f6fa;
+  --theme-bg-secondary: #ffffff;
+  --theme-text: #222222;
+  --theme-text-secondary: #666666;
+  --theme-border: #e4e7ed;
+  --theme-hover: #f5f7fa;
+  --theme-card: #ffffff;
+  --theme-input: #f5f7fa;
+  --theme-table-header: #f5f7fa;
+  --theme-table-row: #ffffff;
+  --theme-shadow: rgba(0, 0, 0, 0.06);
+}
+
+:root.dark {
+  /* 深色主题 */
+  --theme-bg: #181a1b;
+  --theme-bg-secondary: #232425;
+  --theme-text: #e5eaf3;
+  --theme-text-secondary: #a0a0a0;
+  --theme-border: #33363a;
+  --theme-hover: #232425;
+  --theme-card: #232425;
+  --theme-input: #232425;
+  --theme-table-header: #232425;
+  --theme-table-row: #181a1b;
+  --theme-shadow: rgba(0, 0, 0, 0.4);
+}
+
+/* 基础样式 */
+/* body {
+  background-color: var(--theme-bg);
+  color: var(--theme-text);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+#app {
+  background: none !important;
+} */
+
+/* Element Plus 组件适配 */
+.el-card {
+  background-color: var(--theme-card) !important;
+  border-color: var(--theme-border) !important;
+  box-shadow: 0 2px 12px 0 var(--theme-shadow) !important;
+  transition: all 0.3s;
+}
+
+.el-input__wrapper {
+  background-color: var(--theme-input) !important;
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  transition: all 0.3s;
+}
+
+.el-button:not(.theme-button) {
+  background-color: var(--theme-card) !important;
+  border-color: var(--theme-border) !important;
+  color: var(--theme-text) !important;
+  transition: all 0.3s;
+}
+
+.el-menu {
+  background-color: var(--theme-card) !important;
+  border-color: var(--theme-border) !important;
+}
+
+.el-menu-item {
+  color: var(--theme-text) !important;
+}
+
+.el-menu-item:hover {
+  background-color: var(--theme-hover) !important;
+}
+
+.el-table {
+  background-color: var(--theme-card) !important;
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+}
+.el-table th {
+  background-color: var(--theme-table-header) !important;
+  color: var(--theme-text) !important;
+}
+.el-table td {
+  background-color: var(--theme-table-row) !important;
+  color: var(--theme-text) !important;
+}
+
+/* 过渡动画 */
+.theme-transition {
+  transition: all 0.3s ease;
+} 
