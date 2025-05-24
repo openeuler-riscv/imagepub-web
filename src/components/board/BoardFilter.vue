@@ -115,16 +115,6 @@ const handleFilterChange = (key) => {
 </script>
 
 <style scoped>
-.filter-label,
-.filter-label-center {
-  font-size: 16px;
-  font-weight: 500;
-  margin-right: 10px;
-  min-width: 90px;
-  text-align: right;
-  color: var(--theme-text);
-}
-
 /* Dark mode specific color for labels */
 .dark .filter-label,
 .dark .filter-label-center {
