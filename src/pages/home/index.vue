@@ -139,33 +139,6 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
-.home-container {
-  min-height: 100vh;
-  background: var(--theme-bg);
-  transition: background 0.3s;
-  // 可选：加渐变
-  // background: linear-gradient(135deg, var(--theme-bg) 80%, #222 100%);
-}
-
-.product-card {
-  background: var(--theme-card) !important;
-  color: var(--theme-text) !important;
-  border-radius: 18px;
-  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.08);
-  transition: background 0.3s, color 0.3s;
-}
-
-.product-name, .product-vendor {
-  color: var(--theme-text) !important;
-  transition: color 0.3s;
-}
-
-.input-container :deep(.el-input__wrapper) {
-  background: var(--theme-input) !important;
-  color: var(--theme-text) !important;
-  transition: background 0.3s, color 0.3s;
-}
-
 :deep(.el-input__prefix) {
   margin-left: 15px;
 }
@@ -196,5 +169,60 @@ onMounted(async () => {
   &:hover {
     background-color: #f5f7fa;
   }
+}
+/* 暗黑模式样式 */
+html.dark {
+  .home-container {
+    background: #121212 !important;
+  }
+
+  .product-card {
+    background-color: #1e1e1e !important;
+    border-color: #444 !important;
+    &:hover {
+      box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  .product-name {
+    color: #e0e0e0 !important;
+  }
+
+  .product-vendor {
+    color: #aaa !important;
+  }
+
+  .dropdown-item .filter-button {
+    background-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+    border-color: #555 !important;
+  }
+
+  /* Element Plus组件暗黑样式 */
+  :deep(.el-input__wrapper) {
+    background-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+  }
+
+  :deep(.el-dropdown-menu) {
+    background-color: #2a2a2a !important;
+    border-color: #555 !important;
+  }
+
+  :deep(.el-dropdown-menu__item) {
+    color: #e0e0e0 !important;
+    
+    &:hover {
+      background-color: #3a3a3a !important;
+    }
+  }
+
+  :deep(.el-input__inner) {
+    color: #e0e0e0 !important;
+    &::placeholder {
+      color: #888 !important;
+    }
+  }
+  
 }
 </style>

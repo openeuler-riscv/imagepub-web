@@ -30,7 +30,7 @@ import CustomSearchIcon from "@/components/icon/CustomSearchIcon.vue";
 import DarkModeButton from "@/components/common/DarkModeButton.vue";
 import { useRouter } from "vue-router";
 import { useI18n } from 'vue-i18n';
-import { useDarkModeStore } from '@/stores/darkMode';
+import { useDarkModeStore } from '@/store/darkMode';
 
 const router = useRouter();
 const { t, locale } = useI18n();

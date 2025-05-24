@@ -29,16 +29,7 @@
   --theme-shadow: rgba(0, 0, 0, 0.4);
 }
 
-/* 基础样式 */
-/* body {
-  background-color: var(--theme-bg);
-  color: var(--theme-text);
-  transition: background-color 0.3s, color 0.3s;
-}
 
-#app {
-  background: none !important;
-} */
 
 /* Element Plus 组件适配 */
 .el-card {
