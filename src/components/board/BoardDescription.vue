@@ -2,13 +2,13 @@
   <div class="component-container">
     <div v-if="props.historyVersions && props.historyVersions.length > 0" class="version-list">
       <div v-for="(version, index) in props.historyVersions" :key="index" class="version-card"
-           @click="handleActionClick(version)" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
+        @click="handleActionClick(version)" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
         <div class="version-header">
           <div class="version-number">v{{ version.version }}</div>
           <div class="release-date">{{ version.releaseDate }}</div>
         </div>
 
-        <div class="changelog-title">{{t('changeLog')}}</div>
+        <div class="changelog-title">{{ t('changeLog') }}</div>
         <div class="changelog-content">
           {{ version.changelog || '无变更说明' }}
         </div>
@@ -20,9 +20,9 @@
 
 
 <script setup>
-import {useI18n} from "vue-i18n";
+import { useI18n } from "vue-i18n";
 
-const {t} = useI18n()
+const { t } = useI18n()
 const props = defineProps({
   title: String,
   description: String,

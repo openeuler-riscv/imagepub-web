@@ -1,4 +1,4 @@
-.image-container{
+.image-container {
   width: 100%;
   height: 100%;
   min-height: 100vh;
@@ -7,6 +7,7 @@
   color: var(--theme-text);
   transition: background-color 0.3s, color 0.3s;
 }
+
 .top-container {
   padding: 20px;
   width: 100%;
@@ -49,11 +50,12 @@
   }
 }
 
-.el-table-custom-label{
+.el-table-custom-label {
   color: var(--theme-text);
   font-size: 1rem;
 }
-.text-indent-2{
+
+.text-indent-2 {
   text-indent: 2rem;
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
   color: var(--theme-text-secondary);
@@ -67,8 +69,7 @@
 
 /* 卡片样式 */
 .version-info-card,
-.mirror-list-card,
- {
+.mirror-list-card {
   background-color: var(--theme-card);
   border-radius: 12px;
   box-shadow: 0 4px 20px var(--theme-shadow);
@@ -111,6 +112,18 @@
   padding: 10px 0;
   line-height: 1.6;
   color: var(--theme-text-secondary);
+  <<<<<<< HEAD
+}
+
+.no-border {
+  border: none !important;
+}
+
+.no-border:hover,
+.no-border:focus {
+  border: none !important;
+  outline: none !important;
+  =======>>>>>>>upstream/dev
 }
 
 /* 帮助文档切换按钮 */
@@ -146,22 +159,26 @@
 .mirror-table {
   border-radius: 8px;
   overflow: hidden;
+
   /* Element Plus Table Dark Mode */
   :deep(.el-table) {
     background-color: var(--theme-card) !important;
     color: var(--theme-text) !important;
     border-color: var(--theme-border) !important;
   }
+
   :deep(.el-table th) {
     background-color: var(--theme-table-header) !important;
     color: var(--theme-text) !important;
     border-color: var(--theme-border) !important;
   }
+
   :deep(.el-table td) {
     background-color: var(--theme-table-row) !important;
     color: var(--theme-text) !important;
     border-color: var(--theme-border) !important;
   }
+
   :deep(.el-table__body tr:hover) {
     background-color: var(--theme-hover) !important;
     color: var(--theme-text) !important;
