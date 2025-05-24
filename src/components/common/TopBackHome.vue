@@ -70,14 +70,9 @@ const toggleLanguage = () => {
   display: flex;
   align-items: center;
   gap: 5px;
+  width: 500px;
 }
 
-.detail-search-container {
-  flex-grow: 0.95;
-  display: flex;
-  align-items: center;
-  position: relative;
-}
 .input-wrapper {
   display: flex;
   align-items: center;
@@ -93,14 +88,17 @@ const toggleLanguage = () => {
 
 /* 搜索区域容器样式 */
 .detail-search-container {
-  width: 50vw;
+  flex-grow: 1;
+  width: 500px;
+  flex-shrink: 0;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  position: relative;
 }
 
 .search-box {
-  width: 80%;
+  width: 100%;
   position: relative;
   display: flex;
   align-items: center;
@@ -136,8 +134,8 @@ const toggleLanguage = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   color: #606266;
 
   &:hover {
@@ -154,7 +152,7 @@ const toggleLanguage = () => {
 }
 
 /* 移动端适配样式 */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1068px) {
   .top-bar-container {
     width: 95%;
     height: auto;

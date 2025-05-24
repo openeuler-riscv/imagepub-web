@@ -59,12 +59,6 @@
   border-radius: 12px;
   transform: translateY(-2px);
 }
-.detail-search-container {
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  position: relative;
-}
 .input-container {
   width: 100%;
 }
@@ -196,17 +190,6 @@
   padding: 0 14px;
   height: 40px;
   line-height: 40px;
-}
-
-.detail-search-container > .custom-search-icon,
-.detail-search-container > svg {
-  flex-shrink: 0;
-  width: 36px;
-  height: 36px;
-  margin-left: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 /* Dark mode styles (only applied when html has .dark class) */
