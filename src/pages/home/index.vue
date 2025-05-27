@@ -77,7 +77,7 @@ import CustomSearchIcon from "@/components/icon/CustomSearchIcon.vue";
 import { getProductList } from "@/api/get-json";
 import { ElMessage } from "element-plus";
 import CustomDropIcon from "@/components/icon/CustomDropIcon.vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import './style.scss'
 import TopBackHome from "@/components/common/TopBackHome.vue";
 const searchCondition = reactive({
@@ -90,8 +90,11 @@ const searchCondition = reactive({
   supportStatus: ""
 });
 
+
+
 const productList = ref([]);
 const router = useRouter();
+const route = useRoute();
 const socSearch = (command) => {
   searchCondition.socSearch = command;
 };
@@ -119,6 +122,7 @@ const openProduct = async (product) => {
     path: "/board",
     query: {
       productUri: product.uri,
+      lang: route.query.lang
     },
   });
   window.location.reload();
@@ -225,4 +229,7 @@ html.dark {
   }
   
 }
+
+
+
 </style>
