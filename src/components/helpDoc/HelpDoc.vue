@@ -155,7 +155,7 @@ const parseMarkdown = () => {
 
 const fetchData = async () => {
   try {
-    const markdown = await request.get(`/public/${props.markdownURL}`);
+    const markdown = await request.get(`/${props.markdownURL}`);
     markdownContent.value = markdown.data;
     parseMarkdown();
   } catch (error) {
@@ -166,7 +166,7 @@ const fetchData = async () => {
 };
 
 onMounted(() => {
-  baseUrl.value = path.dirname(`/public/${props.markdownURL}`);
+  baseUrl.value = path.dirname(`/${props.markdownURL}`);
   fetchData();
 });
 
