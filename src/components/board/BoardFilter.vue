@@ -191,24 +191,6 @@ const handleFilterChange = (key) => {
     margin-bottom: clamp(10px, 2vw, 18px);
   }
 
-  .filter-label,
-  .filter-label-center {
-    font-size: 15px;
-    font-weight: 500;
-    margin-bottom: 6px;
-    margin-right: 0;
-    text-align: left;
-    min-width: auto;
-    color: var(--theme-text);
-    /* Ensure mobile also uses theme variable by default */
-  }
-
-  .filter-label-center {
-    display: block;
-    width: 100%;
-    margin-bottom: 6px;
-    margin-left: 0;
-  }
 
   :deep(.el-checkbox-button) {
     margin: 0 !important;
