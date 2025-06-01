@@ -133,12 +133,6 @@ const openProduct = async (product) => {
   });
   window.location.reload();
 };
-const clearFilter = (filterType) => {
-  searchCondition[filterType] = "";
-  if (filterType === 'socSearch') {
-    searchCondition.searchValue = "";
-  }
-};
 
 const handleImageError = (event) => {
   ElMessage.error("主板信息加载失败！", event.message);

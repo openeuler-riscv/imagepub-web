@@ -54,7 +54,7 @@
         </div>
       </div>
     </div>
-    <div v-else class="no-data提示">
+    <div v-else class="no-data-notify">
       <p>{{ t('noBoardDetailInfo') }}</p>
     </div>
   </div>
@@ -77,21 +77,32 @@ watch(
     { immediate: true }
 );
 
-const getRamConfig = () =>
-    props.boardDetail.hardware?.ram
-        ? `${props.boardDetail.hardware.ram.type}, ${props.boardDetail.hardware.ram.capacity.join('/')}`
-        : t('notConfigured');
+
+const getRamConfig = () => {
+  const ramList = props.boardDetail?.hw_info?.ram;
+  if (!Array.isArray(ramList) || ramList.length === 0) {
+    return t('notConfigured');
+  }
+
+  const firstRam = ramList[0];
+  const type = firstRam.type || 'Unknown';
+  const capacity = Array.isArray(firstRam.capacity)
+      ? firstRam.capacity.join('/')
+      : 'Unknown';
+
+  return `${type}, ${capacity}`;
+};
 
 const getStorageInterfaces = () =>
-    props.boardDetail.hardware?.storage || [];
+    props.boardDetail.hw_info?.storage || [];
 
 const getHighSpeedInterfaces = () =>
-    props.boardDetail.hardware?.connectivity?.filter(item =>
+    props.boardDetail.hw_info?.connectivity?.filter(item =>
         ['USB-A', 'Ethernet', 'HDMI', 'MIPI-CSI', 'MIPI-DSI'].includes(item.type)
     ) || [];
 
 const getLowSpeedInterfaces = () =>
-    props.boardDetail.hardware?.connectivity?.filter(item =>
+    props.boardDetail.hw_info?.connectivity?.filter(item =>
         ['USB-C', 'WiFi', 'Bluetooth'].includes(item.type)
     ) || [];
 
@@ -101,13 +112,11 @@ const changeMainImage = (index) => {
 </script>
 
 <style scoped>
-/* 主容器，居中显示 */
 .board-container {
   display: flex;
   justify-content: center;
 }
 
-/* 产品信息外层容器 */
 .product-container {
   width: 90%;
   visibility: visible;
@@ -116,7 +125,6 @@ const changeMainImage = (index) => {
   flex-wrap: wrap;
 }
 
-/* 板卡信息主区域 */
 .board-info {
   margin-top: 20px;
   display: flex;
@@ -135,7 +143,6 @@ const changeMainImage = (index) => {
   margin-right: 20px;
 }
 
-/* 信息列表 */
 .info-list {
   display: flex;
   flex-wrap: wrap;
@@ -143,20 +150,16 @@ const changeMainImage = (index) => {
   width: calc(100% - 320px);
 }
 
-/* 单个信息块 */
 .info-item {
   width: 33%;
   margin-bottom: 10px;
   background: var(--theme-card);
   color: var(--theme-text);
-  /* border-radius: 10px; */
-  /* border: 1px solid var(--theme-border); */
   padding: 10px 8px;
   box-sizing: border-box;
   transition: background 0.3s, color 0.3s, border-color 0.3s;
 }
 
-/* 缩略图容器 */
 .thumbnail-container {
   display: flex;
   flex-wrap: wrap;
@@ -164,8 +167,7 @@ const changeMainImage = (index) => {
   gap: 8px;
 }
 
-/* 无数据提示 */
-.no-data提示 {
+.no-data-notify {
   padding: 20px;
   color: var(--theme-text);
   background: var(--theme-card);
