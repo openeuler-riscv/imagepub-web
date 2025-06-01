@@ -13,10 +13,17 @@
               size="large"
               @keyup.enter="handleSearch"
               @select="handleSelect"
+              @click.suffix="handleSearch"
+              @clear="handleClear"
               style="width: 100%; height: 100%"
               :prefix-icon="CustomPrefixIcon"
-              :suffix-icon="CustomSearchIcon"
-          />
+          >
+            <template #suffix>
+              <el-icon class="custom-search-icon" @click="handleSearch">
+                <component :is="CustomSearchIcon" />
+              </el-icon>
+            </template>
+          </el-autocomplete>
         </div>
       </div>
     </div>
@@ -39,14 +46,15 @@
 </template>
 
 <script setup>
-import { onMounted, ref, nextTick, computed, reactive } from "vue";
+import { onMounted, ref, nextTick, reactive } from "vue";
 import logo from "@/assets/logo/Frame1@3x.svg";
 import CustomPrefixIcon from "@/components/icon/CustomPrefixIcon.vue";
 import CustomSearchIcon from "@/components/icon/CustomSearchIcon.vue";
 import { getProductList } from "@/api/get-json";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
-import './style.scss'
+import './style.scss';
+import { watch } from 'vue';
 import {getCookie} from "@/utils/cookie.js";
 
 const productList = ref([]);
@@ -68,6 +76,7 @@ const fetchProductList = async () => {
     ElMessage.error("获取产品列表失败: " + error.message);
   }
 };
+
 const openProduct = async (product) => {
   let lang = getCookie("lang");
   if(lang === undefined || lang === "") {
@@ -82,14 +91,12 @@ const handleImageError = (event) => {
   ElMessage.error("主板信息加载失败！", event.message);
 };
 
-const handleSearch = (event) => {
+const handleSearch = () => {
   const searchValue = searchCondition.searchValue.toLowerCase().trim();
-
   if (!searchValue) {
     productList.value = [...allProducts.value];
     return;
   }
-
   productList.value = allProducts.value.filter(product => {
     return (
         product.name.toLowerCase().includes(searchValue) ||
@@ -136,8 +143,8 @@ const querySearch = (queryString, callback) => {
       });
     }
   });
-
-  callback(suggestions.slice(0, 3));
+  //最多推荐5条数据
+  callback(suggestions.slice(0, 5));
 };
 
 const handleSelect = (item) => {
@@ -145,6 +152,16 @@ const handleSelect = (item) => {
   handleSearch();
 };
 
+const handleClear = () => {
+  searchCondition.searchValue = "";
+  productList.value = [...allProducts.value];
+};
+
+watch(() => searchCondition.searchValue, (newVal) => {
+  if (!newVal.trim()) {
+    productList.value = [...allProducts.value];
+  }
+});
 
 onMounted(async () => {
   await fetchProductList();
@@ -152,6 +169,10 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
+:deep(.custom-search-icon) {
+  cursor: pointer;
+  margin-left: 8px;
+}
 :deep(.el-input__prefix) {
   margin-left: 15px;
 }

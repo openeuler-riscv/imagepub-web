@@ -63,7 +63,6 @@ import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 const isDataLoaded = ref(false);
-const route = useRoute();
 const boardDetail = ref({});
 const boardImageData = ref({});
 

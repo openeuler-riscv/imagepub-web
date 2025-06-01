@@ -9,7 +9,7 @@
           <div class="version-text">
             {{ currentVersionInfo?.version }}
             {{ currentVersionInfo?.date }}
-            <el-button @click="toggleContent" class="help-toggle-btn" :class="{ 'active': !helpVisible }">
+            <el-button @click="toggleContent" class="active  help-toggle-btn" >
               {{ helpVisible ? t('checkImageList') : t('viewHelpDocumentation') }}
             </el-button>
           </div>

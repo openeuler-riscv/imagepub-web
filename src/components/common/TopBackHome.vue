@@ -5,7 +5,7 @@
         <div class="left-section">
           <CustomLogoIcon class="prefix-icon" />
           <el-button v-if="isBoard" @click="goHome" :icon="Back" round dark class="no-border-button">
-            <span  style="font-size: 1.25rem; font-family: PingFang SC-Regular">{{ t('backToHome') }}</span>
+            <span style="font-size: 1.25rem; font-family: PingFang SC-Regular">{{ t('backToHome') }}</span>
           </el-button>
 
           <el-button v-if="!isBoard" @click="goBack" :icon="Back" round dark class="no-border-button">
@@ -20,28 +20,31 @@
         </div>
         <div class="right-section">
           <DarkModeButton />
-          <el-button round @click="toggleLanguage">{{ t('toggleLanguage') }}</el-button>
+          <el-button round @click="handleLanguageChange">{{ t('toggleLanguage') }}</el-button>
         </div>
       </div>
     </div>
+    <!-- 添加一个关键属性，当routeVersion变化时，整个组件会重新渲染 -->
+    <router-view :key="routeVersion" />
   </div>
 </template>
 
 <script setup>
+import { ref, watch } from 'vue';
 import { Back } from "@element-plus/icons-vue";
 import CustomLogoIcon from "@/components/icon/CustomLogoIcon.vue";
 import CustomSearchIcon from "@/components/icon/CustomSearchIcon.vue";
 import DarkModeButton from "@/components/common/DarkModeButton.vue";
-import {useRoute, useRouter} from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { useI18n } from 'vue-i18n';
-import { useDarkModeStore } from '@/store/darkMode';
 import { setCookie } from '@/utils/cookie';
+import { defineEmits } from 'vue';
+import {useDarkModeStore} from "@/store/darkMode.js";
 
 const router = useRouter();
 const route = useRoute();
 const { t, locale } = useI18n();
-const darkModeStore = useDarkModeStore();
-
+const emits = defineEmits(['language-change']);
 
 const props = defineProps({
   isBoard: {
@@ -49,26 +52,45 @@ const props = defineProps({
     default: true
   }
 });
+
 // 初始化主题
+const darkModeStore = useDarkModeStore();
 darkModeStore.initTheme();
+
+const routeVersion = ref(0);
 
 const goHome = () => router.push('/home');
 const goBack = () => router.back();
-const toggleLanguage = () => {
+
+watch(() => [route.path, route.query.lang], () => {
+  routeVersion.value += 1;
+}, { immediate: true });
+
+const handleLanguageChange = () => {
   const newLang = locale.value === 'zh_CN' ? 'en_US' : 'zh_CN';
   locale.value = newLang;
   setCookie('lang', newLang);
-  // 需要触发当前页面重新请求
-  const currentPath = route.path;
+
   let i18nPath = route.path;
-  if (currentPath.includes('/en_US/')) {
-    i18nPath = currentPath.replace('/en_US/', '/zh_CN/');
-  } else if (currentPath.includes('/zh_CN/')) {
-    i18nPath = currentPath.replace('/zh_CN/', '/en_US/');
+  if (i18nPath.includes(`/${locale.value === 'zh_CN' ? 'en_US' : 'zh_CN'}/`)) {
+    i18nPath = i18nPath.replace(
+        `/${locale.value === 'zh_CN' ? 'en_US' : 'zh_CN'}/`,
+        `/${locale.value}/`
+    );
+  } else {
+    i18nPath = `/${locale.value}${i18nPath}`;
   }
-  router.push({ path: i18nPath, query: { ...router.currentRoute.value.query, lang: newLang } });
+
+  router.push({
+    path: i18nPath,
+    query: {
+      ...route.query,
+      lang: newLang
+    }
+  });
 };
 </script>
+
 
 <style scoped>
 /* 主容器样式 */
