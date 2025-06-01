@@ -4,8 +4,8 @@
       <div v-for="(version, index) in props.historyVersions" :key="index" class="version-card"
         @click="handleActionClick(version)" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
         <div class="version-header">
-          <div class="version-number">v{{ version.version }}</div>
-          <div class="release-date">{{ version.releaseDate }}</div>
+          <div class="version-number">v{{ version.date }}</div>
+          <div class="release-date">{{ version.status }}</div>
         </div>
 
         <div class="changelog-title">{{ t('changeLog') }}</div>

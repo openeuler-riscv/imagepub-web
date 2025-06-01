@@ -79,7 +79,8 @@ import { ElMessage } from "element-plus";
 import CustomDropIcon from "@/components/icon/CustomDropIcon.vue";
 import { useRouter, useRoute } from "vue-router";
 import './style.scss'
-import TopBackHome from "@/components/common/TopBackHome.vue";
+import {getCookie} from "@/utils/cookie.js";
+
 const searchCondition = reactive({
   searchValue: "",
   socSearch: "",
@@ -112,17 +113,22 @@ const fetchProductList = async () => {
   try {
     const response = await getProductList();
     productList.value = response.data;
+    console.log("productList",productList.value)
     await nextTick();
   } catch (error) {
     ElMessage.error("获取产品列表失败: " + error.message);
   }
 };
 const openProduct = async (product) => {
+  let lang = getCookie("lang");
+  if(lang === undefined || lang === "") {
+    lang = "zn_CN";
+  }
   await router.push({
     path: "/board",
     query: {
-      productUri: product.uri,
-      lang: route.query.lang
+      productUri: product.url,
+      lang: lang
     },
   });
   window.location.reload();

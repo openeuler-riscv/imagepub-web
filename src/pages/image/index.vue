@@ -8,6 +8,7 @@
           <BoardInfoTitle :title="t('version')"></BoardInfoTitle>
           <div class="version-text">
             {{ currentVersionInfo?.version }}
+            {{ currentVersionInfo?.date }}
             <el-button @click="toggleContent" class="help-toggle-btn" :class="{ 'active': !helpVisible }">
               {{ helpVisible ? t('checkImageList') : t('viewHelpDocumentation') }}
             </el-button>
@@ -15,7 +16,7 @@
         </div>
         <div class="changelog">
           <BoardInfoTitle :title="t('changeLog')"></BoardInfoTitle>
-          <div>{{ currentVersionInfo?.changelog }}</div>
+          <div>{{ currentVersionInfo?.changelog || '无更新日志' }}</div>
         </div>
       </div>
 
@@ -23,15 +24,13 @@
       <div class="content-toggle-area">
         <div v-if="!helpVisible && mirrorList.length > 0" class="mirror-list-card">
           <el-table :data="mirrorList" style="width: 100%" class="mirror-table">
-            <el-table-column prop="url" :label="t('imageFile')" min-width="150"
-              label-class-name="el-table-custom-label">
+            <el-table-column prop="url" :label="t('imageFile')" min-width="150" label-class-name="el-table-custom-label">
               <template #default="{ row }">
                 {{ row.url.split('/').pop() }}
               </template>
             </el-table-column>
             <el-table-column prop="tags" :label="t('tag')" min-width="60" label-class-name="el-table-custom-label" />
-            <el-table-column prop="hash.sha256" label="sha256" min-width="150"
-              label-class-name="el-table-custom-label" />
+            <el-table-column prop="hash.sha256" label="sha256" min-width="150" label-class-name="el-table-custom-label" />
             <el-table-column :label="t('operation')" min-width="50" label-class-name="el-table-custom-label">
               <template #default="scope">
                 <el-button @click="downloadFile(scope.row.url)" size="small" class="no-border">
@@ -58,81 +57,81 @@
 import './style.scss';
 import TopBackHome from "@/components/common/TopBackHome.vue";
 import HelpDoc from "@/components/helpDoc/helpDoc.vue";
-import { useBoardStore } from "@/store/boardStore.js";
 import { ref, watch, onMounted } from "vue";
-import { ElButton, ElTable, ElTableColumn } from 'element-plus';
+import { ElMessage } from 'element-plus';
 import { useRoute } from 'vue-router';
 import BoardInfoTitle from "@/components/board/BoardInfoTitle.vue";
 import { useI18n } from "vue-i18n";
 
-const { t } = useI18n()
-const boardStore = useBoardStore();
-const boardDetail = ref(boardStore.boardDetail);
+const { t } = useI18n();
+const route = useRoute();
+const boardDetail = ref({});
 const markdownURL = ref('');
 const mirrorList = ref([]);
-const route = useRoute();
-const currentVersion = route.query.version;
 const currentVersionInfo = ref(null);
-const helpVisible = ref(false); // 默认不显示帮助文档
+const helpVisible = ref(false);
 
-const toggleContent = () => {
-  helpVisible.value = !helpVisible.value;
-}
+const suiteName = route.query.suite || '无桌面镜像';
 
-const extractDocs = (boardDetailData) => {
-  return boardDetailData.value.os?.openEuler?.flatMap(osItem =>
-    osItem.imagesuites.flatMap(suite => suite.docs)
-  );
-};
+const props = defineProps({
+  productUri: String,
+  version1: String,
+  version2: String,
+  date: String
+});
 
-const processDocs = (docs) => {
-  return Array.isArray(docs) ? [...new Set(docs)] : [];
-};
-
-const updateMarkdownURL = () => {
-  const docs = extractDocs(boardDetail);
-  const processedDocs = processDocs(docs);
-  markdownURL.value = processedDocs.length > 0 ? processedDocs[0] : '';
-};
-
-const extractMirrorFiles = () => {
-  const files = [];
-  const openEulerList = boardDetail.value.os?.openEuler;
-  if (openEulerList) {
-    openEulerList.forEach(osItem => {
-      const historyVersions = osItem.historyVersions;
-      if (historyVersions) {
-        historyVersions.forEach(his => {
-          if (his.version === currentVersion) {
-            currentVersionInfo.value = his;
-            const imageSuites = osItem.imagesuites;
-            if (imageSuites) {
-              imageSuites.forEach(suite => {
-                const suiteFiles = suite.files;
-                if (suiteFiles) {
-                  suiteFiles.forEach(file => {
-                    files.push(file);
-                  });
-                }
-              });
-            }
-          }
-        });
-      }
-    });
+// 数据获取与处理
+const fetchImagePageData = async () => {
+  if (!props.productUri || !props.version2) {
+    ElMessage.error('缺少必要参数（productUri 或 version）');
+    return;
   }
-  mirrorList.value = files;
+
+  try {
+    const response = await fetch(`/${props.productUri}`);
+    if (!response.ok) throw new Error(`请求失败，状态码: ${response.status}`);
+    const data = await response.json();
+    boardDetail.value = data;
+    processData(data, props.version2); // 传递版本号用于匹配
+  } catch (error) {
+    ElMessage.error(`获取数据失败：${error.message}`);
+  }
 };
 
-watch([boardDetail, route], () => {
-  updateMarkdownURL();
-  extractMirrorFiles();
+const processData = (data, targetVersion) => {
+  const targetOs = data.imagesuites.find(os => os.name === props.version1);
+  if (!targetOs) {
+    ElMessage.error('未找到操作系统镜像');
+    return;
+  }
+
+  const targetRelease = targetOs.releases.find(release => release.name === targetVersion);
+  if (!targetRelease) {
+    ElMessage.error(`未找到版本 ${targetVersion}`);
+    return;
+  }
+
+  const latestRevision = targetRelease?.imagesuites?.[0]?.revisions
+      ?.filter(r => r.date === props.date)?.[0] ?? null;  currentVersionInfo.value = {
+    ...latestRevision,
+    version: targetVersion, // 补充显示版本号
+  };
+
+  mirrorList.value = latestRevision.files || [];
+  markdownURL.value = latestRevision.docs?.[0] || '';
+};
+
+watch([route], () => {
+  fetchImagePageData();
 });
 
 onMounted(() => {
-  updateMarkdownURL();
-  extractMirrorFiles();
+  fetchImagePageData();
 });
+
+const toggleContent = () => {
+  helpVisible.value = !helpVisible.value;
+};
 
 const downloadFile = (url) => {
   const a = document.createElement('a');

@@ -31,7 +31,7 @@ import DarkModeButton from "@/components/common/DarkModeButton.vue";
 import { useRouter } from "vue-router";
 import { useI18n } from 'vue-i18n';
 import { useDarkModeStore } from '@/store/darkMode';
-import { getCookie, setCookie } from '@/utils/cookie';
+import { setCookie } from '@/utils/cookie';
 
 const router = useRouter();
 const { t, locale } = useI18n();
@@ -43,7 +43,7 @@ darkModeStore.initTheme();
 const goHome = () => router.push('/home');
 
 const toggleLanguage = () => {
-  const newLang = locale.value === 'zh' ? 'en' : 'zh';
+  const newLang = locale.value === 'zh_CN' ? 'en_US' : 'zh_CN';
   locale.value = newLang;
   setCookie('lang', newLang);
   // 跳转并带上lang参数

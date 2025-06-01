@@ -1,5 +1,5 @@
 const messages = {
-    zh: {
+    zh_CN: {
         backToHome: '回首页',
         searchPlaceholder: '板卡信息',
         toggleLanguage: '中/英',
@@ -35,8 +35,9 @@ const messages = {
         checkImageList:'查看镜像列表',
         viewHelpDocumentation:'查看帮助文档',
         documentation:"帮助文档",
+        releaseDate: "发布时间",
     },
-    en: {
+    en_US: {
         backToHome: 'Back to Home',
         searchPlaceholder: 'Board information',
         toggleLanguage: 'EN/ZH',
@@ -72,6 +73,7 @@ const messages = {
         checkImageList:'Check the image list',
         viewHelpDocumentation:'View the help documentation',
         documentation:"Documentation",
+        releaseDate: "ReleaseDate",
     }
 };
 

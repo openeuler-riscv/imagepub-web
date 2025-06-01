@@ -24,11 +24,17 @@ const router = createRouter({
       props: route => ({ lang: route.query.lang })
     },
     {
-      path: "/image",
+      path: "/image/:productUri(.*)/:version1/:version2/:date",
       name: "image",
       component: () => import("../pages/image/index.vue"),
-      props: route => ({ lang: route.query.lang })
+      props: (route) => ({
+        productUri: route.params.productUri,
+        version1: route.params.version1,
+        version2: route.params.version2,
+        date: route.params.date,
+      })
     }
+
   ]
 });
 
