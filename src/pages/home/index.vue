@@ -6,58 +6,27 @@
       </div>
       <div class="search-container">
         <div class="input-container">
-          <el-input v-model="searchCondition.searchValue" placeholder="板卡信息" size="large"
-            style="width: 100%; height: 100%" :prefix-icon="CustomPrefixIcon" :suffix-icon="CustomSearchIcon">
-          </el-input>
+          <el-autocomplete
+              v-model="searchCondition.searchValue"
+              :fetch-suggestions="querySearch"
+              placeholder="板卡信息"
+              size="large"
+              @keyup.enter="handleSearch"
+              @select="handleSelect"
+              style="width: 100%; height: 100%"
+              :prefix-icon="CustomPrefixIcon"
+              :suffix-icon="CustomSearchIcon"
+          />
         </div>
       </div>
     </div>
-
-    <div class="dropdown-list-container">
-      <el-dropdown size="large" class="dropdown-item" trigger="click" @command="socSearch">
-        <el-button class="filter-button">
-          {{ socSearchText }}
-          <el-icon class="el-icon--right">
-            <CustomDropIcon />
-          </el-icon>
-        </el-button>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item command="SpacemiT K1/M1/X1">SpacemiT K1/M1/X1</el-dropdown-item>
-            <el-dropdown-item command="SOPHGO SG2042">SOPHGO SG2042</el-dropdown-item>
-            <el-dropdown-item command="ESWin EIC7700X">ESWin EIC7700X</el-dropdown-item>
-            <el-dropdown-item command="Qemu virt">Qemu virt</el-dropdown-item>
-            <el-dropdown-item command="T-HEAD TH1520">T-HEAD TH1520</el-dropdown-item>
-            <el-dropdown-item>StarFive JH7110</el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
-
-      <el-dropdown size="large" class="dropdown-item" trigger="click" @command="systemSearch">
-        <el-button class="filter-button">
-          {{ systemSearchText }}
-          <el-icon class="el-icon--right">
-            <CustomDropIcon />
-          </el-icon>
-        </el-button>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item command="系统特性1">系统特性1</el-dropdown-item>
-            <el-dropdown-item command="系统特性2">系统特性2</el-dropdown-item>
-            <el-dropdown-item command="系统特性3">系统特性3</el-dropdown-item>
-            <el-dropdown-item command="系统特性4">系统特性4</el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
-    </div>
-
     <div class="bottom-container">
       <div class="product-container">
         <el-card v-for="(product, index) in productList" :key="index" class="product-card"
-          @click="openProduct(product)">
+                 @click="openProduct(product)">
           <div class="product-image-container">
             <el-image :src="product.thumbnail" :lazy="true" fit="contain" class="product-image"
-              @error="handleImageError" />
+                      @error="handleImageError" />
           </div>
           <div class="product-info">
             <h3 class="product-name">{{ product.name }}</h3>
@@ -76,44 +45,24 @@ import CustomPrefixIcon from "@/components/icon/CustomPrefixIcon.vue";
 import CustomSearchIcon from "@/components/icon/CustomSearchIcon.vue";
 import { getProductList } from "@/api/get-json";
 import { ElMessage } from "element-plus";
-import CustomDropIcon from "@/components/icon/CustomDropIcon.vue";
-import { useRouter, useRoute } from "vue-router";
+import { useRouter } from "vue-router";
 import './style.scss'
 import {getCookie} from "@/utils/cookie.js";
 
+const productList = ref([]);
+const allProducts = ref([]);
+const router = useRouter();
 const searchCondition = reactive({
   searchValue: "",
   socSearch: "",
   systemSearch: "",
-  instructionSetFeature: "",
-  kernelVersion: "",
-  imageFeature: "",
-  supportStatus: ""
 });
 
-
-
-const productList = ref([]);
-const router = useRouter();
-const route = useRoute();
-const socSearch = (command) => {
-  searchCondition.socSearch = command;
-};
-const systemSearch = (command) => {
-  searchCondition.systemSearch = command;
-}
-const socSearchText = computed(() => {
-  return searchCondition.socSearch || "SoC型号";
-});
-
-const systemSearchText = computed(() => {
-  return searchCondition.systemSearch || "系统特性";
-});
 const fetchProductList = async () => {
   try {
     const response = await getProductList();
     productList.value = response.data;
-    console.log("productList",productList.value)
+    allProducts.value = response.data;
     await nextTick();
   } catch (error) {
     ElMessage.error("获取产品列表失败: " + error.message);
@@ -132,6 +81,71 @@ const openProduct = async (product) => {
 const handleImageError = (event) => {
   ElMessage.error("主板信息加载失败！", event.message);
 };
+
+const handleSearch = (event) => {
+  const searchValue = searchCondition.searchValue.toLowerCase().trim();
+
+  if (!searchValue) {
+    productList.value = [...allProducts.value];
+    return;
+  }
+
+  productList.value = allProducts.value.filter(product => {
+    return (
+        product.name.toLowerCase().includes(searchValue) ||
+        product.vendor.toLowerCase().includes(searchValue) ||
+        (product.soc && product.soc.name && product.soc.name.toLowerCase().includes(searchValue))
+    );
+  });
+};
+
+const querySearch = (queryString, callback) => {
+  if (!queryString.trim()) {
+    callback([]);
+    return;
+  }
+
+  const suggestions = [];
+  const keyword = queryString.toLowerCase().trim();
+
+  allProducts.value.forEach(product => {
+    if (product.name.toLowerCase().includes(keyword) &&
+        !suggestions.some(s => s.value === product.name)) {
+      suggestions.push({
+        value: product.name,
+        type: "name",
+        product
+      });
+    }
+
+    if (product.vendor.toLowerCase().includes(keyword) &&
+        !suggestions.some(s => s.value === product.vendor)) {
+      suggestions.push({
+        value: product.vendor,
+        type: "vendor",
+        product
+      });
+    }
+
+    if (product.soc.name.toLowerCase().includes(keyword) &&
+        !suggestions.some(s => s.value === product.soc.name)) {
+      suggestions.push({
+        value: product.soc.name,
+        type: "soc",
+        product
+      });
+    }
+  });
+
+  callback(suggestions.slice(0, 3));
+};
+
+const handleSelect = (item) => {
+  searchCondition.searchValue = item.value;
+  handleSearch();
+};
+
+
 onMounted(async () => {
   await fetchProductList();
 });
@@ -165,10 +179,6 @@ onMounted(async () => {
 :deep(.el-dropdown-menu__item) {
   padding: 8px 20px;
 }
-</style>
-
-
-<style lang="scss">
 html.dark {
   .home-container {
     background: #121212 !important;
@@ -200,7 +210,7 @@ html.dark {
   .el-dropdown-menu {
     background-color: #2a2a2a !important;
     border-color: #555 !important;
-     box-shadow: none !important;
+    box-shadow: none !important;
   }
 
   .el-dropdown-menu__item {
@@ -231,7 +241,7 @@ html.dark {
       color: #888 !important;
     }
   }
-   .el-popper.is-light {
+  .el-popper.is-light {
     background-color: #2a2a2a !important;
     border-color: #555 !important;
     box-shadow: none !important;
@@ -242,5 +252,15 @@ html.dark {
     border-color: #555 !important;
   }
 }
+:deep(.el-autocomplete-suggestion) {
+  .name {
+    color: var(--el-color-primary);
+  }
+  .vendor {
+    color: var(--el-color-success);
+  }
+  .soc {
+    color: var(--el-color-warning);
+  }
+}
 </style>
-

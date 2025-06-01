@@ -72,7 +72,6 @@ const props = defineProps({ boardDetail: {} });
 watch(
     () => props.boardDetail,
     (newValue) => {
-      console.log("newValue.pictures",newValue.pictures);
       newValue?.pictures?.length > 0 && (currentImageSrc.value = newValue.pictures[0]);
     },
     { immediate: true }

@@ -32,12 +32,13 @@ import { Back } from "@element-plus/icons-vue";
 import CustomLogoIcon from "@/components/icon/CustomLogoIcon.vue";
 import CustomSearchIcon from "@/components/icon/CustomSearchIcon.vue";
 import DarkModeButton from "@/components/common/DarkModeButton.vue";
-import { useRouter } from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import { useI18n } from 'vue-i18n';
 import { useDarkModeStore } from '@/store/darkMode';
 import { setCookie } from '@/utils/cookie';
 
 const router = useRouter();
+const route = useRoute();
 const { t, locale } = useI18n();
 const darkModeStore = useDarkModeStore();
 
@@ -58,8 +59,14 @@ const toggleLanguage = () => {
   locale.value = newLang;
   setCookie('lang', newLang);
   // 需要触发当前页面重新请求
-  console.log("router.currentRoute.value.path",router.currentRoute.value.path);
-  router.push({ path: router.currentRoute.value.path, query: { ...router.currentRoute.value.query, lang: newLang } });
+  const currentPath = route.path;
+  let i18nPath = route.path;
+  if (currentPath.includes('/en_US/')) {
+    i18nPath = currentPath.replace('/en_US/', '/zh_CN/');
+  } else if (currentPath.includes('/zh_CN/')) {
+    i18nPath = currentPath.replace('/zh_CN/', '/en_US/');
+  }
+  router.push({ path: i18nPath, query: { ...router.currentRoute.value.query, lang: newLang } });
 };
 </script>
 
