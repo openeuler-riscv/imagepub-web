@@ -125,15 +125,10 @@ const openProduct = async (product) => {
     lang = "zn_CN";
   }
   await router.push({
-    path: "/board",
-    query: {
-      productUri: product.url,
-      lang: lang
-    },
+    path: `/board/${product.url}`, // RESTful 路径
+    query: {lang: lang}
   });
-  window.location.reload();
 };
-
 const handleImageError = (event) => {
   ElMessage.error("主板信息加载失败！", event.message);
 };

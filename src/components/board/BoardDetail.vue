@@ -4,13 +4,13 @@
       <div class="board-info">
         <div class="board-image-container">
           <div class="board-image">
-            <el-image :src="currentImageSrc" style="width: 23vh; height: 23vh" />
+            <el-image :src="getImageSrc(currentImageSrc)" style="width: 23vh; height: 23vh" />
           </div>
           <div class="thumbnail-container">
             <el-image
                 v-for="(pic, index) in boardDetail?.pictures || []"
                 :key="index"
-                :src="pic"
+                :src="getImageSrc(pic)"
                 style="width: 60px; height: 45px; margin-right: 10px; cursor: pointer; border: saddlebrown 1px solid;"
                 @click="changeMainImage(index)"
             />
@@ -72,11 +72,15 @@ const props = defineProps({ boardDetail: {} });
 watch(
     () => props.boardDetail,
     (newValue) => {
+      console.log("newValue.pictures",newValue.pictures);
       newValue?.pictures?.length > 0 && (currentImageSrc.value = newValue.pictures[0]);
     },
     { immediate: true }
 );
 
+const getImageSrc = (path) => {
+  return `${import.meta.env.VITE_IMAGE_BASE_URL}${path}`;
+};
 
 const getRamConfig = () => {
   const ramList = props.boardDetail?.hw_info?.ram;

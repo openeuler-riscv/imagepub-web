@@ -1,6 +1,6 @@
 <template>
   <div class="image-container">
-    <TopBackHome />
+    <TopBackHome :isBoard=false />
     <div class="content-wrapper">
       <div class="version-info-card">
         <h2 class="version-info-title">{{ t('versionInfo') }}</h2>
@@ -70,8 +70,6 @@ const markdownURL = ref('');
 const mirrorList = ref([]);
 const currentVersionInfo = ref(null);
 const helpVisible = ref(false);
-
-const suiteName = route.query.suite || '无桌面镜像';
 
 const props = defineProps({
   productUri: String,

@@ -98,16 +98,20 @@ const filters = ref({
 
 const activeTab1 = ref(''); // 存储一级Tab的name（如'openEuler'）
 const activeTab2 = ref(''); // 存储二级Tab的name（如'24.03-LTS-SP1'）
-
 const router = useRouter();
 
+const props = defineProps({
+  productUri: {
+    type: String,
+    default: ''
+  }
+});
 
 const openImage = async (row) => {
-  const productUri = route.query.productUri; // 示例值，需从数据中获取
   const version1 = activeTab1.value; // 一级 Tab 值
   const version2 = activeTab2.value; // 二级 Tab 值
   await router.push({
-    path: `/image/${productUri}/${version1}/${version2}/${row.date}`, // RESTful 路径
+    path: `/image/${props.productUri}/${version1}/${version2}/${row.date}`, // RESTful 路径
   });
 };
 
@@ -192,12 +196,11 @@ watch([activeTab1, activeTab2], ([newTab1, newTab2]) => {
 // 保持原有数据加载逻辑，仅调整初始化Tab赋值
 const fetchBoardDetail = async () => {
   try {
-    const productUri = route.query.productUri;
-    if (!productUri) {
+    if (!props.productUri) {
       ElMessage.error('路由参数 productUri 为空');
       return;
     }
-    const uri = `/${productUri}`;
+    const uri = `/${props.productUri}`;
     const response = await fetch(uri);
     if (!response.ok) {
       ElMessage.error(`请求失败，状态码: ${response.status}`);

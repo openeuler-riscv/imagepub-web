@@ -36,6 +36,7 @@ const messages = {
         viewHelpDocumentation:'查看帮助文档',
         documentation:"帮助文档",
         releaseDate: "发布时间",
+        backToPreviousPage: "上一页",
     },
     en_US: {
         backToHome: 'Back to Home',
@@ -74,6 +75,7 @@ const messages = {
         viewHelpDocumentation:'View the help documentation',
         documentation:"Documentation",
         releaseDate: "ReleaseDate",
+        backToPreviousPage: "BackToPreviousPage",
     }
 };
 

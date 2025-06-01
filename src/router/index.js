@@ -18,10 +18,12 @@ const router = createRouter({
       props: route => ({ lang: route.query.lang })
     },
     {
-      path: "/board",
+      path: "/board/:productUri(.*)",
       name: "board",
       component: () => import("../pages/board/index.vue"),
-      props: route => ({ lang: route.query.lang })
+      props: (route) => ({
+        productUri: route.params.productUri,
+      })
     },
     {
       path: "/image/:productUri(.*)/:version1/:version2/:date",

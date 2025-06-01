@@ -4,8 +4,12 @@
       <div class="input-wrapper">
         <div class="left-section">
           <CustomLogoIcon class="prefix-icon" />
-          <el-button @click="goHome" :icon="Back" round dark class="no-border-button">
-            <span style="font-size: 1.25rem; font-family: PingFang SC-Regular">{{ t('backToHome') }}</span>
+          <el-button v-if="isBoard" @click="goHome" :icon="Back" round dark class="no-border-button">
+            <span  style="font-size: 1.25rem; font-family: PingFang SC-Regular">{{ t('backToHome') }}</span>
+          </el-button>
+
+          <el-button v-if="!isBoard" @click="goBack" :icon="Back" round dark class="no-border-button">
+            <span style="font-size: 1.25rem; font-family: PingFang SC-Regular">{{ t('backToPreviousPage') }}</span>
           </el-button>
         </div>
         <div class="detail-search-container">
@@ -37,16 +41,24 @@ const router = useRouter();
 const { t, locale } = useI18n();
 const darkModeStore = useDarkModeStore();
 
+
+const props = defineProps({
+  isBoard: {
+    type: Boolean,
+    default: true
+  }
+});
 // 初始化主题
 darkModeStore.initTheme();
 
 const goHome = () => router.push('/home');
-
+const goBack = () => router.back();
 const toggleLanguage = () => {
   const newLang = locale.value === 'zh_CN' ? 'en_US' : 'zh_CN';
   locale.value = newLang;
   setCookie('lang', newLang);
-  // 跳转并带上lang参数
+  // 需要触发当前页面重新请求
+  console.log("router.currentRoute.value.path",router.currentRoute.value.path);
   router.push({ path: router.currentRoute.value.path, query: { ...router.currentRoute.value.query, lang: newLang } });
 };
 </script>
