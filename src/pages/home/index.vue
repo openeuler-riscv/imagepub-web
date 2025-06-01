@@ -175,12 +175,11 @@ onMounted(async () => {
 
 :deep(.el-dropdown-menu__item) {
   padding: 8px 20px;
-
-  &:hover {
-    background-color: #f5f7fa;
-  }
 }
-/* 暗黑模式样式 */
+</style>
+
+
+<style lang="scss">
 html.dark {
   .home-container {
     background: #121212 !important;
@@ -189,6 +188,7 @@ html.dark {
   .product-card {
     background-color: #1e1e1e !important;
     border-color: #444 !important;
+
     &:hover {
       box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
     }
@@ -208,34 +208,50 @@ html.dark {
     border-color: #555 !important;
   }
 
-  /* Element Plus组件暗黑样式 */
-  :deep(.el-input__wrapper) {
-    background-color: #2a2a2a !important;
-    color: #e0e0e0 !important;
-  }
-
-  :deep(.el-dropdown-menu) {
+  .el-dropdown-menu {
     background-color: #2a2a2a !important;
     border-color: #555 !important;
+     box-shadow: none !important;
   }
 
-  :deep(.el-dropdown-menu__item) {
+  .el-dropdown-menu__item {
+    background-color: #2a2a2a !important;
     color: #e0e0e0 !important;
-    
+
     &:hover {
       background-color: #3a3a3a !important;
+      color: #ffffff !important;
+    }
+
+    &:focus {
+      background-color: #3a3a3a !important;
+      color: #ffffff !important;
+      outline: none !important;
+      box-shadow: none !important;
     }
   }
 
-  :deep(.el-input__inner) {
+  .el-input__wrapper {
+    background-color: #2a2a2a !important;
+  }
+
+  .el-input__inner {
     color: #e0e0e0 !important;
+
     &::placeholder {
       color: #888 !important;
     }
   }
-  
+   .el-popper.is-light {
+    background-color: #2a2a2a !important;
+    border-color: #555 !important;
+    box-shadow: none !important;
+  }
+
+  .el-popper.is-light > .el-popper__arrow::before {
+    background-color: #2a2a2a !important;
+    border-color: #555 !important;
+  }
 }
-
-
-
 </style>
+
