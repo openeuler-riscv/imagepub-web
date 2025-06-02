@@ -1,7 +1,7 @@
 /* 主题变量 */
 :root {
   /* 浅色主题 */
-  --theme-bg: #f4f6fa;
+  --theme-bg: null;
   --theme-bg-secondary: #ffffff;
   --theme-text: #222222;
   --theme-text-secondary: #666666;
