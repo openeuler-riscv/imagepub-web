@@ -148,6 +148,7 @@ const getIsaProfiles = () => {
 
   return currentRelease.imagesuites.flatMap((suite, suiteIndex) => {
     const isa = suite.isa;
+    console.log("isa", isa);
     if (!isa || !isa.march) return [];
     return isa.march.map((march, index) => ({
       id: `${suiteIndex}-${index}`,

@@ -72,7 +72,12 @@ const handleLanguageChange = () => {
   setCookie('lang', newLang);
 
   let i18nPath = route.path;
-  i18nPath = i18nPath.replace(/^\/(zh_CN|en_US)\//, '/');
+
+  if(i18nPath.includes('zh_CN')){
+    i18nPath = i18nPath.replace('zh_CN', 'en_US');
+  }else if(i18nPath.includes('en_US')){
+    i18nPath = i18nPath.replace('en_US', 'zh_CN');
+  }
   router.push({
     path: i18nPath,
     query: {
