@@ -8,7 +8,6 @@ html, body {
 #app {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     width: 100%;
-    min-height: 100vh;
     background: linear-gradient(
             to right top,
             #f4fbff 10%,
