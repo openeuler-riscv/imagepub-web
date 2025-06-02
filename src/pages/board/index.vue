@@ -3,41 +3,60 @@
     <TopBackHome />
 
     <BoardDetail :boardDetail="boardDetail"></BoardDetail>
-    <div v-if="isDataLoaded" class="box-card">
+    <div
+      v-if="isDataLoaded"
+      class="box-card"
+    >
       <div style="width: 100%">
-        <el-tabs v-model="activeTab1" class="top-tabs">
+        <el-tabs
+          v-model="activeTab1"
+          class="top-tabs"
+        >
           <el-tab-pane
-              v-for="(osItem, osIndex) in osList"
-              :key="osIndex"
-              :label="osItem.name"
-              :name="osItem.name"
+            v-for="(osItem, osIndex) in osList"
+            :key="osIndex"
+            :label="osItem.name"
+            :name="osItem.name"
           >
-            <el-tabs v-model="activeTab2" class="sub-tabs" type="border-card">
+            <el-tabs
+              v-model="activeTab2"
+              class="sub-tabs"
+              type="border-card"
+            >
               <el-tab-pane
-                  v-for="(release, releaseIndex) in getReleases(osItem)"
-                  :key="releaseIndex"
-                  :label="release.name"
-                  :name="release.name"
+                v-for="(release, releaseIndex) in getReleases(osItem)"
+                :key="releaseIndex"
+                :label="release.name"
+                :name="release.name"
               >
                 <h2 class="title">{{ release.name }}</h2>
                 <p class="description">
-                  {{ getSuiteDescription(release) || '' }}
+                  {{ getSuiteDescription(release) || "" }}
                 </p>
                 <BoardFilter
-                    :filters="filters"
-                    :kernelVersions="getKernelVersions(release)"
-                    :otherFilters="{
-                    isa: { label: t('isaBaseline'), options: getIsaProfiles(release) },
-                    userspace: { label: t('preInstalledList'), options: getUserspaces(release) },
-                    installer: { label: t('bootLoader'), options: getInstallerTypes(release) }
+                  :filters="filters"
+                  :kernelVersions="getKernelVersions(release)"
+                  :otherFilters="{
+                    isa: {
+                      label: t('isaBaseline'),
+                      options: getIsaProfiles(release),
+                    },
+                    userspace: {
+                      label: t('preInstalledList'),
+                      options: getUserspaces(release),
+                    },
+                    installer: {
+                      label: t('bootLoader'),
+                      options: getInstallerTypes(release),
+                    },
                   }"
                 ></BoardFilter>
                 <BoardDescription
-                    v-if="boardDetail && boardDetail.imagesuites"
-                    :title="release.name"
-                    :description="getSuiteDescription(release)"
-                    :historyVersions="release.imagesuites[0].revisions || []"
-                    :open-image="openImage"
+                  v-if="boardDetail && boardDetail.imagesuites"
+                  :title="release.name"
+                  :description="getSuiteDescription(release)"
+                  :historyVersions="release.imagesuites[0].revisions || []"
+                  :open-image="openImage"
                 >
                 </BoardDescription>
               </el-tab-pane>
@@ -50,16 +69,17 @@
 </template>
 
 <script setup>
-import { useRoute, useRouter } from 'vue-router';
-import { ref, computed, onMounted, watch } from 'vue';
-import { ElMessage } from 'element-plus';
+import { useRoute, useRouter } from "vue-router";
+import { ref, computed, onMounted, watch } from "vue";
+import { ElMessage } from "element-plus";
 import BoardDetail from "@/components/board/BoardDetail.vue";
-import { getProductVersion } from '@/api/get-json';
-import './style.scss';
+import { getProductVersion } from "@/api/get-json";
+import "./style.scss";
 import TopBackHome from "@/components/common/TopBackHome.vue";
 import BoardFilter from "@/components/board/BoardFilter.vue";
 import BoardDescription from "@/components/board/BoardDescription.vue";
-import { useI18n } from 'vue-i18n';
+import { useI18n } from "vue-i18n";
+import { languageFetch } from "@/utils/languageFetch";
 
 const { t } = useI18n();
 const isDataLoaded = ref(false);
@@ -71,39 +91,39 @@ const filters = ref({
     selected: ref([]),
     checkAll: ref(false),
     isIndeterminate: ref(true),
-    all: ['RVCK', 'VENDOR', 'TORVALDS']
+    all: ["RVCK", "VENDOR", "TORVALDS"],
   },
   kernels: {
     selected: ref([]),
     checkAll: ref(false),
-    isIndeterminate: ref(true)
+    isIndeterminate: ref(true),
   },
   isa: {
     selected: ref([]),
     checkAll: ref(false),
-    isIndeterminate: ref(true)
+    isIndeterminate: ref(true),
   },
   userspace: {
     selected: ref([]),
     checkAll: ref(false),
-    isIndeterminate: ref(true)
+    isIndeterminate: ref(true),
   },
   installer: {
     selected: ref([]),
     checkAll: ref(false),
-    isIndeterminate: ref(true)
-  }
+    isIndeterminate: ref(true),
+  },
 });
 
-const activeTab1 = ref(''); // 存储一级Tab的name（如'openEuler'）
-const activeTab2 = ref(''); // 存储二级Tab的name（如'24.03-LTS-SP1'）
+const activeTab1 = ref(""); // 存储一级Tab的name（如'openEuler'）
+const activeTab2 = ref(""); // 存储二级Tab的name（如'24.03-LTS-SP1'）
 const router = useRouter();
 
 const props = defineProps({
   productUri: {
     type: String,
-    default: ''
-  }
+    default: "",
+  },
 });
 
 const openImage = async (row) => {
@@ -115,10 +135,11 @@ const openImage = async (row) => {
 };
 
 // 动态获取一级Tab列表
-const osList = computed(() =>
-    boardDetail.value.imagesuites?.map(osItem => ({
+const osList = computed(
+  () =>
+    boardDetail.value.imagesuites?.map((osItem) => ({
       name: osItem.name,
-      releases: osItem.releases
+      releases: osItem.releases,
     })) || []
 );
 
@@ -126,24 +147,36 @@ const osList = computed(() =>
 const getReleases = (osItem) => osItem.releases || [];
 
 const getSuiteDescription = () => {
-  const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
-  const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
-  return currentRelease?.imagesuites?.[0]?.description || '';
+  const currentOs = boardDetail.value.imagesuites?.find(
+    (os) => os.name === activeTab1.value
+  );
+  const currentRelease = currentOs?.releases?.find(
+    (release) => release.name === activeTab2.value
+  );
+  return currentRelease?.imagesuites?.[0]?.description || "";
 };
 
 const getKernelVersions = () => {
-  const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
-  const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
+  const currentOs = boardDetail.value.imagesuites?.find(
+    (os) => os.name === activeTab1.value
+  );
+  const currentRelease = currentOs?.releases?.find(
+    (release) => release.name === activeTab2.value
+  );
   if (!currentRelease?.imagesuites) return [];
 
   return currentRelease.imagesuites
-      .filter(suite => suite.kernel?.version)
-      .flatMap(suite => [{ version: suite.kernel.version }]);
+    .filter((suite) => suite.kernel?.version)
+    .flatMap((suite) => [{ version: suite.kernel.version }]);
 };
 
 const getIsaProfiles = () => {
-  const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
-  const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
+  const currentOs = boardDetail.value.imagesuites?.find(
+    (os) => os.name === activeTab1.value
+  );
+  const currentRelease = currentOs?.releases?.find(
+    (release) => release.name === activeTab2.value
+  );
   if (!currentRelease?.imagesuites) return [];
 
   return currentRelease.imagesuites.flatMap((suite, suiteIndex) => {
@@ -152,40 +185,53 @@ const getIsaProfiles = () => {
     if (!isa || !isa.march) return [];
     return isa.march.map((march, index) => ({
       id: `${suiteIndex}-${index}`,
-      profile: march
+      profile: march,
     }));
   });
 };
 
 const getUserspaces = () => {
-  const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
-  const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
+  const currentOs = boardDetail.value.imagesuites?.find(
+    (os) => os.name === activeTab1.value
+  );
+  const currentRelease = currentOs?.releases?.find(
+    (release) => release.name === activeTab2.value
+  );
   if (!currentRelease?.imagesuites) return [];
 
   return currentRelease.imagesuites.flatMap((suite, index) => {
     const userSpaceList = suite.userspace;
     if (!userSpaceList) return [];
     return Array.isArray(userSpaceList)
-        ? userSpaceList.map((space, spaceIndex) => ({ id: `${index}-${spaceIndex}`, userspace: space }))
-        : [{ id: `${index}-0`, userspace: userSpaceList }];
+      ? userSpaceList.map((space, spaceIndex) => ({
+          id: `${index}-${spaceIndex}`,
+          userspace: space,
+        }))
+      : [{ id: `${index}-0`, userspace: userSpaceList }];
   });
 };
 
 const getInstallerTypes = () => {
-  const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
-  const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
+  const currentOs = boardDetail.value.imagesuites?.find(
+    (os) => os.name === activeTab1.value
+  );
+  const currentRelease = currentOs?.releases?.find(
+    (release) => release.name === activeTab2.value
+  );
   if (!currentRelease?.imagesuites) return [];
 
-  return [...new Set(
-      currentRelease.imagesuites.map(s => s.loader?.[0]).filter(Boolean)
-  )];
+  return [
+    ...new Set(
+      currentRelease.imagesuites.map((s) => s.loader?.[0]).filter(Boolean)
+    ),
+  ];
 };
 
 // 监听Tab变化，更新相关数据（可选：用于数据联动）
 watch([activeTab1, activeTab2], ([newTab1, newTab2]) => {
   if (newTab1 && newTab2) {
     // 示例：Tab切换时重置过滤条件
-    Object.keys(filters.value).forEach(key => {
+    Object.keys(filters.value).forEach((key) => {
       filters.value[key].selected = [];
       filters.value[key].checkAll = false;
       filters.value[key].isIndeterminate = true;
@@ -197,28 +243,36 @@ watch([activeTab1, activeTab2], ([newTab1, newTab2]) => {
 const fetchBoardDetail = async () => {
   try {
     if (!props.productUri) {
-      ElMessage.error('路由参数 productUri 为空');
+      ElMessage.error("路由参数 productUri 为空");
       return;
     }
     const uri = `/${props.productUri}`;
-    const response = await fetch(uri);
-    if (!response.ok) {
-      ElMessage.error(`请求失败，状态码: ${response.status}`);
-      return;
-    }
-    const data = await response.json();
-    boardDetail.value = data;
-
-    // 初始化Tab：自动选择第一个可用的一级和二级Tab
-    if (osList.value.length) {
-      activeTab1.value = osList.value[0].name; // 一级Tab初始化
-      const firstRelease = osList.value[0].releases[0];
-      if (firstRelease) {
-        activeTab2.value = firstRelease.name; // 二级Tab初始化
+    // 创建一个请求实例，保存在变量中以便后续可以多次调用
+    const request = languageFetch(uri);
+    
+    // 第一次订阅处理响应
+    request.then(async (response) => {
+      if (!response.ok) {
+        ElMessage.error(`请求失败，状态码: ${response.status}`);
+        return;
       }
-    }
+      const data = await response.json();
+      boardDetail.value = data;
+      // 初始化Tab：自动选择第一个可用的一级和二级Tab
+      if (osList.value.length) {
+        activeTab1.value = osList.value[0].name; // 一级Tab初始化
+        const firstRelease = osList.value[0].releases[0];
+        if (firstRelease) {
+          activeTab2.value = firstRelease.name; // 二级Tab初始化
+        }
+      }
+    });
+    
+    // 可以在需要的地方再次调用 request.notify() 来通知所有订阅者
+    // 或者添加新的订阅者
+    // 示例：request.then((response) => { /* 另一个处理函数 */ });
   } catch (error) {
-    ElMessage.error('获取板子详情失败：' + error.message);
+    ElMessage.error("获取板子详情失败：" + error.message);
   } finally {
     isDataLoaded.value = true;
   }
@@ -231,11 +285,11 @@ const fetchProductVersion = async () => {
     if (response && response.data) {
       boardImageData.value = response.data;
     } else {
-      ElMessage.error('获取产品版本失败：返回数据为空');
+      ElMessage.error("获取产品版本失败：返回数据为空");
     }
   } catch (error) {
-    console.error('获取产品版本失败:', error);
-    ElMessage.error('获取产品版本失败：' + error.message);
+    console.error("获取产品版本失败:", error);
+    ElMessage.error("获取产品版本失败：" + error.message);
   }
 };
 
@@ -505,6 +559,4 @@ html.dark {
     }
   }
 }
-
-
 </style>

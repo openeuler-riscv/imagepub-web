@@ -40,7 +40,7 @@ import { useI18n } from 'vue-i18n';
 import { setCookie } from '@/utils/cookie';
 import { defineEmits } from 'vue';
 import {useDarkModeStore} from "@/store/darkMode.js";
-
+import emitter from '@/utils/eventBus.js';
 const router = useRouter();
 const route = useRoute();
 const { t, locale } = useI18n();
@@ -85,6 +85,7 @@ const handleLanguageChange = () => {
       lang: newLang
     }
   });
+  emitter.emit('languageChanged', newLang);
 };
 </script>
 
