@@ -128,19 +128,21 @@ const osList = computed(() =>
 // 辅助函数：获取对应OS的releases列表
 const getReleases = (osItem) => osItem.releases || [];
 
+const getKernelOptions = ()=>{
+  const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
+  const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
+  if (!currentRelease?.imagesuites) return [];
+
+  return currentRelease.imagesuites
+      .filter(suite => suite.kernel?.type)
+      .flatMap(suite => [{ version: suite.kernel.type }]);
+};
+
 const getSuiteDescription = () => {
   const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
   const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
   return currentRelease?.imagesuites?.[0]?.description || '';
 };
-
-const mergedRevisions = computed(() => {
-  if (!release.value?.imagesuites) return [];
-  const allRevisions = release.value.imagesuites.flatMap(suite =>
-      Array.isArray(suite.revisions) ? suite.revisions : []
-  );
-  return [...new Set(allRevisions)]; // 去重
-});
 
 const getKernelVersions = () => {
   const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
@@ -152,15 +154,7 @@ const getKernelVersions = () => {
       .flatMap(suite => [{ version: suite.kernel.version }]);
 };
 
-const getIsaProfiles = () => {
-  const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
-  const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
-  if (!currentRelease?.imagesuites) return [];
 
-  return currentRelease.imagesuites
-      .filter(suite => suite.kernel?.type)
-      .flatMap(suite => [{ version: suite.kernel.type }]);
-}
 
 const getIsaMabi = () => {
   const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);

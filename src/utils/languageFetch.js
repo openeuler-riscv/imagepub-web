@@ -37,7 +37,6 @@ export function languageFetch(uri) {
 
 // 语言变更监听
 emitter.on("languageChanged", (newLang) => {
-  console.log("languageChanged", newLang);
   requestMap.forEach((subscribers, uri) => {
     const response = fetch(uri.replace('lange',newLang));
     response.then((res) => {
