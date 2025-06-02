@@ -61,7 +61,8 @@ import './style.scss';
 import TopBackHome from "@/components/common/TopBackHome.vue";
 import BoardFilter from "@/components/board/BoardFilter.vue";
 import BoardDescription from "@/components/board/BoardDescription.vue";
-import { useI18n } from 'vue-i18n';
+import { useI18n } from "vue-i18n";
+import { languageFetch } from "@/utils/languageFetch";
 
 const { t } = useI18n();
 const isDataLoaded = ref(false);
@@ -93,19 +94,19 @@ const filters = ref({
   installer: {
     selected: ref([]),
     checkAll: ref(false),
-    isIndeterminate: ref(true)
-  }
+    isIndeterminate: ref(true),
+  },
 });
 
-const activeTab1 = ref(''); // 存储一级Tab的name（如'openEuler'）
-const activeTab2 = ref(''); // 存储二级Tab的name（如'24.03-LTS-SP1'）
+const activeTab1 = ref(""); // 存储一级Tab的name（如'openEuler'）
+const activeTab2 = ref(""); // 存储二级Tab的name（如'24.03-LTS-SP1'）
 const router = useRouter();
 
 const props = defineProps({
   productUri: {
     type: String,
-    default: ''
-  }
+    default: "",
+  },
 });
 
 const openImage = async (row) => {
@@ -151,7 +152,7 @@ const getKernelVersions = () => {
       .flatMap(suite => [{ version: suite.kernel.version }]);
 };
 
-const getKernelOptions = ()=>{
+const getIsaProfiles = () => {
   const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
   const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
   if (!currentRelease?.imagesuites) return [];
@@ -188,7 +189,7 @@ const getIsaMarch = () => {
       profile: march
     }));
   });
-}
+};
 
 const getUserspaces = () => {
   const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
@@ -234,22 +235,30 @@ const fetchBoardDetail = async () => {
       return;
     }
     const uri = `/${props.productUri}`;
-    const response = await fetch(uri);
-    if (!response.ok) {
-      ElMessage.error(`请求失败，状态码: ${response.status}`);
-      return;
-    }
-    const data = await response.json();
-    boardDetail.value = data;
+    // 创建一个请求实例，保存在变量中以便后续可以多次调用
+    const request = languageFetch(uri);
 
-    // 初始化Tab：自动选择第一个可用的一级和二级Tab
-    if (osList.value.length) {
-      activeTab1.value = osList.value[0].name; // 一级Tab初始化
-      const firstRelease = osList.value[0].releases[0];
-      if (firstRelease) {
-        activeTab2.value = firstRelease.name; // 二级Tab初始化
+    // 第一次订阅处理响应
+    request.then(async (response) => {
+      if (!response.ok) {
+        ElMessage.error(`请求失败，状态码: ${response.status}`);
+        return;
       }
-    }
+      const data = await response.json();
+      boardDetail.value = data;
+      // 初始化Tab：自动选择第一个可用的一级和二级Tab
+      if (osList.value.length) {
+        activeTab1.value = osList.value[0].name; // 一级Tab初始化
+        const firstRelease = osList.value[0].releases[0];
+        if (firstRelease) {
+          activeTab2.value = firstRelease.name; // 二级Tab初始化
+        }
+      }
+    });
+
+    // 可以在需要的地方再次调用 request.notify() 来通知所有订阅者
+    // 或者添加新的订阅者
+    // 示例：request.then((response) => { /* 另一个处理函数 */ });
   } catch (error) {
     ElMessage.error('获取板子详情失败：' + error.message);
   } finally {
@@ -538,6 +547,4 @@ html.dark {
     }
   }
 }
-
-
 </style>

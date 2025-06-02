@@ -4,8 +4,11 @@
       <div v-for="(version, index) in props.historyVersions" :key="index" class="version-card"
         @click="handleActionClick(version)" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
         <div class="version-header">
-          <div class="version-number">v{{ version.date }}</div>
-          <div class="release-date">{{ version.status }}</div>
+          <div class="version-number">v{{ version.version }}</div>
+          <div class="release-date">{{ version.status||version.date||version.releaseDate }}</div> 
+          <!-- <div class="release-date">{{ version.status }}</div> 这个是新json里加的status，比如发行版 -->
+          <!-- <div class="release-date">{{ version.date }}</div>      这是新版本json的date -->
+          <!-- <div class="release-date">{{ version.releaseDate }}</div>       这是老版本json的relaseDate -->
         </div>
 
         <div class="changelog-title">{{ t('changeLog') }}</div>
