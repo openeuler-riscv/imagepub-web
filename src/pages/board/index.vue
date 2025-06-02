@@ -26,8 +26,10 @@
                 <BoardFilter
                     :filters="filters"
                     :kernelVersions="getKernelVersions(release)"
+                    :kernelOptions="getKernelOptions(release)"
+                    :isaMabi = "getIsaMabi(release)"
+                    :isaMarch = "getIsaMarch(release)"
                     :otherFilters="{
-                    isa: { label: t('isaBaseline'), options: getIsaProfiles(release) },
                     userspace: { label: t('preInstalledList'), options: getUserspaces(release) },
                     installer: { label: t('bootLoader'), options: getInstallerTypes(release) }
                   }"
@@ -36,8 +38,8 @@
                     v-if="boardDetail && boardDetail.imagesuites"
                     :title="release.name"
                     :description="getSuiteDescription(release)"
-                    :historyVersions="release.imagesuites[0].revisions || []"
-                    :open-image="openImage"
+                    :historyVersions="release.imagesuites?.flatMap(suite => suite.revisions || []) || []"
+                :open-image="openImage"
                 >
                 </BoardDescription>
               </el-tab-pane>
@@ -131,6 +133,14 @@ const getSuiteDescription = () => {
   return currentRelease?.imagesuites?.[0]?.description || '';
 };
 
+const mergedRevisions = computed(() => {
+  if (!release.value?.imagesuites) return [];
+  const allRevisions = release.value.imagesuites.flatMap(suite =>
+      Array.isArray(suite.revisions) ? suite.revisions : []
+  );
+  return [...new Set(allRevisions)]; // 去重
+});
+
 const getKernelVersions = () => {
   const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
   const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
@@ -141,21 +151,44 @@ const getKernelVersions = () => {
       .flatMap(suite => [{ version: suite.kernel.version }]);
 };
 
-const getIsaProfiles = () => {
+const getKernelOptions = ()=>{
   const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
   const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
   if (!currentRelease?.imagesuites) return [];
 
+  return currentRelease.imagesuites
+      .filter(suite => suite.kernel?.type)
+      .flatMap(suite => [{ version: suite.kernel.type }]);
+}
+
+const getIsaMabi = () => {
+  const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
+  const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
+  if (!currentRelease?.imagesuites) return [];
   return currentRelease.imagesuites.flatMap((suite, suiteIndex) => {
     const isa = suite.isa;
-    console.log("isa", isa);
+    if (!isa || !isa.mabi) return [];
+    console.log("isa.mabi", isa.mabi);
+    return {
+      id: `${suiteIndex}-${0}`,
+      profile: isa.mabi
+    }
+  });
+}
+
+const getIsaMarch = () => {
+  const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
+  const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
+  if (!currentRelease?.imagesuites) return [];
+  return currentRelease.imagesuites.flatMap((suite, suiteIndex) => {
+    const isa = suite.isa;
     if (!isa || !isa.march) return [];
     return isa.march.map((march, index) => ({
       id: `${suiteIndex}-${index}`,
       profile: march
     }));
   });
-};
+}
 
 const getUserspaces = () => {
   const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);

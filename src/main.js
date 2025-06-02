@@ -29,10 +29,10 @@ function detectLang() {
   if (lang) return lang;
   // 3. 浏览器
   lang = navigator.language || navigator.userLanguage;
-  if (lang.startsWith('zh')) return 'zh';
-  if (lang.startsWith('en')) return 'en';
-  // 4. 默认
-  return 'zh';
+  if (lang.startsWith('zh')) return 'zh_CN';
+  if (lang.startsWith('en')) return 'en_US';
+  // 4. 默认中文
+  return 'zh_CN';
 }
 
 const pinia = createPinia();

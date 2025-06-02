@@ -14,7 +14,7 @@ const messages = {
         notConfigured: 'NC',
         noBoardDetailInfo: '暂无板卡详情信息，请稍后重试。',
         imageSelection: '镜像选择',
-        isaBaseline: 'ISA 基线',
+        isaBaseline: 'ISA 基线：',
         isaSubOptionOne:'ISA 子选项 1',
         isaSubOptionTwo:'ISA 子选项 2',
         preInstalledList: '预装列表',
@@ -37,6 +37,9 @@ const messages = {
         documentation:"帮助文档",
         releaseDate: "发布时间",
         backToPreviousPage: "上一页",
+        isaMarch: "架构版本",
+        isaMabi: "接口类型",
+
     },
     en_US: {
         backToHome: 'Back to Home',
@@ -53,7 +56,7 @@ const messages = {
         notConfigured: 'NC',
         noBoardDetailInfo: 'No board detail information available. Please try again later.',
         imageSelection: 'Image Selection',
-        isaBaseline: 'ISA Baseline',
+        isaBaseline: 'ISA Baseline:',
         isaSubOptionOne:'ISA Sub-option 1',
         isaSubOptionTwo:'ISA Sub-option 2',
         preInstalledList: 'Pre-installed List',
@@ -76,6 +79,8 @@ const messages = {
         documentation:"Documentation",
         releaseDate: "ReleaseDate",
         backToPreviousPage: "Back To Previous Page",
+        isaMarch: "isaMarch",
+        isaMabi: "isaMabi",
     }
 };
 
