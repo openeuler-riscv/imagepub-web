@@ -75,7 +75,7 @@ const messages = {
         viewHelpDocumentation:'View the help documentation',
         documentation:"Documentation",
         releaseDate: "ReleaseDate",
-        backToPreviousPage: "BackToPreviousPage",
+        backToPreviousPage: "Back To Previous Page",
     }
 };
 
