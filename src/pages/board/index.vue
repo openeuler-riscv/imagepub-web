@@ -81,7 +81,12 @@ const filters = ref({
     checkAll: ref(false),
     isIndeterminate: ref(true)
   },
-  isa: {
+  isaMabi: {
+    selected: ref([]),
+    checkAll: ref(false),
+    isIndeterminate: ref(true)
+  },
+  isaMarch: {
     selected: ref([]),
     checkAll: ref(false),
     isIndeterminate: ref(true)

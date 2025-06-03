@@ -62,14 +62,14 @@
           <div style="display: flex; align-items: center; flex-wrap: wrap;">
             <span class="filter-label-center">{{ t('isaMabi') }}</span>
             <el-checkbox-button
-                v-model="filters.isa.checkAll"
-                :indeterminate="filters.isa.isIndeterminate"
-                @change="handleFilterCheckAll('isa')"
+                v-model="filters.isaMabi.checkAll"
+                :indeterminate="filters.isaMabi.isIndeterminate"
+                @change="handleFilterCheckAll('isaMabi')"
                 style="margin-right: 15px;"
             >
               {{ t('all') }}
             </el-checkbox-button>
-            <el-checkbox-group v-model="filters.isa.selected" @change="handleFilterChange('isa')">
+            <el-checkbox-group v-model="filters.isaMabi.selected" @change="handleFilterChange('isaMabi')">
               <el-checkbox-button
                   v-for="item in props.isaMabi"
                   :key="item"
@@ -83,14 +83,14 @@
           <div style="display: flex; align-items: center; flex-wrap: wrap; margin-top: 8px">
             <span class="filter-label-center">{{ t('isaMarch') }}</span>
             <el-checkbox-button
-                v-model="filters.isa.checkAll"
-                :indeterminate="filters.isa.isIndeterminate"
-                @change="handleFilterCheckAll('isa')"
+                v-model="filters.isaMarch.checkAll"
+                :indeterminate="filters.isaMarch.isIndeterminate"
+                @change="handleFilterCheckAll('isaMarch')"
                 style="margin-right: 15px;"
             >
               {{ t('all') }}
             </el-checkbox-button>
-            <el-checkbox-group v-model="filters.isa.selected" @change="handleFilterChange('isa')">
+            <el-checkbox-group v-model="filters.isaMarch.selected" @change="handleFilterChange('isaMarch')">
               <el-checkbox-button
                   v-for="item in isaMarch"
                   :key="item.profile"
@@ -141,6 +141,8 @@ const props = defineProps({
     default: () => ({
       kernel: {},
       kernels: {},
+      isaMabi:{},
+      isaMarch:{},
       userspace: {},
       installer: {}
     })
@@ -173,19 +175,22 @@ const props = defineProps({
 
 const updateCheckState = (key) => {
   const filter = props.filters[key];
-  const allItems = key === 'kernel'
-      ? props.kernelOptions.map(v => v.version)
-      : key === 'kernels'
-          ? props.kernelVersions.map(v => v.version)
-          : key === 'isa'
-              // ISA 合并了两段：baseline 用 isaMabi，version 用 isaMarch
-              ? [ ...props.isaMabi.map(v => v.profile), ...props.isaMarch.map(v => v.profile) ]
-              : props.otherFilters[key].options.map(v => v.profile || v.userspace || v);
+  const allItems =
+      key === 'kernel'
+          ? props.kernelOptions.map(v => v.version)
+          : key === 'kernels'
+              ? props.kernelVersions.map(v => v.version)
+              : key === 'isaMabi'
+                  ? props.isaMabi.map(v => v.profile)
+                  : key === 'isaMarch'
+                      ? props.isaMarch.map(v => v.profile)
+                      : props.otherFilters[key]?.options?.map(v => v.profile || v.userspace || v) || [];
 
   const checkedCount = filter.selected.length;
   filter.checkAll = checkedCount === allItems.length;
   filter.isIndeterminate = checkedCount > 0 && checkedCount < allItems.length;
 };
+
 
 // kernel 部分：全选逻辑
 const handleKernelCheckAll = (val) => {
@@ -209,9 +214,11 @@ const handleFilterCheckAll = (key) => {
     allOptions = props.kernelOptions.map(v => v.version);
   } else if (key === 'kernels') {
     allOptions = props.kernelVersions.map(v => v.version);
-  } else if (key === 'isa') {
-    allOptions = [ ...isaMabi.map(v => v.profile), ...isaMarch.map(v => v.profile) ];
-  } else {
+  } else if (key === 'isaMabi') {
+    allOptions = props.isaMabi.map(v => v.profile);
+  } else if (key === 'isaMarch') {
+    allOptions = props.isaMarch.map(v => v.profile);
+  }else {
     allOptions = props.otherFilters[key].options.map(v => v.profile || v.userspace || v);
   }
   filter.selected = filter.checkAll ? allOptions : [];
