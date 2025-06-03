@@ -9,7 +9,7 @@
           <el-autocomplete
               v-model="searchCondition.searchValue"
               :fetch-suggestions="querySearch"
-              placeholder="板卡信息"
+              :placeholder="t('boardInfo')"
               size="large"
               @keyup.enter="handleSearch"
               @select="handleSelect"
@@ -56,7 +56,8 @@ import { useRouter } from "vue-router";
 import './style.scss';
 import { watch } from 'vue';
 import {getCookie} from "@/utils/cookie.js";
-
+import {useI18n} from "vue-i18n";
+const {t} = useI18n();
 const productList = ref([]);
 const allProducts = ref([]);
 const router = useRouter();
