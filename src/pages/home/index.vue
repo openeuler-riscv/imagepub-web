@@ -2,7 +2,7 @@
   <div class="home-container">
     <div class="home-search-container">
       <div class="logo-container">
-        <el-image :src="logo" />
+        <el-image class="el-image-logo" :src="logo" />
       </div>
       <div class="search-container">
         <div class="input-container">
@@ -188,6 +188,7 @@ onMounted(async () => {
   border: none;
   box-shadow: none;
   padding: 0 12px;
+  height: 100%; // 确保输入框包装器填满容器高度
 }
 
 .el-dropdown-link {
@@ -274,6 +275,7 @@ html.dark {
     border-color: #555 !important;
   }
 }
+
 :deep(.el-autocomplete-suggestion) {
   .name {
     color: var(--el-color-primary);
