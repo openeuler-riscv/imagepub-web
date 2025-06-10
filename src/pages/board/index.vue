@@ -233,7 +233,7 @@ const fetchBoardDetail = async () => {
       ElMessage.error('路由参数 productUri 为空');
       return;
     }
-    const uri = `/${props.productUri}`;
+    const uri = `/${props.productUri}.json`;
     // 创建一个请求实例，保存在变量中以便后续可以多次调用
     const request = languageFetch(uri);
 

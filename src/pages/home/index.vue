@@ -2,24 +2,30 @@
   <div class="home-container">
     <div class="home-search-container">
       <div class="logo-container">
-        <el-image class="el-image-logo" :src="logo" />
+        <el-image
+          class="el-image-logo"
+          :src="logo"
+        />
       </div>
       <div class="search-container">
         <div class="input-container">
           <el-autocomplete
-              v-model="searchCondition.searchValue"
-              :fetch-suggestions="querySearch"
-              :placeholder="t('boardInfo')"
-              size="large"
-              @keyup.enter="handleSearch"
-              @select="handleSelect"
-              @click.suffix="handleSearch"
-              @clear="handleClear"
-              style="width: 100%; height: 100%"
-              :prefix-icon="CustomPrefixIcon"
+            v-model="searchCondition.searchValue"
+            :fetch-suggestions="querySearch"
+            :placeholder="t('boardInfo')"
+            size="large"
+            @keyup.enter="handleSearch"
+            @select="handleSelect"
+            @click.suffix="handleSearch"
+            @clear="handleClear"
+            style="width: 100%; height: 100%"
+            :prefix-icon="CustomPrefixIcon"
           >
             <template #suffix>
-              <el-icon class="custom-search-icon" @click="handleSearch">
+              <el-icon
+                class="custom-search-icon"
+                @click="handleSearch"
+              >
                 <component :is="CustomSearchIcon" />
               </el-icon>
             </template>
@@ -29,11 +35,20 @@
     </div>
     <div class="bottom-container">
       <div class="product-container">
-        <el-card v-for="(product, index) in productList" :key="index" class="product-card"
-                 @click="openProduct(product)">
+        <el-card
+          v-for="(product, index) in productList"
+          :key="index"
+          class="product-card"
+          @click="openProduct(product)"
+        >
           <div class="product-image-container">
-            <el-image :src="product.thumbnail" :lazy="true" fit="contain" class="product-image"
-                      @error="handleImageError" />
+            <el-image
+              :src="product.thumbnail"
+              :lazy="true"
+              fit="contain"
+              class="product-image"
+              @error="handleImageError"
+            />
           </div>
           <div class="product-info">
             <h3 class="product-name">{{ product.name }}</h3>
@@ -53,11 +68,11 @@ import CustomSearchIcon from "@/components/icon/CustomSearchIcon.vue";
 import { getProductList } from "@/api/get-json";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
-import './style.scss';
-import { watch } from 'vue';
-import {getCookie} from "@/utils/cookie.js";
-import {useI18n} from "vue-i18n";
-const {t} = useI18n();
+import "./style.scss";
+import { watch } from "vue";
+import { getCookie } from "@/utils/cookie.js";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const productList = ref([]);
 const allProducts = ref([]);
 const router = useRouter();
@@ -80,12 +95,12 @@ const fetchProductList = async () => {
 
 const openProduct = async (product) => {
   let lang = getCookie("lang");
-  if(lang === undefined || lang === "") {
+  if (lang === undefined || lang === "") {
     lang = "zn_CN";
   }
+  const fixUrl = product.url.replace(".json", "");
   await router.push({
-    path: `/board/${product.url}`, // RESTful 路径
-    query: {lang: lang}
+    path: `/board/${fixUrl}`, // RESTful 路径
   });
 };
 const handleImageError = (event) => {
@@ -98,11 +113,13 @@ const handleSearch = () => {
     productList.value = [...allProducts.value];
     return;
   }
-  productList.value = allProducts.value.filter(product => {
+  productList.value = allProducts.value.filter((product) => {
     return (
-        product.name.toLowerCase().includes(searchValue) ||
-        product.vendor.toLowerCase().includes(searchValue) ||
-        (product.soc && product.soc.name && product.soc.name.toLowerCase().includes(searchValue))
+      product.name.toLowerCase().includes(searchValue) ||
+      product.vendor.toLowerCase().includes(searchValue) ||
+      (product.soc &&
+        product.soc.name &&
+        product.soc.name.toLowerCase().includes(searchValue))
     );
   });
 };
@@ -116,31 +133,37 @@ const querySearch = (queryString, callback) => {
   const suggestions = [];
   const keyword = queryString.toLowerCase().trim();
 
-  allProducts.value.forEach(product => {
-    if (product.name.toLowerCase().includes(keyword) &&
-        !suggestions.some(s => s.value === product.name)) {
+  allProducts.value.forEach((product) => {
+    if (
+      product.name.toLowerCase().includes(keyword) &&
+      !suggestions.some((s) => s.value === product.name)
+    ) {
       suggestions.push({
         value: product.name,
         type: "name",
-        product
+        product,
       });
     }
 
-    if (product.vendor.toLowerCase().includes(keyword) &&
-        !suggestions.some(s => s.value === product.vendor)) {
+    if (
+      product.vendor.toLowerCase().includes(keyword) &&
+      !suggestions.some((s) => s.value === product.vendor)
+    ) {
       suggestions.push({
         value: product.vendor,
         type: "vendor",
-        product
+        product,
       });
     }
 
-    if (product.soc.name.toLowerCase().includes(keyword) &&
-        !suggestions.some(s => s.value === product.soc.name)) {
+    if (
+      product.soc.name.toLowerCase().includes(keyword) &&
+      !suggestions.some((s) => s.value === product.soc.name)
+    ) {
       suggestions.push({
         value: product.soc.name,
         type: "soc",
-        product
+        product,
       });
     }
   });
@@ -158,11 +181,14 @@ const handleClear = () => {
   productList.value = [...allProducts.value];
 };
 
-watch(() => searchCondition.searchValue, (newVal) => {
-  if (!newVal.trim()) {
-    productList.value = [...allProducts.value];
+watch(
+  () => searchCondition.searchValue,
+  (newVal) => {
+    if (!newVal.trim()) {
+      productList.value = [...allProducts.value];
+    }
   }
-});
+);
 
 onMounted(async () => {
   await fetchProductList();
