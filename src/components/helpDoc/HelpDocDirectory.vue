@@ -1,56 +1,38 @@
 <template>
-  <div
-    class="document-list-container"
-    :class="{ sidebar: !isMobile }"
-  >
-    <div
-      class="related-list"
-      v-if="!isMobile"
-    >
+  <div class="document-list-container" :class="{ sidebar: !isMobile }">
+    <!-- 桌面端目录 -->
+    <div class="doc-directory" v-if="!isMobile">
+      <DocTree :items="tocItems" :onClick="handleDocItemClick" :currentItem="currentDocItem" />
+    </div>
+
+    <!-- 移动端按钮 -->
+    <div class="mobile-button-container" v-if="isMobile">
+      <button class="sidebar-toggle" :class="{ 'fixed': isButtonFixed }" @click="toggleMobileSidebar">
+        <i class="fa fa-bars"></i>
+      </button>
+    </div>
+
+    <!-- 右侧的抽屉 -->
+    <el-drawer modal="false" v-model="mobileDocShow" :with-header="false" direction="rtl" size="80%">
+      <div>
+        <DocTree :items="tocItems" :onClick="handleDocItemClick" :currentItem="currentDocItem" />
+      </div>
+      <!-- 移动端相关文档列表 -->
+      <div class="related-list mobile-related-list">
+        <BoardInfoTitle title="相关文档"></BoardInfoTitle>
+        <div class="related-list-item">文档1</div>
+        <div class="related-list-item">文档2</div>
+        <div class="related-list-item">文档3</div>
+      </div>
+    </el-drawer>
+
+    <!-- 桌面端相关文档列表 -->
+    <div class="related-list" v-if="!isMobile">
       <BoardInfoTitle title="相关文档"></BoardInfoTitle>
       <div class="related-list-item">文档1</div>
       <div class="related-list-item">文档2</div>
       <div class="related-list-item">文档3</div>
     </div>
-
-    <el-affix :offset="30">
-      <div
-        class="doc-directory"
-        v-if="!isMobile"
-      >
-        <DocTree
-          :items="tocItems"
-          :onClick="handleDocItemClick"
-          :currentItem="currentDocItem"
-        />
-      </div>
-      <div v-else>
-        <button
-          class="sidebar-toggle"
-          v-show="isMobile"
-          @click="toggleMobileSidebar"
-        >
-          <i class="fa fa-bars"></i>
-        </button>
-      </div>
-    </el-affix>
-
-    <!-- 左侧的抽屉 -->
-    <el-drawer
-      modal="false"
-      v-model="mobileDocShow"
-      :with-header="false"
-      direction="ltr"
-    
-    >
-      <div>
-        <DocTree
-          :items="tocItems"
-          :onClick="handleDocItemClick"
-          :currentItem="currentDocItem"
-        />
-      </div>
-    </el-drawer>
   </div>
 </template>
 
@@ -288,6 +270,18 @@ const setupScrollListener = () => {
 const toggleMobileSidebar = () => {
   mobileDocShow.value = !mobileDocShow.value;
 };
+
+const isButtonFixed = ref(false);
+
+// 添加滚动监听来控制按钮固定
+const handleButtonScroll = () => {
+  const docElement = document.querySelector('.markdown-body');
+  if (docElement) {
+    const docRect = docElement.getBoundingClientRect();
+    isButtonFixed.value = docRect.top <= 70;
+  }
+};
+
 // 组件挂载时，解析 markdown 内容并设置滚动监听
 onMounted(() => {
   if (props.markdownContent) {
@@ -297,6 +291,8 @@ onMounted(() => {
   // 等待DOM更新后设置滚动监听
   nextTick(() => {
     setupScrollListener();
+    // 添加按钮滚动监听
+    window.addEventListener('scroll', handleButtonScroll);
   });
 });
 
@@ -307,11 +303,12 @@ onUnmounted(() => {
   //   markdownBody.removeEventListener("scroll", handleDocScroll);
   // }
   window.removeEventListener("scroll", handleDocScroll);
+  // 移除按钮滚动监听
+  window.removeEventListener('scroll', handleButtonScroll);
 });
 </script>
 
 <style scoped>
-
 .sidebar {
   max-width: 240px;
   width: 15%;
@@ -334,7 +331,7 @@ onUnmounted(() => {
 }
 
 .related-list {
-  margin-top: 20px;
+  margin-top: 60px;
   padding: 20px 14px;
   background: var(--theme-card);
   border-radius: 8px;
@@ -352,8 +349,18 @@ onUnmounted(() => {
   transition: background 0.3s, color 0.3s;
 }
 
-.sidebar-toggle {
+.markdown-body {
+  position: relative;
+  /* padding-top: 50px; */
+}
+
+.mobile-button-container {
   position: absolute;
+  right: -5px;
+  top: -40px;
+}
+
+.sidebar-toggle {
   width: 40px;
   height: 40px;
   border: none;
@@ -364,8 +371,20 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 10;
+  z-index: 999;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+}
+
+.sidebar-toggle.fixed {
+  position: fixed;
+  right: 20px;
+  top: 30px;
+}
+
+.mobile-related-list {
+  margin-top: 40px;
+  padding: 20px 14px;
+  border-top: 1px solid var(--theme-border);
 }
 </style>

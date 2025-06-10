@@ -1,9 +1,6 @@
 <template>
   <div class="help-doc">
-    <helpDocDirectory
-      :markdownContent="markdownContent"
-      :isMobile="isMobile"
-    />
+    <helpDocDirectory :markdownContent="markdownContent" :isMobile="isMobile" />
 
     <!-- 移动端目录按钮 -->
     <!-- <button
@@ -24,7 +21,7 @@
 
     <div class="markdown-body">
       <!-- 给手机的目录按钮添加一个上下的空间 -->
-      <div style="height: 30px;" v-show="isMobile">
+      <div v-show="isMobile">
       </div>
       <div class="board-info-2">
         <BoardInfoTitle name="板卡信息"></BoardInfoTitle>
@@ -114,9 +111,8 @@ renderer.image = function (href, title, text) {
   }
 
   const newHref = path.join(baseUrl.value, imageHref);
-  return `<img src="${newHref}" alt="${text}" ${
-    title ? `title="${title}"` : ""
-  }>`;
+  return `<img src="${newHref}" alt="${text}" ${title ? `title="${title}"` : ""
+    }>`;
 };
 
 renderer.code = function (code) {
@@ -263,14 +259,17 @@ onMounted(() => {
   width: 6px;
   height: 6px;
 }
+
 .markdown-body::-webkit-scrollbar-track {
   background: transparent;
   border-radius: 3px;
 }
+
 .markdown-body::-webkit-scrollbar-thumb {
   background: var(--theme-border);
   border-radius: 3px;
 }
+
 .markdown-body::-webkit-scrollbar-thumb:hover {
   background: var(--theme-hover);
 }
@@ -303,6 +302,7 @@ onMounted(() => {
   from {
     transform: translateX(100%);
   }
+
   to {
     transform: translateX(0);
   }
@@ -339,13 +339,16 @@ onMounted(() => {
   .sidebar-desktop {
     display: none;
   }
+
   .content-area {
     padding: 24px;
     padding-top: 80px;
   }
+
   .markdown-body {
     width: 90vw;
   }
+
   .help-document {
     flex-direction: column;
   }
@@ -358,9 +361,8 @@ onMounted(() => {
 }
 
 .markdown-body :deep(code) {
-  background-color: var(
-    --theme-code-bg
-  ) !important; /* Ensure inline code also has dark background if needed */
+  background-color: var(--theme-code-bg) !important;
+  /* Ensure inline code also has dark background if needed */
   color: var(--theme-code-text) !important;
 }
 
@@ -379,9 +381,8 @@ onMounted(() => {
 .markdown-body :deep(.hljs-selector-id),
 .markdown-body :deep(.hljs-selector-pseudo),
 .markdown-body :deep(.hljs-string) {
-  color: var(
-    --theme-text-secondary
-  ) !important; /* Example: adjust string color */
+  color: var(--theme-text-secondary) !important;
+  /* Example: adjust string color */
 }
 
 /* You might need to add more rules here for other highlight.js token types

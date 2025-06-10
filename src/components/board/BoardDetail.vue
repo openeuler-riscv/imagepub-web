@@ -7,13 +7,9 @@
             <el-image :src="getImageSrc(currentImageSrc)" style="width: 23vh; height: 23vh" />
           </div>
           <div class="thumbnail-container">
-            <el-image
-                v-for="(pic, index) in boardDetail?.pictures || []"
-                :key="index"
-                :src="getImageSrc(pic)"
-                style="width: 60px; height: 45px; margin-right: 10px; cursor: pointer; border: saddlebrown 1px solid;"
-                @click="changeMainImage(index)"
-            />
+            <el-image v-for="(pic, index) in boardDetail?.pictures || []" :key="index" :src="getImageSrc(pic)"
+              style="width: 60px; height: 45px; margin-right: 10px; cursor: pointer; border: saddlebrown 1px solid;"
+              @click="changeMainImage(index)" />
           </div>
         </div>
         <div class="info-list">
@@ -70,11 +66,11 @@ const currentImageSrc = ref('');
 const props = defineProps({ boardDetail: {} });
 
 watch(
-    () => props.boardDetail,
-    (newValue) => {
-      newValue?.pictures?.length > 0 && (currentImageSrc.value = newValue.pictures[0]);
-    },
-    { immediate: true }
+  () => props.boardDetail,
+  (newValue) => {
+    newValue?.pictures?.length > 0 && (currentImageSrc.value = newValue.pictures[0]);
+  },
+  { immediate: true }
 );
 
 const getImageSrc = (path) => {
@@ -90,24 +86,24 @@ const getRamConfig = () => {
   const firstRam = ramList[0];
   const type = firstRam.type || 'Unknown';
   const capacity = Array.isArray(firstRam.capacity)
-      ? firstRam.capacity.join('/')
-      : 'Unknown';
+    ? firstRam.capacity.join('/')
+    : 'Unknown';
 
   return `${type}, ${capacity}`;
 };
 
 const getStorageInterfaces = () =>
-    props.boardDetail.hw_info?.storage || [];
+  props.boardDetail.hw_info?.storage || [];
 
 const getHighSpeedInterfaces = () =>
-    props.boardDetail.hw_info?.connectivity?.filter(item =>
-        ['USB-A', 'Ethernet', 'HDMI', 'MIPI-CSI', 'MIPI-DSI'].includes(item.type)
-    ) || [];
+  props.boardDetail.hw_info?.connectivity?.filter(item =>
+    ['USB-A', 'Ethernet', 'HDMI', 'MIPI-CSI', 'MIPI-DSI'].includes(item.type)
+  ) || [];
 
 const getLowSpeedInterfaces = () =>
-    props.boardDetail.hw_info?.connectivity?.filter(item =>
-        ['USB-C', 'WiFi', 'Bluetooth'].includes(item.type)
-    ) || [];
+  props.boardDetail.hw_info?.connectivity?.filter(item =>
+    ['USB-C', 'WiFi', 'Bluetooth'].includes(item.type)
+  ) || [];
 
 const changeMainImage = (index) => {
   currentImageSrc.value = props.boardDetail.pictures?.[index] || '';
@@ -137,7 +133,7 @@ const changeMainImage = (index) => {
   background: var(--theme-card);
   color: var(--theme-text);
   border: 1px solid var(--theme-border);
-  box-shadow: 0 3px 12px 0 rgba(0,0,0,0.08);
+  box-shadow: 0 3px 12px 0 rgba(0, 0, 0, 0.08);
   transition: background 0.3s, color 0.3s, border-color 0.3s;
 }
 
@@ -187,6 +183,7 @@ const changeMainImage = (index) => {
     padding: 10px 2vw;
     width: 100%;
   }
+
   .board-info {
     flex-direction: column;
     margin-top: 10px;
@@ -199,6 +196,7 @@ const changeMainImage = (index) => {
     color: var(--theme-text);
     border: 1px solid var(--theme-border);
   }
+
   .board-image {
     margin: 0 auto 12px auto;
     width: 90vw;
@@ -206,6 +204,7 @@ const changeMainImage = (index) => {
     display: flex;
     justify-content: center;
   }
+
   .board-image :deep(.el-image) {
     width: 100% !important;
     height: auto !important;
@@ -213,11 +212,13 @@ const changeMainImage = (index) => {
     max-height: 200px;
     object-fit: contain;
   }
+
   .thumbnail-container {
     justify-content: center;
     gap: 6px;
     margin-top: 8px;
   }
+
   .info-list {
     width: 100%;
     margin-left: 0;
@@ -225,6 +226,7 @@ const changeMainImage = (index) => {
     flex-direction: column;
     gap: 10px;
   }
+
   .info-item {
     width: 100%;
     margin-bottom: 8px;
@@ -238,12 +240,14 @@ const changeMainImage = (index) => {
     padding: 10px 8px;
     box-sizing: border-box;
   }
+
   .info-item .el-row {
     margin-bottom: 4px;
     font-size: 15px;
     line-height: 1.5;
     word-break: break-all;
   }
+
   .info-item .el-row:last-child {
     margin-bottom: 0;
   }

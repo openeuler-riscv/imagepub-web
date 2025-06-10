@@ -8,42 +8,26 @@
         <el-main :style="{ padding: '0', textAlign: 'left' }">
           <div style="display: flex; align-items: center; flex-wrap: wrap;">
             <span class="filter-label-center">{{ t('versionLabel') }}</span>
-            <el-checkbox-button
-                v-model="filters.kernel.checkAll"
-                :indeterminate="filters.kernel.isIndeterminate"
-                @change="handleKernelCheckAll"
-                style="margin-right: 15px;"
-            >
+            <el-checkbox-button v-model="filters.kernel.checkAll" :indeterminate="filters.kernel.isIndeterminate"
+              @change="handleKernelCheckAll" style="margin-right: 15px;">
               {{ t('all') }}
             </el-checkbox-button>
 
             <el-checkbox-group v-model="filters.kernel.selected" @change="handleKernelChange">
-              <el-checkbox-button
-                  v-for="item in kernelOptions"
-                  :key="item"
-                  :value="item.version"
-              >
+              <el-checkbox-button v-for="item in kernelOptions" :key="item" :value="item.version">
                 {{ item.version }}
               </el-checkbox-button>
             </el-checkbox-group>
           </div>
           <div style="display: flex; align-items: center; flex-wrap: wrap; margin-top: 8px">
             <span class="filter-label-center">{{ t('versionNumber') }}</span>
-            <el-checkbox-button
-                v-model="filters.kernels.checkAll"
-                :indeterminate="filters.kernels.isIndeterminate"
-                @change="handleFilterCheckAll('kernels')"
-                style="margin-right: 15px;"
-            >
+            <el-checkbox-button v-model="filters.kernels.checkAll" :indeterminate="filters.kernels.isIndeterminate"
+              @change="handleFilterCheckAll('kernels')" style="margin-right: 15px;">
               {{ t('all') }}
             </el-checkbox-button>
 
             <el-checkbox-group v-model="filters.kernels.selected" @change="handleFilterChange('kernels')">
-              <el-checkbox-button
-                  v-for="item in kernelVersions"
-                  :key="item.version"
-                  :value="item.version"
-              >
+              <el-checkbox-button v-for="item in kernelVersions" :key="item.version" :value="item.version">
                 {{ item.version }}
               </el-checkbox-button>
             </el-checkbox-group>
@@ -61,20 +45,12 @@
         <el-main :style="{ padding: '0', textAlign: 'left' }">
           <div style="display: flex; align-items: center; flex-wrap: wrap;">
             <span class="filter-label-center">{{ t('isaMabi') }}</span>
-            <el-checkbox-button
-                v-model="filters.isaMabi.checkAll"
-                :indeterminate="filters.isaMabi.isIndeterminate"
-                @change="handleFilterCheckAll('isaMabi')"
-                style="margin-right: 15px;"
-            >
+            <el-checkbox-button v-model="filters.isaMabi.checkAll" :indeterminate="filters.isaMabi.isIndeterminate"
+              @change="handleFilterCheckAll('isaMabi')" style="margin-right: 15px;">
               {{ t('all') }}
             </el-checkbox-button>
             <el-checkbox-group v-model="filters.isaMabi.selected" @change="handleFilterChange('isaMabi')">
-              <el-checkbox-button
-                  v-for="item in props.isaMabi"
-                  :key="item"
-                  :value="item.profile"
-              >
+              <el-checkbox-button v-for="item in props.isaMabi" :key="item" :value="item.profile">
                 {{ item.profile }}
               </el-checkbox-button>
             </el-checkbox-group>
@@ -82,20 +58,12 @@
 
           <div style="display: flex; align-items: center; flex-wrap: wrap; margin-top: 8px">
             <span class="filter-label-center">{{ t('isaMarch') }}</span>
-            <el-checkbox-button
-                v-model="filters.isaMarch.checkAll"
-                :indeterminate="filters.isaMarch.isIndeterminate"
-                @change="handleFilterCheckAll('isaMarch')"
-                style="margin-right: 15px;"
-            >
+            <el-checkbox-button v-model="filters.isaMarch.checkAll" :indeterminate="filters.isaMarch.isIndeterminate"
+              @change="handleFilterCheckAll('isaMarch')" style="margin-right: 15px;">
               {{ t('all') }}
             </el-checkbox-button>
             <el-checkbox-group v-model="filters.isaMarch.selected" @change="handleFilterChange('isaMarch')">
-              <el-checkbox-button
-                  v-for="item in isaMarch"
-                  :key="item.profile"
-                  :value="item.profile"
-              >
+              <el-checkbox-button v-for="item in isaMarch" :key="item.profile" :value="item.profile">
                 {{ item.profile }}
               </el-checkbox-button>
             </el-checkbox-group>
@@ -108,20 +76,13 @@
     <div class="filter-row" v-for="(filter, key) in otherFilters" :key="key">
       <span class="filter-label">{{ filter.label }}：</span>
       <div style="display: flex; align-items: center; flex-wrap: wrap;">
-        <el-checkbox-button
-            v-model="filters[key].checkAll"
-            :indeterminate="filters[key].isIndeterminate"
-            @change="handleFilterCheckAll(key)"
-            style="margin-right: 15px;"
-        >
+        <el-checkbox-button v-model="filters[key].checkAll" :indeterminate="filters[key].isIndeterminate"
+          @change="handleFilterCheckAll(key)" style="margin-right: 15px;">
           {{ t('all') }}
         </el-checkbox-button>
         <el-checkbox-group v-model="filters[key].selected" @change="handleFilterChange(key)">
-          <el-checkbox-button
-              v-for="item in filter.options"
-              :key="item.id || item"
-              :value="item.profile || item.userspace || item"
-          >
+          <el-checkbox-button v-for="item in filter.options" :key="item.id || item"
+            :value="item.profile || item.userspace || item">
             {{ item.profile || item.userspace || item }}
           </el-checkbox-button>
         </el-checkbox-group>
@@ -141,8 +102,8 @@ const props = defineProps({
     default: () => ({
       kernel: {},
       kernels: {},
-      isaMabi:{},
-      isaMarch:{},
+      isaMabi: {},
+      isaMarch: {},
       userspace: {},
       installer: {}
     })
@@ -176,15 +137,15 @@ const props = defineProps({
 const updateCheckState = (key) => {
   const filter = props.filters[key];
   const allItems =
-      key === 'kernel'
-          ? props.kernelOptions.map(v => v.version)
-          : key === 'kernels'
-              ? props.kernelVersions.map(v => v.version)
-              : key === 'isaMabi'
-                  ? props.isaMabi.map(v => v.profile)
-                  : key === 'isaMarch'
-                      ? props.isaMarch.map(v => v.profile)
-                      : props.otherFilters[key]?.options?.map(v => v.profile || v.userspace || v) || [];
+    key === 'kernel'
+      ? props.kernelOptions.map(v => v.version)
+      : key === 'kernels'
+        ? props.kernelVersions.map(v => v.version)
+        : key === 'isaMabi'
+          ? props.isaMabi.map(v => v.profile)
+          : key === 'isaMarch'
+            ? props.isaMarch.map(v => v.profile)
+            : props.otherFilters[key]?.options?.map(v => v.profile || v.userspace || v) || [];
 
   const checkedCount = filter.selected.length;
   filter.checkAll = checkedCount === allItems.length;
@@ -195,8 +156,8 @@ const updateCheckState = (key) => {
 // kernel 部分：全选逻辑
 const handleKernelCheckAll = (val) => {
   props.filters.kernel.selected = val
-      ? props.kernelOptions.map(v => v.version)
-      : [];
+    ? props.kernelOptions.map(v => v.version)
+    : [];
   props.filters.kernel.isIndeterminate = false;
 };
 
@@ -218,7 +179,7 @@ const handleFilterCheckAll = (key) => {
     allOptions = props.isaMabi.map(v => v.profile);
   } else if (key === 'isaMarch') {
     allOptions = props.isaMarch.map(v => v.profile);
-  }else {
+  } else {
     allOptions = props.otherFilters[key].options.map(v => v.profile || v.userspace || v);
   }
   filter.selected = filter.checkAll ? allOptions : [];
