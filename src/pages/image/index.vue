@@ -9,9 +9,6 @@
           <div class="version-text">
             {{ currentVersionInfo?.version }}
             {{ currentVersionInfo?.date }}
-            <el-button @click="toggleContent" class="active  help-toggle-btn" >
-              {{ helpVisible ? t('checkImageList') : t('viewHelpDocumentation') }}
-            </el-button>
           </div>
         </div>
         <div class="changelog">
@@ -20,34 +17,31 @@
         </div>
       </div>
 
-      <!-- 镜像列表和帮助文档区域 -->
-      <div class="content-toggle-area">
-        <div v-if="!helpVisible && mirrorList.length > 0" class="mirror-list-card">
-          <el-table :data="mirrorList" style="width: 100%" class="mirror-table">
-            <el-table-column prop="url" :label="t('imageFile')" min-width="150" label-class-name="el-table-custom-label">
-              <template #default="{ row }">
-                {{ row.url.split('/').pop() }}
-              </template>
-            </el-table-column>
-            <el-table-column prop="tags" :label="t('tag')" min-width="60" label-class-name="el-table-custom-label" />
-            <el-table-column prop="hash.sha256" label="sha256" min-width="150" label-class-name="el-table-custom-label" />
-            <el-table-column :label="t('operation')" min-width="50" label-class-name="el-table-custom-label">
-              <template #default="scope">
-                <el-button @click="downloadFile(scope.row.url)" size="small" class="no-border">
-                  <i class="fa-solid fa-cloud-arrow-down fa-2x" style="opacity: 0.3;"></i>
-                </el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
+      <!-- 镜像列表区域 -->
+      <div v-if="mirrorList.length > 0" class="mirror-list-card">
+        <h2 class="version-info-title">{{ t('imageFile') }}</h2>
+        <el-table :data="mirrorList" style="width: 100%" class="mirror-table">
+          <el-table-column prop="url" :label="t('imageFile')" min-width="150" label-class-name="el-table-custom-label">
+            <template #default="{ row }">
+              {{ row.url.split('/').pop() }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="tags" :label="t('tag')" min-width="60" label-class-name="el-table-custom-label" />
+          <el-table-column prop="hash.sha256" label="sha256" min-width="150" label-class-name="el-table-custom-label" />
+          <el-table-column :label="t('operation')" min-width="50" label-class-name="el-table-custom-label">
+            <template #default="scope">
+              <el-button @click="downloadFile(scope.row.url)" size="small" class="no-border">
+                <i class="fa-solid fa-cloud-arrow-down fa-2x" style="opacity: 0.3;"></i>
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
 
-        <!-- 帮助文档 -->
-        <div class="bottom-container">
-          <div v-if="helpVisible" class="help-doc-card">
-            <h2 class="version-info-title">{{ t('documentation') }}</h2>
-            <HelpDoc v-if="markdownURL !== ''" :markdownURL="markdownURL" :boardDetail="boardDetail" />
-          </div>
-        </div>
+      <!-- 帮助文档 -->
+      <div class="help-doc-card">
+        <h2 class="version-info-title">{{ t('documentation') }}</h2>
+        <HelpDoc v-if="markdownURL !== ''" :markdownURL="markdownURL" :boardDetail="boardDetail" />
       </div>
     </div>
   </div>
@@ -69,7 +63,6 @@ const boardDetail = ref({});
 const markdownURL = ref('');
 const mirrorList = ref([]);
 const currentVersionInfo = ref(null);
-const helpVisible = ref(false);
 
 const props = defineProps({
   productUri: String,
@@ -90,7 +83,7 @@ const fetchImagePageData = async () => {
     if (!response.ok) throw new Error(`请求失败，状态码: ${response.status}`);
     const data = await response.json();
     boardDetail.value = data;
-    processData(data, props.version2); // 传递版本号用于匹配
+    processData(data, props.version2);
   } catch (error) {
     ElMessage.error(`获取数据失败：${error.message}`);
   }
@@ -110,9 +103,10 @@ const processData = (data, targetVersion) => {
   }
 
   const latestRevision = targetRelease?.imagesuites?.[0]?.revisions
-      ?.filter(r => r.date === props.date)?.[0] ?? null;  currentVersionInfo.value = {
+    ?.filter(r => r.date === props.date)?.[0] ?? null;
+  currentVersionInfo.value = {
     ...latestRevision,
-    version: targetVersion, // 补充显示版本号
+    version: targetVersion,
   };
 
   mirrorList.value = latestRevision.files || [];
@@ -126,10 +120,6 @@ watch([route], () => {
 onMounted(() => {
   fetchImagePageData();
 });
-
-const toggleContent = () => {
-  helpVisible.value = !helpVisible.value;
-};
 
 const downloadFile = (url) => {
   const a = document.createElement('a');

@@ -25,8 +25,9 @@
 
 .version-info-title {
   font-size: 1.5rem;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: var(--theme-text);
 }
 
 .version-info-item {
@@ -68,7 +69,8 @@
 
 /* 卡片样式 */
 .version-info-card,
-.mirror-list-card {
+.mirror-list-card,
+.help-doc-card {
   background-color: var(--theme-card);
   border-radius: 12px;
   box-shadow: 0 4px 20px var(--theme-shadow);
@@ -83,34 +85,10 @@
   box-shadow: 0 8px 30px var(--theme-shadow);
 }
 
-/* 版本信息区域 */
-.version-info-title {
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--theme-text);
-  margin-bottom: 15px;
-  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
-}
-
-.version-details,
-.changelog {
-  margin-bottom: 15px;
-  color: var(--theme-text);
-}
-
 .version-text {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--theme-border);
+  font-size: 1rem;
+  margin: 10px 0;
   color: var(--theme-text);
-}
-
-.changelog div {
-  padding: 10px 0;
-  line-height: 1.6;
-  color: var(--theme-text-secondary);
 }
 
 .no-border {
@@ -154,33 +132,19 @@
 
 /* 表格样式 */
 .mirror-table {
-  border-radius: 8px;
-  overflow: hidden;
+  margin-top: 10px;
 
-  /* Element Plus Table Dark Mode */
-  :deep(.el-table) {
-    background-color: var(--theme-card) !important;
-    color: var(--theme-text) !important;
-    border-color: var(--theme-border) !important;
+  :deep(.el-table__header) {
+    background-color: var(--theme-card);
   }
 
-  :deep(.el-table th) {
-    background-color: var(--theme-table-header) !important;
-    color: var(--theme-text) !important;
-    border-color: var(--theme-border) !important;
-  }
+  :deep(.el-table__row) {
+    background-color: var(--theme-card);
 
-  :deep(.el-table td) {
-    background-color: var(--theme-table-row) !important;
-    color: var(--theme-text) !important;
-    border-color: var(--theme-border) !important;
+    &:hover {
+      background-color: var(--theme-hover);
+    }
   }
-
-  :deep(.el-table__body tr:hover) {
-    background-color: var(--theme-hover) !important;
-    color: var(--theme-text) !important;
-  }
-
 }
 
 .el-table-custom-label {
@@ -206,13 +170,15 @@
 /* 响应式布局 */
 @media (max-width: 768px) {
   .content-wrapper {
-    padding: 15px;
+    width: 100%;
+    padding: 10px;
   }
 
   .version-info-card,
   .mirror-list-card,
   .help-doc-card {
     padding: 15px;
+    margin-bottom: 15px;
   }
 
   .version-info-title {
