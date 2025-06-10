@@ -338,6 +338,7 @@ onUnmounted(() => {
   background-color: var(--theme-card);
   padding: 10px;
   margin: 10px;
+  position: relative;
 }
 
 .doc-directory {
@@ -353,14 +354,16 @@ onUnmounted(() => {
 .directory-fixed {
   position: fixed;
   top: 10px;
-  width: calc(15% - 20px);
+  width: 15%;
   max-width: 220px;
+  padding: inherit;
 }
 
 /* 为了防止固定定位时的跳动，添加一个占位元素 */
-.directory-fixed+.directory-placeholder {
-  height: 100%;
-  visibility: hidden;
+.doc-directory-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: calc(100vh - 200px);
 }
 
 .document-list-container {
@@ -431,11 +434,6 @@ onUnmounted(() => {
 }
 
 .desktop-container {
-  position: relative;
-  width: 100%;
-}
-
-.doc-directory-wrapper {
   position: relative;
   width: 100%;
 }

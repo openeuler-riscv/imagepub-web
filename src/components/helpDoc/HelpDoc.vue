@@ -23,7 +23,7 @@
       <!-- 给手机的目录按钮添加一个上下的空间 -->
       <div v-show="isMobile">
       </div>
-      <div class="board-info-2">
+      <!-- <div class="board-info-2">
         <BoardInfoTitle name="板卡信息"></BoardInfoTitle>
         <div class="info-detail">
           <div id="board-block">
@@ -39,7 +39,7 @@
             <div id="content">{{ boardDetail?.type }}</div>
           </div>
         </div>
-      </div>
+      </div> -->
       <div v-html="parsedMarkdown"></div>
       源文件：{{ markdownURL }}
     </div>
