@@ -335,16 +335,19 @@ onUnmounted(() => {
 .sidebar {
   max-width: 240px;
   width: 15%;
+  min-width: 180px;
   background-color: var(--theme-card);
   padding: 10px;
   margin: 10px;
   position: relative;
+  overflow-x: hidden;
 }
 
 .doc-directory {
   width: 100%;
   height: calc(100vh - 200px);
   overflow-y: auto;
+  overflow-x: hidden;
   margin-top: 20px;
   position: relative;
   /* 只保留opacity的过渡效果 */
@@ -354,8 +357,11 @@ onUnmounted(() => {
 .directory-fixed {
   position: fixed;
   top: 10px;
-  width: 15%;
+  width: calc(15% - 20px);
+  /* 减去左右margin的宽度 */
   max-width: 220px;
+  min-width: 160px;
+  /* 减去左右margin后的最小宽度 */
   padding: inherit;
 }
 
