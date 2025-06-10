@@ -90,7 +90,6 @@ const filterItemsByQuery = (items, query) => {
     justify-content: center;
     align-items: center;
     margin-bottom: 15px;
-
     .search-input {
       padding: 8px 30px 8px 10px;
       border: 1px solid var(--theme-border);
@@ -100,7 +99,7 @@ const filterItemsByQuery = (items, query) => {
       background-color: var(--theme-input);
       color: var(--theme-text);
       transition: border-color 0.3s, background-color 0.3s, color 0.3s;
-
+      width: 100%;
       &:focus {
         border-color: var(--el-color-primary);
       }

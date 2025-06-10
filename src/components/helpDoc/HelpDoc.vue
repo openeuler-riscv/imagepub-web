@@ -1,21 +1,31 @@
 <template>
   <div class="help-doc">
-    <div class="sidebar" :class="{ 'hidden': isMobile }">
-      <helpDocDirectory :markdownContent="markdownContent" />
-    </div>
+    <helpDocDirectory
+      :markdownContent="markdownContent"
+      :isMobile="isMobile"
+    />
 
     <!-- 移动端目录按钮 -->
-    <button class="sidebar-toggle" v-show="isMobile" @click="toggleMobileSidebar">
-      <i class="fa fa-bars"></i>
-    </button>
-
+    <!-- <button
+        class="sidebar-toggle"
+        v-show="isMobile"
+        @click="toggleMobileSidebar"
+      >
+        <i class="fa fa-bars"></i>
+      </button> -->
     <!-- 移动端侧边栏 -->
-    <div class="sidebar-mobile sidebar-overlay" v-show="isMobile && showMobileSidebar"
-      @click="showMobileSidebar = false">
-      <helpDocDirectory :markdownContent="markdownContent" />
-    </div>
+    <!-- <div
+        class="sidebar-mobile sidebar-overlay"
+        v-show="isMobile && showMobileSidebar"
+        @click="showMobileSidebar = false"
+      >
+        <helpDocDirectory :markdownContent="markdownContent" />
+      </div> -->
 
     <div class="markdown-body">
+      <!-- 给手机的目录按钮添加一个上下的空间 -->
+      <div style="height: 30px;" v-show="isMobile">
+      </div>
       <div class="board-info-2">
         <BoardInfoTitle name="板卡信息"></BoardInfoTitle>
         <div class="info-detail">
@@ -104,7 +114,9 @@ renderer.image = function (href, title, text) {
   }
 
   const newHref = path.join(baseUrl.value, imageHref);
-  return `<img src="${newHref}" alt="${text}" ${title ? `title="${title}"` : ""}>`;
+  return `<img src="${newHref}" alt="${text}" ${
+    title ? `title="${title}"` : ""
+  }>`;
 };
 
 renderer.code = function (code) {
@@ -190,9 +202,8 @@ const toggleMobileSidebar = () => {
 // 初始化和监听窗口大小变化
 onMounted(() => {
   checkScreenSize();
-  window.addEventListener('resize', checkScreenSize);
+  window.addEventListener("resize", checkScreenSize);
 });
-
 </script>
 
 <style scoped>
@@ -205,21 +216,11 @@ onMounted(() => {
   transition: background 0.3s, color 0.3s;
 }
 
-.sidebar {
-  width: 15%;
-  min-width: 200px;
-  background-color: var(--theme-card);
-  padding: 16px;
-  border-right: 1px solid var(--theme-border);
-  color: var(--theme-text);
-  transition: background 0.3s, color 0.3s, border-color 0.3s;
-}
-
 .markdown-body {
   flex: 1;
-  overflow: auto;
-  padding: 16px;
-  max-height: 90vh;
+  /* overflow: auto; */
+  /* padding: 16px; */
+  /* max-height: 90vh; */
   background: var(--theme-card);
   color: var(--theme-text);
   border-radius: 8px;
@@ -228,12 +229,11 @@ onMounted(() => {
 
 /* 板卡信息区 */
 .board-info-2 {
-  margin-top: 24px;
+  margin: 24px 10px 16px 10px;
   background: var(--theme-card);
   color: var(--theme-text);
   border-radius: 8px;
-  padding: 12px 16px;
-  margin-bottom: 16px;
+  padding: 10px 10px;
   box-shadow: 0 2px 12px 0 var(--theme-shadow);
 }
 
@@ -286,7 +286,7 @@ onMounted(() => {
   -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 
-.sidebar-mobile {
+/* .sidebar-mobile {
   position: absolute;
   right: 0px;
   border-left: 1px solid var(--theme-border);
@@ -297,7 +297,7 @@ onMounted(() => {
   animation: slideIn 0.3s forwards;
   background: var(--theme-card);
   color: var(--theme-text);
-}
+} */
 
 @keyframes slideIn {
   from {
@@ -308,7 +308,7 @@ onMounted(() => {
   }
 }
 
-.sidebar-toggle {
+/* .sidebar-toggle {
   position: absolute;
   top: -45px;
   right: 20px;
@@ -329,11 +329,11 @@ onMounted(() => {
 
 .sidebar-toggle:active {
   background-color: var(--el-color-primary-dark);
-}
+} */
 
-.hidden {
+/* .hidden {
   display: none;
-}
+} */
 
 @media (max-width: 768px) {
   .sidebar-desktop {
@@ -358,7 +358,9 @@ onMounted(() => {
 }
 
 .markdown-body :deep(code) {
-  background-color: var(--theme-code-bg) !important; /* Ensure inline code also has dark background if needed */
+  background-color: var(
+    --theme-code-bg
+  ) !important; /* Ensure inline code also has dark background if needed */
   color: var(--theme-code-text) !important;
 }
 
@@ -377,7 +379,9 @@ onMounted(() => {
 .markdown-body :deep(.hljs-selector-id),
 .markdown-body :deep(.hljs-selector-pseudo),
 .markdown-body :deep(.hljs-string) {
-    color: var(--theme-text-secondary) !important; /* Example: adjust string color */
+  color: var(
+    --theme-text-secondary
+  ) !important; /* Example: adjust string color */
 }
 
 /* You might need to add more rules here for other highlight.js token types

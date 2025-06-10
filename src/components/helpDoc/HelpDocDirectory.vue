@@ -1,15 +1,56 @@
 <template>
-  <div class="document-list-container">
-    <div class="related-list">
+  <div
+    class="document-list-container"
+    :class="{ sidebar: !isMobile }"
+  >
+    <div
+      class="related-list"
+      v-if="!isMobile"
+    >
       <BoardInfoTitle title="相关文档"></BoardInfoTitle>
       <div class="related-list-item">文档1</div>
       <div class="related-list-item">文档2</div>
       <div class="related-list-item">文档3</div>
     </div>
-    <div class="doc-directory">
-      <DocTree :items="tocItems" :onClick="handleDocItemClick" :currentItem="currentDocItem" />
-    </div>
 
+    <el-affix :offset="30">
+      <div
+        class="doc-directory"
+        v-if="!isMobile"
+      >
+        <DocTree
+          :items="tocItems"
+          :onClick="handleDocItemClick"
+          :currentItem="currentDocItem"
+        />
+      </div>
+      <div v-else>
+        <button
+          class="sidebar-toggle"
+          v-show="isMobile"
+          @click="toggleMobileSidebar"
+        >
+          <i class="fa fa-bars"></i>
+        </button>
+      </div>
+    </el-affix>
+
+    <!-- 左侧的抽屉 -->
+    <el-drawer
+      modal="false"
+      v-model="mobileDocShow"
+      :with-header="false"
+      direction="ltr"
+    
+    >
+      <div>
+        <DocTree
+          :items="tocItems"
+          :onClick="handleDocItemClick"
+          :currentItem="currentDocItem"
+        />
+      </div>
+    </el-drawer>
   </div>
 </template>
 
@@ -21,6 +62,10 @@ const props = defineProps({
   markdownContent: {
     type: String,
     required: true,
+  },
+  isMobile: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -36,20 +81,18 @@ const handleDocItemClick = (item) => {
     const element = document.getElementById(item.id);
     if (element) {
       // 先移除滚动监听，避免滚动过程中触发handleDocScroll
-      const markdownBody = document.querySelector(".markdown-body");
-      if (markdownBody) {
-        markdownBody.removeEventListener("scroll", handleDocScroll);
-      }
-
+      // const markdownBody = document.querySelector(".markdown-body");
+      // if (markdownBody) {
+      //   markdownBody.removeEventListener("scroll", handleDocScroll);
+      // }
+      window.removeEventListener("scroll", handleDocScroll);
       // 滚动到目标元素
       element.scrollIntoView({ behavior: "smooth" });
-      console.log('elemtne' + element);
+      console.log("elemtne" + element);
 
       // 等待滚动完成后再添加监听
       setTimeout(() => {
-        if (markdownBody) {
-          markdownBody.addEventListener("scroll", handleDocScroll);
-        }
+        window.addEventListener("scroll", handleDocScroll);
       }, 500);
     }
   }
@@ -66,14 +109,22 @@ const handleDocScroll = () => {
   if (headings.length === 0) return;
 
   // 计算每个标题到视口顶部的距离
-  const scrollTop = markdownBody.scrollTop;
+  const scrollTop = window.scrollY;
+  const viewportHeight = window.innerHeight;
   let closestHeading = null;
   let closestDistance = Infinity;
 
-  // 找到距离顶部最近的标题
+  // 找到在视口中最接近顶部的标题
   headings.forEach((heading) => {
-    const distance = Math.abs(heading.offsetTop - scrollTop);
-    if (distance < closestDistance) {
+    // 获取标题相对于文档顶部的位置
+    const rect = heading.getBoundingClientRect();
+    const headingTop = rect.top + scrollTop;
+
+    // 计算标题到视口中心的距离（使用视口中心更符合视觉焦点）
+    const distance = Math.abs(headingTop - scrollTop - viewportHeight / 2);
+
+    // 只考虑在视口内或接近视口顶部的标题
+    if (rect.top <= viewportHeight * 0.6 && distance < closestDistance) {
       closestDistance = distance;
       closestHeading = heading;
     }
@@ -199,7 +250,7 @@ const parseTocFromMarkdown = (markdown) => {
 
   return buildSubtree(items);
 };
-
+const mobileDocShow = ref(false);
 // 监听 markdownContent 的变化，更新目录结构
 watch(
   () => props.markdownContent,
@@ -215,23 +266,32 @@ watch(
   },
   { immediate: true }
 );
-
+// 监听isMobile的变化
+watch(
+  () => props.isMobile,
+  (newValue, oldValue) => {
+    console.log("移动端状态已变更:", newValue);
+  }
+);
 // 设置滚动监听
 const setupScrollListener = () => {
-  const markdownBody = document.querySelector(".markdown-body");
-  if (markdownBody) {
-    // 先移除可能已存在的监听器，避免重复
-    markdownBody.removeEventListener("scroll", handleDocScroll);
-    // 添加滚动监听
-    markdownBody.addEventListener("scroll", handleDocScroll);
-  }
-};
+  // const markdownBody = document.querySelector(".markdown-body");
+  // if (markdownBody) {
+  //   // 先移除可能已存在的监听器，避免重复
+  //   markdownBody.removeEventListener("scroll", handleDocScroll);
+  //   // 添加滚动监听
+  //   markdownBody.addEventListener("scroll", handleDocScroll);
+  // }
 
+  window.addEventListener("scroll", handleDocScroll);
+};
+const toggleMobileSidebar = () => {
+  mobileDocShow.value = !mobileDocShow.value;
+};
 // 组件挂载时，解析 markdown 内容并设置滚动监听
 onMounted(() => {
   if (props.markdownContent) {
     tocItems.value = parseTocFromMarkdown(props.markdownContent);
-
   }
 
   // 等待DOM更新后设置滚动监听
@@ -242,14 +302,24 @@ onMounted(() => {
 
 // 组件卸载时，移除滚动监听
 onUnmounted(() => {
-  const markdownBody = document.querySelector(".markdown-body");
-  if (markdownBody) {
-    markdownBody.removeEventListener("scroll", handleDocScroll);
-  }
+  // const markdownBody = document.querySelector(".markdown-body");
+  // if (markdownBody) {
+  //   markdownBody.removeEventListener("scroll", handleDocScroll);
+  // }
+  window.removeEventListener("scroll", handleDocScroll);
 });
 </script>
 
 <style scoped>
+
+.sidebar {
+  max-width: 240px;
+  width: 15%;
+  background-color: var(--theme-card);
+  padding: 10px;
+  margin: 10px;
+}
+
 .doc-directory {
   width: auto;
   height: 100%;
@@ -259,7 +329,6 @@ onUnmounted(() => {
 .document-list-container {
   background-color: var(--theme-card);
   border-radius: 10px;
-  padding: 10px;
   color: var(--theme-text);
   transition: background 0.3s, color 0.3s;
 }
@@ -269,7 +338,7 @@ onUnmounted(() => {
   padding: 20px 14px;
   background: var(--theme-card);
   border-radius: 8px;
-  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.04);
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.04);
   color: var(--theme-text);
   transition: background 0.3s, color 0.3s;
 }
@@ -281,5 +350,22 @@ onUnmounted(() => {
   margin: 10px;
   color: var(--theme-text);
   transition: background 0.3s, color 0.3s;
+}
+
+.sidebar-toggle {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--el-color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s;
 }
 </style>
