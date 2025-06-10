@@ -1,8 +1,20 @@
 <template>
   <div class="document-list-container" :class="{ sidebar: !isMobile }">
     <!-- 桌面端目录 -->
-    <div class="doc-directory" v-if="!isMobile">
-      <DocTree :items="tocItems" :onClick="handleDocItemClick" :currentItem="currentDocItem" />
+    <div v-if="!isMobile" class="desktop-container">
+      <!-- 桌面端相关文档列表 -->
+      <div class="related-list desktop-related-list">
+        <BoardInfoTitle title="相关文档"></BoardInfoTitle>
+        <div class="related-list-item">文档1</div>
+        <div class="related-list-item">文档2</div>
+        <div class="related-list-item">文档3</div>
+      </div>
+
+      <div class="doc-directory-wrapper">
+        <div class="doc-directory" :class="{ 'directory-fixed': isDirectoryFixed }">
+          <DocTree :items="tocItems" :onClick="handleDocItemClick" :currentItem="currentDocItem" />
+        </div>
+      </div>
     </div>
 
     <!-- 移动端按钮 -->
@@ -15,24 +27,17 @@
     <!-- 右侧的抽屉 -->
     <el-drawer modal="false" v-model="mobileDocShow" :with-header="false" direction="rtl" size="80%">
       <div>
+        <!-- 移动端相关文档列表 -->
+        <div class="related-list mobile-related-list">
+          <BoardInfoTitle title="相关文档"></BoardInfoTitle>
+          <div class="related-list-item">文档1</div>
+          <div class="related-list-item">文档2</div>
+          <div class="related-list-item">文档3</div>
+        </div>
+
         <DocTree :items="tocItems" :onClick="handleDocItemClick" :currentItem="currentDocItem" />
       </div>
-      <!-- 移动端相关文档列表 -->
-      <div class="related-list mobile-related-list">
-        <BoardInfoTitle title="相关文档"></BoardInfoTitle>
-        <div class="related-list-item">文档1</div>
-        <div class="related-list-item">文档2</div>
-        <div class="related-list-item">文档3</div>
-      </div>
     </el-drawer>
-
-    <!-- 桌面端相关文档列表 -->
-    <div class="related-list" v-if="!isMobile">
-      <BoardInfoTitle title="相关文档"></BoardInfoTitle>
-      <div class="related-list-item">文档1</div>
-      <div class="related-list-item">文档2</div>
-      <div class="related-list-item">文档3</div>
-    </div>
   </div>
 </template>
 
@@ -59,14 +64,14 @@ const currentDocItem = ref(null);
 // 处理点击文档项目的事件
 const handleDocItemClick = (item) => {
   currentDocItem.value = item;
+  // 如果是移动端，点击后关闭抽屉
+  if (props.isMobile) {
+    mobileDocShow.value = false;
+  }
+
   if (item.id) {
     const element = document.getElementById(item.id);
     if (element) {
-      // 先移除滚动监听，避免滚动过程中触发handleDocScroll
-      // const markdownBody = document.querySelector(".markdown-body");
-      // if (markdownBody) {
-      //   markdownBody.removeEventListener("scroll", handleDocScroll);
-      // }
       window.removeEventListener("scroll", handleDocScroll);
       // 滚动到目标元素
       element.scrollIntoView({ behavior: "smooth" });
@@ -282,6 +287,22 @@ const handleButtonScroll = () => {
   }
 };
 
+const isDirectoryFixed = ref(false);
+
+// 添加滚动监听来控制目录固定
+const handleDirectoryScroll = () => {
+  if (!props.isMobile) {
+    const directoryElement = document.querySelector('.doc-directory');
+    const relatedList = document.querySelector('.desktop-related-list');
+    if (directoryElement && relatedList) {
+      const relatedListRect = relatedList.getBoundingClientRect();
+      const relatedListBottom = relatedListRect.bottom;
+      // 当相关文档列表完全滚出视图时才固定目录
+      isDirectoryFixed.value = relatedListBottom < 0;
+    }
+  }
+};
+
 // 组件挂载时，解析 markdown 内容并设置滚动监听
 onMounted(() => {
   if (props.markdownContent) {
@@ -293,6 +314,7 @@ onMounted(() => {
     setupScrollListener();
     // 添加按钮滚动监听
     window.addEventListener('scroll', handleButtonScroll);
+    window.addEventListener('scroll', handleDirectoryScroll);
   });
 });
 
@@ -305,6 +327,7 @@ onUnmounted(() => {
   window.removeEventListener("scroll", handleDocScroll);
   // 移除按钮滚动监听
   window.removeEventListener('scroll', handleButtonScroll);
+  window.removeEventListener('scroll', handleDirectoryScroll);
 });
 </script>
 
@@ -318,9 +341,26 @@ onUnmounted(() => {
 }
 
 .doc-directory {
-  width: auto;
+  width: 100%;
+  height: calc(100vh - 200px);
+  overflow-y: auto;
+  margin-top: 20px;
+  position: relative;
+  /* 只保留opacity的过渡效果 */
+  transition: opacity 0.2s ease;
+}
+
+.directory-fixed {
+  position: fixed;
+  top: 10px;
+  width: calc(15% - 20px);
+  max-width: 220px;
+}
+
+/* 为了防止固定定位时的跳动，添加一个占位元素 */
+.directory-fixed+.directory-placeholder {
   height: 100%;
-  overflow: hidden;
+  visibility: hidden;
 }
 
 .document-list-container {
@@ -331,13 +371,16 @@ onUnmounted(() => {
 }
 
 .related-list {
-  margin-top: 60px;
   padding: 20px 14px;
   background: var(--theme-card);
   border-radius: 8px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.04);
   color: var(--theme-text);
   transition: background 0.3s, color 0.3s;
+}
+
+.desktop-related-list {
+  margin-bottom: 20px;
 }
 
 .related-list-item {
@@ -351,7 +394,6 @@ onUnmounted(() => {
 
 .markdown-body {
   position: relative;
-  /* padding-top: 50px; */
 }
 
 .mobile-button-container {
@@ -383,8 +425,32 @@ onUnmounted(() => {
 }
 
 .mobile-related-list {
-  margin-top: 40px;
+  margin-bottom: 20px;
   padding: 20px 14px;
-  border-top: 1px solid var(--theme-border);
+  border-bottom: 1px solid var(--theme-border);
+}
+
+.desktop-container {
+  position: relative;
+  width: 100%;
+}
+
+.doc-directory-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* 隐藏滚动条但保持功能 */
+.doc-directory::-webkit-scrollbar {
+  width: 6px;
+}
+
+.doc-directory::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
+.doc-directory::-webkit-scrollbar-track {
+  background-color: transparent;
 }
 </style>

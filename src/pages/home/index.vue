@@ -2,53 +2,34 @@
   <div class="home-container">
     <div class="home-search-container">
       <div class="logo-container">
-        <el-image
-          class="el-image-logo"
-          :src="logo"
-        />
+        <el-image class="el-image-logo" :src="logo" />
       </div>
       <div class="search-container">
         <div class="input-container">
-          <el-autocomplete
-            v-model="searchCondition.searchValue"
-            :fetch-suggestions="querySearch"
-            :placeholder="t('boardInfo')"
-            size="large"
-            @keyup.enter="handleSearch"
-            @select="handleSelect"
-            @click.suffix="handleSearch"
-            @clear="handleClear"
-            style="width: 100%; height: 100%"
-            :prefix-icon="CustomPrefixIcon"
-          >
+          <el-autocomplete v-model="searchCondition.searchValue" :fetch-suggestions="querySearch"
+            :placeholder="t('boardInfo')" size="large" @keyup.enter="handleSearch" @select="handleSelect"
+            @click.suffix="handleSearch" @clear="handleClear" style="width: 100%; height: 100%"
+            :prefix-icon="CustomPrefixIcon">
             <template #suffix>
-              <el-icon
-                class="custom-search-icon"
-                @click="handleSearch"
-              >
+              <el-icon class="custom-search-icon" @click="handleSearch">
                 <component :is="CustomSearchIcon" />
               </el-icon>
             </template>
           </el-autocomplete>
         </div>
       </div>
+      <div class="toggle-container">
+        <DarkModeButton />
+        <el-button round @click="handleLanguageChange">{{ t('toggleLanguage') }}</el-button>
+      </div>
     </div>
     <div class="bottom-container">
       <div class="product-container">
-        <el-card
-          v-for="(product, index) in productList"
-          :key="index"
-          class="product-card"
-          @click="openProduct(product)"
-        >
+        <el-card v-for="(product, index) in productList" :key="index" class="product-card"
+          @click="openProduct(product)">
           <div class="product-image-container">
-            <el-image
-              :src="product.thumbnail"
-              :lazy="true"
-              fit="contain"
-              class="product-image"
-              @error="handleImageError"
-            />
+            <el-image :src="product.thumbnail" :lazy="true" fit="contain" class="product-image"
+              @error="handleImageError" />
           </div>
           <div class="product-info">
             <h3 class="product-name">{{ product.name }}</h3>
@@ -65,17 +46,21 @@ import { onMounted, ref, nextTick, reactive } from "vue";
 import logo from "@/assets/logo/Frame1@3x.svg";
 import CustomPrefixIcon from "@/components/icon/CustomPrefixIcon.vue";
 import CustomSearchIcon from "@/components/icon/CustomSearchIcon.vue";
-import { getProductList } from "@/api/get-json";
 import { ElMessage } from "element-plus";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import "./style.scss";
 import { watch } from "vue";
 import { getCookie } from "@/utils/cookie.js";
 import { useI18n } from "vue-i18n";
-const { t } = useI18n();
+import DarkModeButton from "@/components/common/DarkModeButton.vue";
+import { setCookie } from '@/utils/cookie';
+import emitter from '@/utils/eventBus.js';
+import { languageFetch } from "@/utils/languageFetch";
+const { t, locale } = useI18n();
 const productList = ref([]);
 const allProducts = ref([]);
 const router = useRouter();
+const route = useRoute();
 const searchCondition = reactive({
   searchValue: "",
   socSearch: "",
@@ -84,10 +69,24 @@ const searchCondition = reactive({
 
 const fetchProductList = async () => {
   try {
-    const response = await getProductList();
-    productList.value = response.data;
-    allProducts.value = response.data;
-    await nextTick();
+    let lang = getCookie("lang");
+    if (!lang) {
+      lang = "zh_CN"; //默认中文
+    }
+
+    const uri = `/v2/${lang}/boards.json`;
+    const request = languageFetch(uri);
+
+    request.then(async (response) => {
+      if (!response.ok) {
+        ElMessage.error(`请求失败，状态码: ${response.status}`);
+        return;
+      }
+      const data = await response.json();
+      productList.value = data;
+      allProducts.value = data;
+      await nextTick();
+    });
   } catch (error) {
     ElMessage.error("获取产品列表失败: " + error.message);
   }
@@ -190,6 +189,26 @@ watch(
   }
 );
 
+const handleLanguageChange = () => {
+  const newLang = locale.value === 'zh_CN' ? 'en_US' : 'zh_CN';
+  locale.value = newLang;
+  setCookie('lang', newLang);
+
+  // 更新路由，保持在首页
+  router.push({
+    path: '/home',
+    query: {
+      lang: newLang
+    }
+  });
+
+  // 触发语言变更事件
+  emitter.emit('languageChanged', newLang);
+
+  // 重新获取产品列表
+  fetchProductList();
+};
+
 onMounted(async () => {
   await fetchProductList();
 });
@@ -200,6 +219,7 @@ onMounted(async () => {
   cursor: pointer;
   margin-left: 8px;
 }
+
 :deep(.el-input__prefix) {
   margin-left: 15px;
 }
@@ -228,6 +248,7 @@ onMounted(async () => {
 :deep(.el-dropdown-menu__item) {
   padding: 8px 20px;
 }
+
 html.dark {
   .home-container {
     background: #121212 !important;
@@ -290,13 +311,14 @@ html.dark {
       color: #888 !important;
     }
   }
+
   .el-popper.is-light {
     background-color: #2a2a2a !important;
     border-color: #555 !important;
     box-shadow: none !important;
   }
 
-  .el-popper.is-light > .el-popper__arrow::before {
+  .el-popper.is-light>.el-popper__arrow::before {
     background-color: #2a2a2a !important;
     border-color: #555 !important;
   }
@@ -306,9 +328,11 @@ html.dark {
   .name {
     color: var(--el-color-primary);
   }
+
   .vendor {
     color: var(--el-color-success);
   }
+
   .soc {
     color: var(--el-color-warning);
   }
