@@ -86,7 +86,7 @@ const fetchImagePageData = async () => {
   }
 
   try {
-    const response = await fetch(`/${props.productUri}`);
+    const response = await fetch(`/${props.productUri}.json`);
     if (!response.ok) throw new Error(`请求失败，状态码: ${response.status}`);
     const data = await response.json();
     boardDetail.value = data;
