@@ -358,10 +358,8 @@ onUnmounted(() => {
   position: fixed;
   top: 10px;
   width: calc(15% - 20px);
-  /* 减去左右margin的宽度 */
   max-width: 220px;
   min-width: 160px;
-  /* 减去左右margin后的最小宽度 */
   padding: inherit;
 }
 

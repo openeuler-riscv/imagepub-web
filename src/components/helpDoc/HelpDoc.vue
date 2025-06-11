@@ -205,22 +205,33 @@ onMounted(() => {
 <style scoped>
 .help-doc {
   display: flex;
-  position: relative;
+  flex-direction: row;
+  width: 100%;
+  max-width: 100vw;
+  min-height: 100vh;
   background: var(--theme-bg);
   color: var(--theme-text);
-  min-height: 100vh;
-  transition: background 0.3s, color 0.3s;
+  overflow-x: hidden;
+}
+
+.help-doc>.document-list-container,
+.help-doc>.sidebar {
+  min-width: 220px;
+  max-width: 320px;
+  width: 18vw;
+  flex-shrink: 0;
 }
 
 .markdown-body {
   flex: 1;
-  /* overflow: auto; */
-  /* padding: 16px; */
-  /* max-height: 90vh; */
+  min-width: 0;
+  max-width: 100%;
+  padding: 24px;
   background: var(--theme-card);
   color: var(--theme-text);
   border-radius: 8px;
-  transition: background 0.3s, color 0.3s;
+  overflow-x: auto;
+  word-wrap: break-word;
 }
 
 /* 板卡信息区 */
@@ -336,21 +347,21 @@ onMounted(() => {
 } */
 
 @media (max-width: 768px) {
-  .sidebar-desktop {
-    display: none;
+  .help-doc {
+    flex-direction: column;
   }
 
-  .content-area {
-    padding: 24px;
-    padding-top: 80px;
+  .help-doc>.document-list-container,
+  .help-doc>.sidebar {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
   }
 
   .markdown-body {
-    width: 90vw;
-  }
-
-  .help-document {
-    flex-direction: column;
+    width: 100vw;
+    margin: 0;
+    padding: 10px;
   }
 }
 
