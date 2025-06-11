@@ -39,12 +39,12 @@ const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
 
 if (process.env.NODE_ENV !== 'development') {
-    console.log = function() {};
+  console.log = function () { };
 }
 
 const i18n = createI18n({
-    locale: detectLang(),
-    messages
+  locale: detectLang(),
+  messages
 });
 
 const app = createApp(App)

@@ -39,7 +39,7 @@ const messages = {
         backToPreviousPage: "上一页",
         isaMarch: "架构版本",
         isaMabi: "接口类型",
-
+        emptyContent: '暂无相关内容',
     },
     en_US: {
         backToHome: 'Back to Home',
@@ -81,6 +81,7 @@ const messages = {
         backToPreviousPage: "Back To Previous Page",
         isaMarch: "isaMarch",
         isaMabi: "isaMabi",
+        emptyContent: 'No relevant content',
     }
 };
 
