@@ -197,6 +197,13 @@ const handleSearchInput = e => {
   if (!searchKeyword.value) {
     isSearched.value = false;
     searchQuery.value = "";
+    router.replace({
+      ...route,
+      query: {
+        ...route.query,
+        kw: undefined
+      }
+    })
   }
   showSuggestions.value = true;
 };
