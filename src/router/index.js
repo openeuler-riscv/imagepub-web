@@ -5,6 +5,7 @@ const DEFAULT_LANG = 'zh_CN';
 
 // 获取语言函数：优先从路由参数获取，其次从Cookie获取，最后使用默认值
 function getLang(route) {
+  console.log(route.query.lang || getCookie('lang') || DEFAULT_LANG)
   return route.query.lang || getCookie('lang') || DEFAULT_LANG;
 }
 
@@ -13,18 +14,14 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: "/",
+      path: "",
       name: "root",
-      redirect: (to) => {
-        const lang = getLang(to);
-        return { path: "/home", query: { lang } };
-      }
-    },
-    {
-      path: "/home",
-      name: "home",
       component: () => import("../pages/home/index.vue"),
-      props: route => ({ lang: getLang(route) })
+      props: route => ({ lang: getLang(route) }),
+      // redirect: (to) => {
+      //   const lang = getLang(to);
+      //   return { path: "/", query: { lang } };
+      // }
     },
     {
       path: "/board/:productUri(.*)",

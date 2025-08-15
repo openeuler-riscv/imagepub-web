@@ -1,14 +1,18 @@
 <script setup>
 import ProductItem from "@/components/ProductItem.vue";
 import { ref, computed, onMounted, nextTick, onUnmounted, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute,useRouter } from "vue-router";
 import { getProductList } from "@/api/get-json";
 
 defineOptions({
-  name: "homePage"
+  name: "home"
 });
 
+// 路由相关
+
+const router = useRouter()
 const route = useRoute();
+
 const searchKeyword = ref("");
 const searchQuery = ref("");
 const showSuggestions = ref(false);
@@ -197,6 +201,45 @@ const handleSearchInput = e => {
   showSuggestions.value = true;
 };
 
+
+// 防抖函数
+const debounce = (func, delay) => {
+  let timer = null
+  return (...args) => {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      func.apply(this, args)
+    }, delay)
+  }
+}
+
+// 同步搜索关键词到URL
+const syncToUrl = (value) => {
+  // 保留当前路由的其他参数
+  router.replace({
+    ...route,
+    query: {
+      ...route.query,
+      kw: value || undefined
+    }
+  })
+}
+
+// 防抖处理的同步函数
+const debouncedSync = debounce(syncToUrl, 300)
+
+
+// 监听路由变化，从URL同步到搜索框
+watch(() => route.query, (newQuery) => {
+  // 只有当值不同时才更新，避免循环触发
+  if (newQuery.kw !== searchKeyword.value) {
+    searchKeyword.value = newQuery.kw || ''
+    searchQuery.value = newQuery.kw || ''
+  }
+}, { immediate: true }) // 初始化时立即执行
+
+
+
 const handleSearch = () => {
   if (searchKeyword.value) {
     showSuggestions.value = false;
@@ -210,6 +253,7 @@ const handleSearch = () => {
       behavior: "smooth"
     });
   }
+  debouncedSync(searchKeyword.value)
 };
 
 const handleSearchIconClick = () => {
@@ -304,9 +348,10 @@ watch(viewportWidth, newValue => {
   changeIsDummy(newValue);
 });
 watch(filteredProductList, newValue => {
- 
   changeIsDummy(viewportWidth.value);
 });
+
+
 const changeIsDummy = value => {
   if (Math.floor((value + 16) / 256) > filteredProductList.value.length) {
     isdummy.value = false;
@@ -360,6 +405,7 @@ const startRandomPlaceholder = () => {
 };
 
 onMounted(async () => {
+
   await fetchProductList();
   startRandomPlaceholder();
   changeViewportWidth();
@@ -371,7 +417,7 @@ onMounted(async () => {
   const originalPlaceholder = searchInput.placeholder;
 
   const handleScroll = () => {
-    console.log(window.scrollY)
+
     showBackToTop.value = window.scrollY > 500;
 
     if (window.scrollY > 285) {
@@ -402,7 +448,7 @@ onMounted(async () => {
 
   window.addEventListener("scroll", handleScroll);
 
-  const keyword = route.query.keyword;
+  const keyword = route.query.kw;
   if (keyword) {
     searchKeyword.value = keyword;
     searchQuery.value = keyword;
@@ -413,6 +459,12 @@ onMounted(async () => {
 </script>
 
 <template>
+  <div class="setting">
+    <div class="setting-icon">
+      <img src="" />
+    </div>
+    <div class="setting-icon"></div>
+  </div>
   <div class="logo">
     <img src="@/assets/logo/Frame1@3x.svg" alt="OERC Logo" />
   </div>
@@ -502,6 +554,23 @@ $primary-blue: #012fa6;
 $secondary-blue: #4a77ca;
 $light-blue: #789edb;
 $border-color: #f1faff;
+
+.setting{
+  position: sticky;
+  top:40px;
+
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+
+.setting-icon{
+  width: 36px;
+  height: 36px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  margin-right: 18px;
+}
 
 .logo {
   margin: 214px 625px 0;

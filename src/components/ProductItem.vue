@@ -15,6 +15,7 @@
 import { useRouter } from "vue-router";
 const router = useRouter();
 const handleClick = () => {
+  console.log(11)
   router.push({
     name: "board",
     query: { uri: props.info.uri, name: props.info.name }
