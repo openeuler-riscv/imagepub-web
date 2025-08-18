@@ -235,6 +235,7 @@ const processData = (data, targetVersion) => {
     ElMessage.error(`未找到版本 ${targetVersion}`);
     return;
   }
+  
 
   const latestRevision = targetRelease?.imagesuites?.find(d=>d.id === props.imagesuiteIndex)?.revisions?.[route.query.revision]
     
@@ -242,6 +243,8 @@ const processData = (data, targetVersion) => {
     ...latestRevision,
     version: targetVersion, // 补充显示版本号
   };
+
+  console.log(targetRelease)
 
   mirrorList.value = latestRevision.files || [];
   markdownURL.value = latestRevision.docs?.[route.query.doc] || '';

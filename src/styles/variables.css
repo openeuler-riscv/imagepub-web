@@ -8,7 +8,6 @@
   --app-input-bg: #f5f7fa;
   --app-shadow: rgba(0, 0, 0, 0.1);
 }
-
 :root.dark {
   /* 深色主题变量 */
   --app-bg: #121212;
