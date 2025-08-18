@@ -24,13 +24,16 @@ const router = createRouter({
       // }
     },
     {
-      path: "/board/:productUri(.*)",
+      path: "/board/:vendor/:product",
       name: "board",
       component: () => import("../pages/board/index.vue"),
-      props: (route) => ({
-        productUri: route.params.productUri,
+      props: (route) => {
+        console.log(route)
+        return ({
+        productUri: route.params.product,
         lang: getLang(route)
       })
+      }
     },
     {
       path: "/image/:productUri(.*)/:version1/:version2/:date",

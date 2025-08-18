@@ -59,7 +59,7 @@ darkModeStore.initTheme();
 
 const routeVersion = ref(0);
 
-const goHome = () => router.push('/home');
+const goHome = () => router.push('/');
 const goBack = () => router.back();
 
 watch(() => [route.path, route.query.lang], () => {

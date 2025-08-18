@@ -52,18 +52,20 @@
 </template>
 
 <script setup>
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { ref, computed, onMounted, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import BoardDetail from "@/components/board/BoardDetail.vue";
-import { getProductVersion } from '@/api/get-json';
+import { getProductVersion,getProductList } from '@/api/get-json';
 import './style.scss';
 import TopBackHome from "@/components/common/TopBackHome.vue";
 import BoardFilter from "@/components/board/BoardFilter.vue";
 import BoardDescription from "@/components/board/BoardDescription.vue";
 import { useI18n } from "vue-i18n";
 import { languageFetch } from "@/utils/languageFetch";
+import { useProductDataStore } from '@/store/productData'
 
+const productStore = useProductDataStore()
 const { t } = useI18n();
 const isDataLoaded = ref(false);
 const boardDetail = ref({});
@@ -106,6 +108,10 @@ const filters = ref({
 const activeTab1 = ref(""); // 存储一级Tab的name（如'openEuler'）
 const activeTab2 = ref(""); // 存储二级Tab的name（如'24.03-LTS-SP1'）
 const router = useRouter();
+const proUrl = ref("");
+
+
+
 
 const props = defineProps({
   productUri: {
@@ -226,14 +232,21 @@ watch([activeTab1, activeTab2], ([newTab1, newTab2]) => {
   }
 });
 
+
 // 保持原有数据加载逻辑，仅调整初始化Tab赋值
 const fetchBoardDetail = async () => {
+  const response = await getProductList();
+  proUrl.value = response.data?.find(it=>it?.name === props.productUri)?.url;
+
+  
+
+
   try {
-    if (!props.productUri) {
+    if (!proUrl?.value) {
       ElMessage.error('路由参数 productUri 为空');
       return;
     }
-    const uri = `/${props.productUri}`;
+    const uri = `/${proUrl.value}`;
     // 创建一个请求实例，保存在变量中以便后续可以多次调用
     const request = languageFetch(uri);
 

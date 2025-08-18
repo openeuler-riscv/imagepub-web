@@ -13,13 +13,16 @@
 
 <script setup>
 import { useRouter } from "vue-router";
+import { computed } from "vue";
+import { useProductDataStore } from '@/store/productData'
+
+
 const router = useRouter();
 const handleClick = () => {
-  console.log(11)
   router.push({
-    name: "board",
-    query: { uri: props.info.uri, name: props.info.name }
+    path: `/board/${props.info.vendor}/${props.info.name}`
   });
+  productStore.setProUrl(props.info.url)
 };
 
 const props = defineProps({
@@ -30,7 +33,10 @@ const props = defineProps({
 });
 
 
-import { computed } from "vue";
+
+
+const productStore = useProductDataStore()
+
 const isKernel = computed(() => {
   return String(props.info.kernel).includes("RVCK-") ? true : false;
 });
