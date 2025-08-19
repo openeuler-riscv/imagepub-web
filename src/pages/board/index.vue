@@ -3,6 +3,17 @@
     <TopBackHome />
 
     <BoardDetail :boardDetail="boardDetail"></BoardDetail>
+
+    <div class="drawer-btn" @click="openDrawer">
+      <el-button  >
+        <span>展示全部</span>
+      
+
+      </el-button>
+       <CustomArrowIcon style="cursor:pointer;position:absolute;right:20px;top:16px"/>
+     
+    </div>
+
     <div v-if="isDataLoaded" class="box-card">
       <div style="width: 100%">
         <el-tabs v-model="activeTab1" class="top-tabs">
@@ -23,17 +34,7 @@
                 <p class="description">
                   {{ getSuiteDescription(release) || '' }}
                 </p>
-                <BoardFilter
-                    :filters="filters"
-                    :kernelVersions="getKernelVersions(release)"
-                    :kernelOptions="getKernelOptions(release)"
-                    :isaMabi = "getIsaMabi(release)"
-                    :isaMarch = "getIsaMarch(release)"
-                    :otherFilters="{
-                    userspace: { label: t('preInstalledList'), options: getUserspaces(release) },
-                    installer: { label: t('bootLoader'), options: getInstallerTypes(release) }
-                  }"
-                ></BoardFilter>
+               
                 <BoardDescription
                     v-if="boardDetail && boardDetail.imagesuites"
                     :title="release.name"
@@ -48,6 +49,26 @@
         </el-tabs>
       </div>
     </div>
+     <el-drawer
+        v-model="drawerVisible"
+        title="筛选"
+        placement="right"
+      >
+      <div>
+          <BoardFilter
+            :filters="filters"
+            :kernelVersions="getKernelVersions(release)"
+            :kernelOptions="getKernelOptions(release)"
+            :isaMabi = "getIsaMabi(release)"
+            :isaMarch = "getIsaMarch(release)"
+            :otherFilters="{
+            userspace: { label: t('preInstalledList'), options: getUserspaces(release) },
+            installer: { label: t('bootLoader'), options: getInstallerTypes(release) }
+          }"
+        ></BoardFilter>
+
+        </div>
+      </el-drawer>
   </div>
 </template>
 
@@ -64,6 +85,10 @@ import BoardDescription from "@/components/board/BoardDescription.vue";
 import { useI18n } from "vue-i18n";
 import { languageFetch } from "@/utils/languageFetch";
 import { useProductDataStore } from '@/store/productData'
+import CustomArrowIcon from '@/components/icon/CustomArrowIcon.vue'
+
+
+
 
 const productStore = useProductDataStore()
 const { t } = useI18n();
@@ -109,6 +134,7 @@ const activeTab1 = ref(""); // 存储一级Tab的name（如'openEuler'）
 const activeTab2 = ref(""); // 存储二级Tab的name（如'24.03-LTS-SP1'）
 const router = useRouter();
 const proUrl = ref("");
+const drawerVisible = ref(false);
 
 
 
@@ -119,6 +145,11 @@ const props = defineProps({
     default: "",
   },
 });
+
+
+const openDrawer = () => {
+  drawerVisible.value = true;
+};
 
 const openImage = async (row) => {
   const version1 = activeTab1.value; // 一级 Tab 值
@@ -300,6 +331,43 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+
+
+
+.drawer-btn{
+  width: 90%;
+  height: 52px;
+  border:2px solid #000;
+  margin:20px auto;
+  border-radius: 12px;
+  position: relative;
+}
+
+.drawer-btn :deep(.el-button){
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+
+    &:span{
+      display: inline-flex;
+      justify-content: space-between;
+    }
+
+}
+:deep(.el-drawer__header){
+  padding-bottom: 20px;
+  border-bottom: 1px solid #d9d9d9 !important;
+}
+
+
+
+
+
+
+
 /* 默认样式（浅色模式） */
 :deep(.el-checkbox-button.is-checked) {
   --el-checkbox-button-checked-bg-color: #ebf4fb;
