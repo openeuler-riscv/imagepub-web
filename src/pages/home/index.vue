@@ -347,6 +347,7 @@ const changeViewportWidth = () => {
 
 onUnmounted(() => {
   window.removeEventListener("resize", changeViewportWidth);
+  window.removeEventListener('scroll', handleScroll)
   if (placeholderTimer.value) {
     clearInterval(placeholderTimer.value);
   }
@@ -411,19 +412,12 @@ const startRandomPlaceholder = () => {
   }, 5000);
 };
 
-onMounted(async () => {
 
-  await fetchProductList();
-  startRandomPlaceholder();
-  changeViewportWidth();
-  window.addEventListener("resize", changeViewportWidth);
-  document.addEventListener("click", closeAllOptions);
-  document.addEventListener("click", closeSearchSuggestions);
-  const searchContainer = document.querySelector(".search-container");
+/* 监听页面滚动 */
+const handleScroll = () => {
+   const searchContainer = document.querySelector(".search-container");
   const searchInput = document.querySelector(".search-input");
   const originalPlaceholder = searchInput.placeholder;
-
-  const handleScroll = () => {
 
     showBackToTop.value = window.scrollY > 500;
 
@@ -453,6 +447,15 @@ onMounted(async () => {
     }
   };
 
+
+onMounted(async () => {
+
+  await fetchProductList();
+  startRandomPlaceholder();
+  changeViewportWidth();
+  window.addEventListener("resize", changeViewportWidth);
+  document.addEventListener("click", closeAllOptions);
+  document.addEventListener("click", closeSearchSuggestions);  
   window.addEventListener("scroll", handleScroll);
 
   const keyword = route.query.kw;

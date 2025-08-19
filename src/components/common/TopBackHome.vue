@@ -9,7 +9,7 @@
           </el-button>
 
           <el-button v-if="!isBoard" @click="goBack" :icon="Back" round dark class="no-border-button">
-            <span style="font-size: 1.25rem; font-family: PingFang SC-Regular">{{ t('backToPreviousPage') }}</span>
+            <span style="font-size: 1.75rem; font-family: PingFang SC-Regular">{{ t('backToPreviousPage') }}</span>
           </el-button>
         </div>
         <div class="detail-search-container">
@@ -100,13 +100,15 @@ const handleLanguageChange = () => {
 
 .top-bar-container {
   width: 90%;
-  height: 7vh;
+  /* height: 7vh; */
   margin-top: 2vh;
   /* border: 1px solid #f1faff; */
   border-radius: 24px;
   background-color: #ffffff;
   display: flex;
   justify-content: center;
+  box-shadow: 0 3px 2px 0 rgba(1, 47, 166, 0.02), 0 7px 5px 0 rgba(1, 47, 166, 0.03), 0 12px 10px 0 rgba(1, 47, 166, 0.04), 0 22px 18px 0 rgba(1, 47, 166, 0.04);
+    height: 96px;
 }
 
 /* 左侧区域样式 */
@@ -165,21 +167,23 @@ const handleLanguageChange = () => {
   }
   .no-border-button {
     border: none !important;
+    
+    
   }
 }
 
 .search-icon {
   position: absolute;
   right: 12px;
-  top: 30%;
+  top: 36%;
   transform: translateY(-50%);
   cursor: pointer;
   z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 44px;
+  height: 44px;
   color: #606266;
 
   &:hover {
@@ -189,7 +193,13 @@ const handleLanguageChange = () => {
 
 .no-border-button {
   border: none !important;
+  
 }
+
+.no-border-button :deep(.el-icon){
+      color:#000 !important;
+      font-size: 24px !important;
+    }
 
 .no-border-button:hover {
   color: #012fa6 !important;
@@ -221,8 +231,8 @@ const handleLanguageChange = () => {
 
     .search-icon {
       right: 10px;
-      width: 18px;
-      height: 18px;
+      width: 44px;
+      height: 44px;
     }
   }
 
@@ -274,8 +284,11 @@ const handleLanguageChange = () => {
 }
 
 .search-box .input-container :deep(.el-input__wrapper) {
-  background-color: var(--theme-input);
+  background-color: #f5f5f5;
   box-shadow: 0 0 0 1px var(--theme-border);
+  border-radius: 16px;
+  height:60px;
+  font-size: 16px;
 }
 
 .search-box .input-container :deep(.el-input__wrapper:hover) {

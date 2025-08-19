@@ -4,7 +4,7 @@
       <div class="board-info">
         <div class="board-image-container">
           <div class="board-image">
-            <el-image :src="getImageSrc(currentImageSrc)" style="width: 23vh; height: 23vh" />
+            <el-image :src="getImageSrc(currentImageSrc)" style="width: 32vh; height: 42vh;border-radius:8px" />
           </div>
           <div class="thumbnail-container">
             <el-image
@@ -16,41 +16,57 @@
             />
           </div>
         </div>
+
         <div class="info-list">
           <div class="info-item">
             <BoardInfoTitle :title="t('boardInfo')" />
-            <el-row>{{ t('vendorName') }}: {{ boardDetail?.vendor?.name }}</el-row>
-            <el-row>{{ t('socModel') }}: {{ boardDetail?.soc?.name }}</el-row>
-            <el-row>{{ t('boardType') }}: {{ boardDetail?.type }}</el-row>
+            <el-row>
+              <el-col :span="8" >
+                  <el-row style="color:#666;margin-bottom:8px">{{ t('vendorName') }}: </el-row>
+                  <el-row class="text-limit-16 text-style" >{{ boardDetail?.vendor?.name }}</el-row>
+              </el-col>
+              <el-col :span="8"> 
+                <el-row style="color:#666;margin-bottom:8px">{{ t('socModel') }}:</el-row> 
+                <el-row class="text-limit-32 text-style">{{ boardDetail?.soc?.name }}</el-row></el-col>
+              <el-col :span="8"><el-row style="color:#666;margin-bottom:8px">{{ t('boardType') }}:</el-row> 
+                <el-row class="text-style">{{ boardDetail?.type }}</el-row></el-col>
+            </el-row>
+            
           </div>
           <div class="info-item">
             <BoardInfoTitle :title="t('ramConfig')" />
-            <el-row>{{ getRamConfig() }}</el-row>
+            <el-row class="text-style">{{ getRamConfig() }}</el-row>
           </div>
           <div class="info-item">
+            <el-row>
+            <el-col :span="8">
             <BoardInfoTitle :title="t('storageInterface')" />
             <el-row>
               <el-col v-for="(item, index) in getStorageInterfaces()" :key="index" :span="24">
-                {{ item.type }}, {{ item.capacity || t('notConfigured') }}
+                <li>{{ item.type }}, {{ item.capacity || t('notConfigured') }}</li>
               </el-col>
             </el-row>
-          </div>
-          <div class="info-item">
+          </el-col>
+          <el-col :span="8">
             <BoardInfoTitle :title="t('highSpeedInterface')" />
             <el-row>
               <el-col v-for="(item, index) in getHighSpeedInterfaces()" :key="index" :span="24">
-                {{ item.type }} {{ item.nums ? `x${item.nums}` : "" }}
+                 <li>{{ item.type }} {{ item.nums ? `x${item.nums}` : "" }}</li>
               </el-col>
             </el-row>
-          </div>
-          <div class="info-item">
+          </el-col>
+          <el-col :span="8">
             <BoardInfoTitle :title="t('lowSpeedInterface')" />
             <el-row>
               <el-col v-for="(item, index) in getLowSpeedInterfaces()" :key="index" :span="24">
-                {{ item.type }} {{ item.nums ? `x${item.nums}` : "" }}
+                <li>{{ item.type }} {{ item.nums ? `x${item.nums}` : "" }}</li>
               </el-col>
             </el-row>
+          </el-col>
+          </el-row>
           </div>
+          
+
         </div>
       </div>
     </div>
@@ -115,6 +131,13 @@ const changeMainImage = (index) => {
 </script>
 
 <style scoped>
+li {
+  list-style-type: circle; /* 空心原点样式 */
+  font-size: 15px;
+  color:#333
+  
+}
+
 .board-container {
   display: flex;
   justify-content: center;
@@ -149,12 +172,13 @@ const changeMainImage = (index) => {
 .info-list {
   display: flex;
   flex-wrap: wrap;
-  margin-left: 5vw;
+  margin-left: 1vw;
   width: calc(100% - 320px);
+  flex-direction: column;
 }
 
 .info-item {
-  width: 33%;
+  /* width: 33%; */
   margin-bottom: 10px;
   background: var(--theme-card);
   color: var(--theme-text);
@@ -179,6 +203,37 @@ const changeMainImage = (index) => {
   text-align: center;
   transition: background 0.3s, color 0.3s, border-color 0.3s;
 }
+
+.text-style{
+  font-size: 16px !important;
+  color:#333
+}
+
+.text-limit-16 {
+  /* 限制宽度为16个字符宽度 */
+  max-width: 16ch;
+  /* 强制单行显示 */
+  white-space: nowrap;
+  /* 隐藏超出部分 */
+  overflow: hidden;
+  /* 超出时显示省略号 */
+  text-overflow: ellipsis;
+}
+
+.text-limit-32{
+  /* 限制宽度为16个字符宽度 */
+  max-width: 32ch;
+  /* 强制单行显示 */
+  white-space: nowrap;
+  /* 隐藏超出部分 */
+  overflow: hidden;
+  /* 超出时显示省略号 */
+  text-overflow: ellipsis;
+}
+.interface-list{
+  display: flex;
+}
+
 
 /* ------------------ 移动端适配 ------------------ */
 @media screen and (max-width: 768px) {

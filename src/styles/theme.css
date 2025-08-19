@@ -3,7 +3,7 @@
   /* 浅色主题 */
   --theme-bg: null;
   --theme-bg-secondary: #ffffff;
-  --theme-text: #222222;
+  --theme-text: #000;
   --theme-text-secondary: #666666;
   --theme-border: #e4e7ed;
   --theme-hover: #f5f7fa;
