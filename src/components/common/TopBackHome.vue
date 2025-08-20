@@ -5,7 +5,7 @@
         <div class="left-section">
           <CustomLogoIcon class="prefix-icon" />
           <el-button v-if="isBoard" @click="goHome" :icon="Back" round dark class="no-border-button">
-            <span style="font-size: 1.25rem; font-family: PingFang SC-Regular">{{ t('backToHome') }}</span>
+            <span style="font-size: 1.75rem; font-family: PingFang SC-Regular">{{ t('backToHome') }}</span>
           </el-button>
 
           <el-button v-if="!isBoard" @click="goBack" :icon="Back" round dark class="no-border-button">

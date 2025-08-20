@@ -1,33 +1,63 @@
 <template>
   <div class="component-container">
     <div v-if="props.historyVersions && props.historyVersions.length > 0" class="version-list">
-      <div v-for="(version, index) in props.historyVersions" :key="index" class="version-card"
-        @click="handleActionClick(version)" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
-        <div class="version-header">
-          <div class="version-number">v{{ version.date }}</div>
-          <div class="release-date">{{ version.status||version.date||version.releaseDate }}</div> 
-          <!-- <div class="release-date">{{ version.status }}</div> 这个是新json里加的status，比如发行版 -->
-          <!-- <div class="release-date">{{ version.date }}</div>      这是新版本json的date -->
-          <!-- <div class="release-date">{{ version.releaseDate }}</div>       这是老版本json的relaseDate -->
-        </div>
+      <!-- <div v-for="(version, index) in props.historyVersions" :key="index" class="version-card"
+      
+        @click="handleActionClick(version)" 
+        
+        @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave"> -->
 
-        <div class="changelog-title">{{ t('changeLog') }}</div>
-        <div class="changelog-content">
-          {{ version.changelog || '无变更说明' }}
-        </div>
+        <div v-for="(version, index) in props.historyVersions" :key="index" class="version-card"
+    
+        
+        @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
+          <div class="version-des">{{ props.title }}</div>
+          <div class="vs-first" @click="handleActionClick(version)">
+            <div class="vs-label">
+              <div class="vs-title">
+                <img src="@/assets/icons/board/version.svg" style="margin-right:4px"/>
+                <span>{{t('version')}}</span>
+              </div>
+              <div class="version-number">{{  props.title + '  '+ version.date }}</div>
+            </div>
+            <div class="vs-label">
+              <div class="vs-title">
+                <img src="@/assets/icons/board/log.svg" style="margin-right:4px"/>
+                <span>{{t('changeLog')}}</span>
+              </div>
+              <div class="version-number changelog-content">  {{ version.changelog || '无变更说明' }}</div>
+            </div>
+          </div>
+
+          <div class="vs-more"  @click="toggleArrow(props.releaseIndex)">
+            <img 
+              width="10"
+              height="10"
+              style="margin-right:4px"
+              :src="props.isExpanded ? upArrow : downArrow" 
+              alt="箭头图标" 
+              class="arrow-icon"
+             
+            >
+            <div>{{t('allversion')}}</div>
+          </div>
+        
       </div>
     </div>
 
   </div>
 </template>
 
-
 <script setup>
 import { useI18n } from "vue-i18n";
-
+import { ref } from 'vue'
+import upArrow from '@/assets/icons/board/up.svg'
+import downArrow from '@/assets/icons/board/down.svg'
 const { t } = useI18n()
 const props = defineProps({
   title: String,
+  isExpanded:Boolean,
+  releaseIndex:Number,
   description: String,
   historyVersions: {
     type: Array,
@@ -36,9 +66,18 @@ const props = defineProps({
   openImage: Function,
 });
 
+
+const toggleArrow = (releaseIndex) =>{
+  emit('update:computed-value', releaseIndex);
+  //isClicked.value = !isClicked.value
+}
+
 const handleActionClick = async (row) => {
   await props.openImage(row);
 };
+
+
+const emit = defineEmits(['update:computed-value']);
 
 </script>
 
@@ -54,6 +93,50 @@ const handleActionClick = async (row) => {
   --theme-gradient-end-color: var(--theme-card); // 渐变结束颜色与卡片背景一致
 }
 
+.version-des{
+  color:#000;
+  font-size: 16px;
+}
+
+.vs-first{
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  margin-top: 16px;
+  padding:16px;
+  &:hover{
+    background-color: #BEE3F833;
+  }
+}
+
+.vs-more{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color:#012fa6;
+  font-size: 14px;
+  margin:12px auto
+}
+
+.vs-title{
+  font-size: 14px;
+  color:#666;
+  width:100px;
+  display: flex;
+  align-items: center;
+  font-weight: 400;
+}
+
+.vs-label{
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.version-number{
+  font-size: 14px;
+  color:#333
+}
+
 /* 暗黑模式变量 */
 html.dark {
   --theme-border: #4c4d4f;
@@ -66,7 +149,7 @@ html.dark {
 }
 
 .component-container {
-  padding: 20px;
+  padding: 20px 0px;
   border-radius: 8px;
 }
 
@@ -74,7 +157,6 @@ html.dark {
   display: grid;
   grid-template-columns: 1fr;
   gap: 16px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);
   transition: box-shadow 0.3s ease;
 
   @media (min-width: 768px) {
@@ -96,7 +178,7 @@ html.dark {
 
 .version-card {
   background-color: var(--theme-card);
-  border-radius: 8px;
+  border-radius: 20px;
   box-shadow:
     0 2px 4px rgba(0, 0, 0, 0.1),
     0 -1px 2px rgba(0, 0, 0, 0.05);
@@ -104,6 +186,7 @@ html.dark {
   transition: box-shadow 0.3s ease, transform 0.3s ease;
   cursor: pointer;
   border: 1px solid var(--theme-border);
+  font-weight: 400;
 
   &:hover {
     box-shadow:
@@ -119,31 +202,6 @@ html.dark {
     color: var(--theme-text);
   }
 
-  .version-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 13px 5px;
-    height: 40px;
-    border-bottom: 2px solid var(--theme-border);
-    position: relative;
-
-    .version-number {
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--theme-text);
-    }
-
-    .release-date {
-      font-size: 11px;
-      color: var(--theme-text-secondary);
-      position: absolute;
-      bottom: 3px;
-      right: 8px;
-    }
-  }
-
   .changelog-title {
     font-size: 12px;
     font-weight: 600;
@@ -152,18 +210,20 @@ html.dark {
   }
 
   .changelog-content {
-    font-size: 13px;
-    color: var(--theme-text);
-    padding: 0 5px;
+    font-size: 14px;
+  
     font-weight: 400;
-    height: 150px;
-    overflow: hidden;
-    position: relative;
-
-    /* 允许文本换行 */
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
+   white-space: normal;
+  /* 限制最大高度为两行文字高度 (根据实际行高调整) */
+      max-height: 2.4em; /* 假设行高是 1.2em */
+      /* 隐藏超出部分 */
+      overflow: hidden;
+      /* 显示省略号 */
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2; /* 显示 2 行 */
+      -webkit-box-orient: vertical;
+      }
 
   .description {
     font-size: 14px;
@@ -173,7 +233,7 @@ html.dark {
   }
 
   /* 在容器末尾添加渐变遮罩和省略号 */
-  .changelog-content::after {
+  /* .changelog-content::after {
     content: "...";
     position: absolute;
     bottom: 0;
@@ -181,7 +241,7 @@ html.dark {
     padding-left: 40px;
     background: linear-gradient(to right, transparent, var(--theme-gradient-end-color) 70%);
     pointer-events: none;
-  }
+  } */
 }
 
 :deep(.el-table__body tr:hover) {

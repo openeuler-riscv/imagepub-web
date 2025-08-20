@@ -6,7 +6,7 @@
     </div>
     <div class="product-item-info">
       <div class="product-item-name">{{ info.name }}</div>
-      <div class="product-item-desc">{{ info.vendor }}</div>
+      <div class="product-item-desc">{{ info.vendor.name }}</div>
     </div>
   </div>
 </template>
@@ -20,7 +20,7 @@ import { useProductDataStore } from '@/store/productData'
 const router = useRouter();
 const handleClick = () => {
   router.push({
-    path: `/board/${props.info.vendor}/${props.info.name}`
+    path: `/board/${props.info.vendor.id}/${props.info.id}`
   });
   productStore.setProUrl(props.info.url)
 };

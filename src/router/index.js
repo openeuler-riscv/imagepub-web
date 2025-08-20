@@ -27,23 +27,21 @@ const router = createRouter({
       path: "/board/:vendor/:product",
       name: "board",
       component: () => import("../pages/board/index.vue"),
-      props: (route) => {
-        console.log(route)
-        return ({
-        productUri: route.params.product,
+      props: (route) => ({
+        productUri: route.params.vendor,
         lang: getLang(route)
       })
-      }
+      
     },
     {
-      path: "/image/:productUri(.*)/:version1/:version2/:date",
+      path: "/release/:distro/:distro_rel/:vendor/:product/:image_receipe/",
       name: "image",
       component: () => import("../pages/image/index.vue"),
       props: (route) => ({
-        productUri: route.params.productUri,
-        version1: route.params.version1,
-        version2: route.params.version2,
-        date: route.params.date,
+        productUri: route.params.product,
+        version1: route.params.distro,
+        version2: route.params.distro_rel,
+        // date: route.params.date,
         lang: getLang(route)
       })
     }

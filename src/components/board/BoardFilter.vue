@@ -1,130 +1,144 @@
 <template>
   <div class="filters">
     <div class="filter-row">
-      <el-container>
-        <span class="filter-label adjusted-position" style="display: inline-block; width: 130px;">
-          {{ t('kernelVersion') }}
-        </span>
-        <el-main :style="{ padding: '0', textAlign: 'left' }">
-          <div style="display: flex; align-items: center; flex-wrap: wrap;">
-            <span class="filter-label-center">{{ t('versionLabel') }}</span>
-            <el-checkbox-button
-                v-model="filters.kernel.checkAll"
-                :indeterminate="filters.kernel.isIndeterminate"
-                @change="handleKernelCheckAll"
-                style="margin-right: 15px;"
-            >
-              {{ t('all') }}
-            </el-checkbox-button>
-
-            <el-checkbox-group v-model="filters.kernel.selected" @change="handleKernelChange">
-              <el-checkbox-button
-                  v-for="item in kernelOptions"
-                  :key="item"
-                  :value="item.version"
+      <el-container style="flex-direction:column">
+        <BoardInfoTitle :title="t('kernelVersion')" />
+        <div :style="{ display: 'flex', flexDirection: 'column' }">
+          <div class="filter-item" >
+            <span class="filter-new-label" >{{ t('versionLabel') }}</span>
+            <div style="display:flex;flex-wrap:wrap;margin-top:8px">
+               <el-checkbox-button
+                  v-model="filters.kernel.checkAll"
+                  :indeterminate="filters.kernel.isIndeterminate"
+                  @change="handleKernelCheckAll"
+                  style="margin-right: 10px;height:32px"
               >
-                {{ item.version }}
+                {{ t('all') }}
               </el-checkbox-button>
-            </el-checkbox-group>
-          </div>
-          <div style="display: flex; align-items: center; flex-wrap: wrap; margin-top: 8px">
-            <span class="filter-label-center">{{ t('versionNumber') }}</span>
-            <el-checkbox-button
-                v-model="filters.kernels.checkAll"
-                :indeterminate="filters.kernels.isIndeterminate"
-                @change="handleFilterCheckAll('kernels')"
-                style="margin-right: 15px;"
-            >
-              {{ t('all') }}
-            </el-checkbox-button>
 
-            <el-checkbox-group v-model="filters.kernels.selected" @change="handleFilterChange('kernels')">
-              <el-checkbox-button
-                  v-for="item in kernelVersions"
-                  :key="item.version"
-                  :value="item.version"
-              >
-                {{ item.version }}
-              </el-checkbox-button>
-            </el-checkbox-group>
+              <el-checkbox-group v-model="filters.kernel.selected" @change="handleKernelChange">
+                <el-checkbox-button
+                    v-for="item in kernelOptions"
+                    :key="item"
+                    :value="item.version"
+                >
+                  {{ item.version }}
+                </el-checkbox-button>
+              </el-checkbox-group>
+            </div>
+           
           </div>
-        </el-main>
+          <div class="filter-item" >
+              <span class="filter-new-label">{{ t('versionNumber') }}</span>
+               <div style="display:flex;flex-wrap:wrap;margin-top:8px">
+                  <el-checkbox-button
+                    v-model="filters.kernels.checkAll"
+                    :indeterminate="filters.kernels.isIndeterminate"
+                    @change="handleFilterCheckAll('kernels')"
+                     style="margin-right: 10px;height:32px"
+                >
+                  {{ t('all') }}
+                </el-checkbox-button>
+
+                <el-checkbox-group v-model="filters.kernels.selected" @change="handleFilterChange('kernels')">
+                  <el-checkbox-button
+                      v-for="item in kernelVersions"
+                      :key="item.version"
+                      :value="item.version"
+                  >
+                    {{ item.version }}
+                  </el-checkbox-button>
+                </el-checkbox-group>
+               </div>
+            
+          </div>
+        </div>
       </el-container>
     </div>
 
     <!-- 下面这块就是把原来误用 filters.kernel / filters.kernels 的部分改成 filters.isa -->
     <div class="filter-row">
-      <el-container>
-        <span class="filter-label adjusted-position" style="display: inline-block; width: 130px;">
-          {{ t('isaBaseline') }}
-        </span>
-        <el-main :style="{ padding: '0', textAlign: 'left' }">
-          <div style="display: flex; align-items: center; flex-wrap: wrap;">
-            <span class="filter-label-center">{{ t('isaMabi') }}</span>
-            <el-checkbox-button
-                v-model="filters.isaMabi.checkAll"
-                :indeterminate="filters.isaMabi.isIndeterminate"
-                @change="handleFilterCheckAll('isaMabi')"
-                style="margin-right: 15px;"
-            >
-              {{ t('all') }}
-            </el-checkbox-button>
-            <el-checkbox-group v-model="filters.isaMabi.selected" @change="handleFilterChange('isaMabi')">
-              <el-checkbox-button
-                  v-for="item in props.isaMabi"
-                  :key="item"
-                  :value="item.profile"
+      <el-container style="flex-direction:column">
+        <BoardInfoTitle :title="t('isaBaseline')" />
+        <div :style="{ display: 'flex', flexDirection: 'column' }">
+          <div class="filter-item">
+            <span class="filter-new-label">{{ t('isaMabi') }}</span>
+             <div style="display:flex;flex-wrap:wrap;margin-top:8px">
+                 <el-checkbox-button
+                  v-model="filters.isaMabi.checkAll"
+                  :indeterminate="filters.isaMabi.isIndeterminate"
+                  @change="handleFilterCheckAll('isaMabi')"
+                  style="margin-right: 10px;height:32px"
               >
-                {{ item.profile }}
+                {{ t('all') }}
               </el-checkbox-button>
-            </el-checkbox-group>
+              <el-checkbox-group v-model="filters.isaMabi.selected" @change="handleFilterChange('isaMabi')">
+                <el-checkbox-button
+                    v-for="item in props.isaMabi"
+                    :key="item"
+                    :value="item.profile"
+                >
+                  {{ item.profile }}
+                </el-checkbox-button>
+              </el-checkbox-group>
+             </div>
           </div>
 
-          <div style="display: flex; align-items: center; flex-wrap: wrap; margin-top: 8px">
-            <span class="filter-label-center">{{ t('isaMarch') }}</span>
-            <el-checkbox-button
-                v-model="filters.isaMarch.checkAll"
-                :indeterminate="filters.isaMarch.isIndeterminate"
-                @change="handleFilterCheckAll('isaMarch')"
-                style="margin-right: 15px;"
-            >
-              {{ t('all') }}
-            </el-checkbox-button>
-            <el-checkbox-group v-model="filters.isaMarch.selected" @change="handleFilterChange('isaMarch')">
-              <el-checkbox-button
-                  v-for="item in isaMarch"
-                  :key="item.profile"
-                  :value="item.profile"
+          <div>
+            <span class="filter-new-label">{{ t('isaMarch') }}</span>
+            <div style="display:flex;flex-wrap:wrap;margin-top:8px">
+                 <el-checkbox-button
+                  v-model="filters.isaMarch.checkAll"
+                  :indeterminate="filters.isaMarch.isIndeterminate"
+                  @change="handleFilterCheckAll('isaMarch')"
+                  style="margin-right: 10px;height:32px"
               >
-                {{ item.profile }}
+                {{ t('all') }}
               </el-checkbox-button>
-            </el-checkbox-group>
+              <el-checkbox-group v-model="filters.isaMarch.selected" @change="handleFilterChange('isaMarch')">
+                <el-checkbox-button
+                    v-for="item in isaMarch"
+                    :key="item.profile"
+                    :value="item.profile"
+                >
+                  {{ item.profile }}
+                </el-checkbox-button>
+              </el-checkbox-group>
+
+            </div>
+           
           </div>
-        </el-main>
+        </div>
       </el-container>
     </div>
 
     <!-- 其余过滤项保持原来的循环逻辑 -->
     <div class="filter-row" v-for="(filter, key) in otherFilters" :key="key">
-      <span class="filter-label">{{ filter.label }}：</span>
-      <div style="display: flex; align-items: center; flex-wrap: wrap;">
-        <el-checkbox-button
-            v-model="filters[key].checkAll"
-            :indeterminate="filters[key].isIndeterminate"
-            @change="handleFilterCheckAll(key)"
-            style="margin-right: 15px;"
-        >
-          {{ t('all') }}
-        </el-checkbox-button>
-        <el-checkbox-group v-model="filters[key].selected" @change="handleFilterChange(key)">
-          <el-checkbox-button
-              v-for="item in filter.options"
-              :key="item.id || item"
-              :value="item.profile || item.userspace || item"
+      <BoardInfoTitle :title="filter.label" />
+      <div :style="{ display: 'flex', flexDirection: 'column',position:'relative',bottom:'12px',height:'32px' }">
+        <div class="filter-item">
+           <div style="display:flex;flex-wrap:wrap;">
+              <el-checkbox-button
+              v-model="filters[key].checkAll"
+              :indeterminate="filters[key].isIndeterminate"
+              @change="handleFilterCheckAll(key)"
+              style="margin-right: 10px;height:32px"
           >
-            {{ item.profile || item.userspace || item }}
+            {{ t('all') }}
           </el-checkbox-button>
-        </el-checkbox-group>
+          <el-checkbox-group v-model="filters[key].selected" @change="handleFilterChange(key)">
+            <el-checkbox-button
+                v-for="item in filter.options"
+                :key="item.id || item"
+                :value="item.profile || item.userspace || item"
+            >
+              {{ item.profile || item.userspace || item }}
+            </el-checkbox-button>
+          </el-checkbox-group>
+           </div>
+            
+        </div>
+        
       </div>
     </div>
   </div>
@@ -132,7 +146,7 @@
 
 <script setup>
 import { useI18n } from "vue-i18n";
-
+import BoardInfoTitle from "./BoardInfoTitle.vue";
 const { t } = useI18n();
 const props = defineProps({
   filters: {
@@ -232,27 +246,52 @@ const handleFilterChange = (key) => {
 </script>
 
 <style scoped>
+
 /* Dark mode specific color for labels */
 .dark .filter-label,
 .dark .filter-label-center {
-  color: #cccccc !important;
+  color: #333 !important;
+  font-size: 14px;
   /* Adjusted color for dark mode */
 }
 
-:deep(.el-checkbox-button__inner) {
+
+
+
+.filter-new-label{
   font-size: 14px;
+  color:#333;
+}
+
+.filter-item{
+  margin-bottom: 8px;
+}
+
+.filter-row {
+     flex-direction: column;
+    align-items: flex-start;
+  }
+
+
+
+
+
+
+
+
+:deep(.el-checkbox-button__inner) {
+  font-size: 15px;
   font-weight: 400;
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
   border-radius: 5px !important;
-  background: var(--theme-input) !important;
   color: var(--theme-text) !important;
-  border: clamp(1px, 0.2vw, 2px) solid var(--theme-border) !important;
+  border: clamp(1px, 0.2vw, 1px) solid #ccc !important;
   transition: all 0.2s;
   white-space: nowrap;
   overflow: visible;
-  padding: 8px 16px;
-  min-width: 80px;
-  height: 36px;
+  padding: 8px;
+  min-width: 64px;
+  height: 32px;
   line-height: 20px;
   display: inline-flex;
   align-items: center;
@@ -268,12 +307,14 @@ const handleFilterChange = (key) => {
 :deep(.el-checkbox-group) {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  /* gap: 8px; */
   align-items: center;
+  padding:0px;
+  flex:1
 }
 
 :deep(.el-checkbox-button.is-checked .el-checkbox-button__inner) {
-  background: var(--theme-hover) !important;
+
   color: var(--el-color-primary) !important;
   border: clamp(1px, 0.2vw, 2px) solid var(--el-color-primary) !important;
   box-shadow: none;
@@ -281,16 +322,17 @@ const handleFilterChange = (key) => {
 }
 
 :deep(.el-checkbox-button__inner:hover) {
-  background: var(--theme-hover) !important;
-  border-color: var(--el-color-primary) !important;
-  color: var(--el-color-primary) !important;
+  color: #000 !important;
+  border:clamp(1px, 0.2vw, 2px) solid #012fa6 !important;
 }
 
-:deep(.el-checkbox-button.is-checked .el-checkbox-button__inner:hover) {
-  background: var(--theme-hover) !important;
-  border-color: var(--el-color-primary) !important;
-  color: var(--el-color-primary) !important;
+:deep(.el-checkbox-button.is-checked .el-checkbox-button__inner){
+  border-color: #012fa6 !important;
+  color: #012fa6 !important;
+  border:clamp(1px, 0.2vw, 2px) solid #012fa6 !important;
+  background-color: #fff !important;
 }
+
 
 @media screen and (max-width: 900px) {
   .filters {
@@ -320,13 +362,13 @@ const handleFilterChange = (key) => {
   }
 
   :deep(.el-checkbox-button__inner) {
-    font-size: 13px;
+    font-size: 15px;
     padding: 6px 12px;
     width: 100%;
     min-width: 60px;
     height: 32px;
     line-height: 20px;
-    background: var(--theme-input) !important;
+    
     color: var(--theme-text) !important;
     white-space: nowrap;
     overflow: visible;
@@ -343,7 +385,6 @@ const handleFilterChange = (key) => {
 
 @media (min-width: 769px) {
   :deep(.el-checkbox-button__inner) {
-    background: var(--theme-input) !important;
     color: var(--theme-text) !important;
   }
 }

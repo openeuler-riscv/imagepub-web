@@ -7,12 +7,11 @@
     <div class="drawer-btn" @click="openDrawer">
       <el-button  >
         <span>展示全部</span>
-      
-
       </el-button>
        <CustomArrowIcon style="cursor:pointer;position:absolute;right:20px;top:16px"/>
-     
     </div>
+
+
 
     <div v-if="isDataLoaded" class="box-card">
       <div style="width: 100%">
@@ -29,19 +28,15 @@
                   :key="releaseIndex"
                   :label="release.name"
                   :name="release.name"
+                  :isExpanded = release.isExpanded
               >
-                <h2 class="title">{{ release.name }}</h2>
-                <p class="description">
-                  {{ getSuiteDescription(release) || '' }}
-                </p>
-               
                 <BoardDescription
                     v-if="boardDetail && boardDetail.imagesuites"
                     :title="release.name"
+                    :releaseIndex="releaseIndex"
+                     @update:computed-value="handleUpdate"
                     :description="getSuiteDescription(release)"
-                    :historyVersions="release.imagesuites?.flatMap(suite => suite.revisions || []) || []"
-                :open-image="openImage"
-                >
+                    :historyVersions="release.imagesuites?.flatMap(suite => suite.revisions || []) || []" :open-image="openImage">
                 </BoardDescription>
               </el-tab-pane>
             </el-tabs>
@@ -54,7 +49,8 @@
         title="筛选"
         placement="right"
       >
-      <div>
+       <template #default>
+        <div>
           <BoardFilter
             :filters="filters"
             :kernelVersions="getKernelVersions(release)"
@@ -68,6 +64,14 @@
         ></BoardFilter>
 
         </div>
+       </template>
+        
+         <template #footer>
+            <div style="flex: auto">
+              <el-button color="#012fa6" class="drawer-footer-btn" @click="resetClick">{{t('reset')}}</el-button>
+              <el-button type="primary" class="drawer-footer-cnf" @click="confirmClick">{{t('confirm')}}</el-button>
+            </div>
+          </template>
       </el-drawer>
   </div>
 </template>
@@ -137,7 +141,13 @@ const proUrl = ref("");
 const drawerVisible = ref(false);
 
 
+const resetClick = () =>{
+  console.log(22)
+}
 
+const confirmClick = () =>{
+  console.log(11)
+}
 
 const props = defineProps({
   productUri: {
@@ -146,16 +156,29 @@ const props = defineProps({
   },
 });
 
+console.log(proUrl.value)
+
+
+
+
+// 接收子组件的修改事件
+const handleUpdate = (newValue) => {
+  // 修改 computed 值（会触发上面的 setter）
+  console.log(newValue)
+};
+
 
 const openDrawer = () => {
   drawerVisible.value = true;
 };
 
 const openImage = async (row) => {
+  console.log(row)
   const version1 = activeTab1.value; // 一级 Tab 值
   const version2 = activeTab2.value; // 二级 Tab 值
   await router.push({
-    path: `/image/${props.productUri}/${version1}/${version2}/${row.date}`, // RESTful 路径
+    // path: `/release/${props.productUri}/${version1}/${version2}/${row.date}`, // RESTful 路径
+    path: `/release/${version1}/${version2}/1/${props.productUri}/2`
   });
 };
 
@@ -163,12 +186,18 @@ const openImage = async (row) => {
 const osList = computed(() =>
     boardDetail.value.imagesuites?.map(osItem => ({
       name: osItem.name,
-      releases: osItem.releases
+      releases: osItem.releases,
+      isExpanded:false
     })) || []
 );
 
+
+console.log(osList)
+
 // 辅助函数：获取对应OS的releases列表
-const getReleases = (osItem) => osItem.releases || [];
+const getReleases = (osItem) => {
+  return osItem.releases || [];
+} 
 
 const getKernelOptions = ()=>{
   const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
@@ -183,6 +212,7 @@ const getKernelOptions = ()=>{
 const getSuiteDescription = () => {
   const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
   const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
+
   return currentRelease?.imagesuites?.[0]?.description || '';
 };
 
@@ -267,6 +297,7 @@ watch([activeTab1, activeTab2], ([newTab1, newTab2]) => {
 // 保持原有数据加载逻辑，仅调整初始化Tab赋值
 const fetchBoardDetail = async () => {
   const response = await getProductList();
+  console.log(props.productUri,response.data)
   proUrl.value = response.data?.find(it=>it?.name === props.productUri)?.url;
 
   
@@ -332,6 +363,31 @@ onMounted(async () => {
 
 <style scoped>
 
+.drawer-footer-btn{
+  width:100px;
+  border-radius:8px;
+  border:1px solid #012fa6 !important;
+  color:#012fa6 !important
+}
+
+.drawer-footer-cnf{
+  width:100px;
+  border-radius:8px;
+  border:1px solid #012fa6 !important;
+  color:#fff !important;
+  background:#012fa6 !important
+}
+
+  :deep(.el-tabs__header)
+  {
+    background-color: transparent 
+  }
+
+  :deep(.el-tabs--border-card){
+    background-color: transparent;
+  }
+
+
 
 
 .drawer-btn{
@@ -358,8 +414,9 @@ onMounted(async () => {
 
 }
 :deep(.el-drawer__header){
-  padding-bottom: 20px;
+  padding-bottom: 16px;
   border-bottom: 1px solid #d9d9d9 !important;
+  margin-bottom: 16px !important;
 }
 
 
@@ -405,7 +462,7 @@ onMounted(async () => {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  padding: 4px 0;
+  /* padding: 4px 0; */
 }
 
 :deep(.el-checkbox-button) {
@@ -433,7 +490,7 @@ onMounted(async () => {
 
   :deep(.el-checkbox-group) {
     gap: 8px;
-    padding: 3px 0;
+    /* padding: 3px 0; */
   }
 
   :deep(.el-checkbox-button:not(.is-checked) .el-checkbox-button__inner) {
@@ -498,14 +555,44 @@ onMounted(async () => {
   color: #102e9f;
 }
 
+
+
+:deep(.el-tabs--border-card > .el-tabs__header){
+  border-bottom: none ;
+  height:32px
+} 
+
+:deep(.el-tabs){
+  --el-tabs-header-height: 32px;
+}
+
+
+
+:deep(.el-tabs__item){
+  border-radius: 6px;
+  margin-right: 12px;
+
+  margin-top: 0px !important;
+  margin-left: 0px !important;
+}
+
+:deep(.el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active){
+  border-left: none !important;
+  border-right: none !important;
+}
+
+:deep(.el-tabs--border-card>.el-tabs__header .el-tabs__item){
+  border:none
+}
+
 :deep(.el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active),
 :deep(.el-tabs--border-card > .el-tabs__header .el-tabs__item:hover) {
   color: #102e9f;
 }
 
 :deep(.sub-tabs.el-tabs--border-card) {
-  border-radius: 8px !important;
   overflow: hidden;
+  border:none;
 }
 
 .filter-title {
@@ -535,6 +622,7 @@ onMounted(async () => {
   margin-top: 0;
   padding-top: 0px;
   padding-bottom: 0px;
+  padding-left:0px
 }
 
 .top-tabs :deep(.el-tabs__item:not(.sub-tabs .el-tabs__item)) {
@@ -580,6 +668,7 @@ html.dark {
     color: #7ca0f8;
     background-color: #1e1e1e;
   }
+
 
   :deep(.el-tabs__item:hover) {
     color: #7ca0f8;
