@@ -3,43 +3,55 @@
     <TopBackHome :isBoard=false />
     <div class="content-wrapper">
       <div class="version-info-card">
-        <h2 class="version-info-title">{{ t('versionInfo') }}</h2>
         <div class="version-details">
-          <BoardInfoTitle :title="t('version')"></BoardInfoTitle>
-          <div class="version-text">
-            {{ currentVersionInfo?.version }}
-            {{ currentVersionInfo?.date }}
-            <el-button @click="toggleContent" class="active  help-toggle-btn" >
-              {{ helpVisible ? t('checkImageList') : t('viewHelpDocumentation') }}
-            </el-button>
-          </div>
+            <el-row>
+              <el-col :span="8" >
+                  <el-row> <BoardInfoTitle :title="t('versionInfo')" /> </el-row>
+                  <el-row class="text-limit-16 text-style" style="font-size:15px;color:#333" > {{ currentVersionInfo?.version }}{{ currentVersionInfo?.date }}</el-row>
+              </el-col>
+              <el-col :span="16"> 
+                <el-row ><BoardInfoTitle :title="t('changeLog')" /> </el-row> 
+                <el-row style="color:#333" class="text-limit-32 text-style changelog-content">{{ currentVersionInfo?.changelog || '无更新日志' }}</el-row></el-col>
+              
+            </el-row>
         </div>
-        <div class="changelog">
-          <BoardInfoTitle :title="t('changeLog')"></BoardInfoTitle>
-          <div>{{ currentVersionInfo?.changelog || '无更新日志' }}</div>
+        <div class="image-list">
+          <BoardInfoTitle :title="t('imageFile')" />  
+            <div v-if=" mirrorList.length > 0">
+              <el-table :show-header="false"  :data="mirrorList" style="width: 100%" class="mirror-table">
+                <el-table-column prop="tags" :label="t('tag')" width="80" label-class-name="el-table-custom-label" >
+                    <template #default="{ row }">
+                      <el-tag style="color:#fff;border:none" :color="row.tags[0] == '系统' ? '#012fa6': '#ff7300'">  {{ row.tags[0] }}</el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="url" :label="t('imageFile')" min-width="150" label-class-name="el-table-custom-label">
+                  <template #default="{ row }">
+                    {{ row.url.split('/').pop() }}
+                  </template>
+                </el-table-column>
+                
+                <el-table-column prop="hash.sha256" label="sha256" min-width="150" label-class-name="el-table-custom-label" >
+                  
+                   <template #default="{ row }">
+                      {{Object.keys(row.hash)?.[0]}}
+                    </template>
+                </el-table-column>
+
+                <el-table-column :label="t('operation')" min-width="50" label-class-name="el-table-custom-label">
+                  <template #default="scope">
+                    <el-button @click="downloadFile(scope.row.url)" size="small" class="no-border">
+                      <i class="fa-solid fa-cloud-arrow-down fa-2x" style="opacity: 0.3;"></i>
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+        </div>
         </div>
       </div>
 
       <!-- 镜像列表和帮助文档区域 -->
       <div class="content-toggle-area">
-        <div v-if="!helpVisible && mirrorList.length > 0" class="mirror-list-card">
-          <el-table :data="mirrorList" style="width: 100%" class="mirror-table">
-            <el-table-column prop="url" :label="t('imageFile')" min-width="150" label-class-name="el-table-custom-label">
-              <template #default="{ row }">
-                {{ row.url.split('/').pop() }}
-              </template>
-            </el-table-column>
-            <el-table-column prop="tags" :label="t('tag')" min-width="60" label-class-name="el-table-custom-label" />
-            <el-table-column prop="hash.sha256" label="sha256" min-width="150" label-class-name="el-table-custom-label" />
-            <el-table-column :label="t('operation')" min-width="50" label-class-name="el-table-custom-label">
-              <template #default="scope">
-                <el-button @click="downloadFile(scope.row.url)" size="small" class="no-border">
-                  <i class="fa-solid fa-cloud-arrow-down fa-2x" style="opacity: 0.3;"></i>
-                </el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
+        
 
         <!-- 帮助文档 -->
         <div class="bottom-container">
@@ -69,7 +81,7 @@ const boardDetail = ref({});
 const markdownURL = ref('');
 const mirrorList = ref([]);
 const currentVersionInfo = ref(null);
-const helpVisible = ref(false);
+const helpVisible = ref(true);
 
 const props = defineProps({
   productUri: String,
@@ -90,6 +102,8 @@ const fetchImagePageData = async () => {
     if (!response.ok) throw new Error(`请求失败，状态码: ${response.status}`);
     const data = await response.json();
     boardDetail.value = data;
+
+    console.log(boardDetail.value)
     processData(data, props.version2); // 传递版本号用于匹配
   } catch (error) {
     ElMessage.error(`获取数据失败：${error.message}`);
@@ -108,12 +122,18 @@ const processData = (data, targetVersion) => {
     ElMessage.error(`未找到版本 ${targetVersion}`);
     return;
   }
+  
 
-  const latestRevision = targetRelease?.imagesuites?.[0]?.revisions
-      ?.filter(r => r.date === props.date)?.[0] ?? null;  currentVersionInfo.value = {
+  //const latestRevision = targetRelease?.imagesuites?.[0]?.revisions?.filter(r => r.date === props.date)?.[0] ?? null;  
+  const latestRevision = targetRelease?.imagesuites?.[0]?.revisions?.[0]
+    
+    
+      currentVersionInfo.value = {
     ...latestRevision,
     version: targetVersion, // 补充显示版本号
   };
+
+  console.log(targetRelease)
 
   mirrorList.value = latestRevision.files || [];
   markdownURL.value = latestRevision.docs?.[0] || '';

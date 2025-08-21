@@ -1,6 +1,6 @@
 <template>
   <div class="table-container">
-    <el-table :data="currentPageData" :show-header="false">
+    <el-table :data="currentPageData" :show-header="false"  @cell-click="handleRowClick">
     
       <el-table-column prop="content" align="left" >
  
@@ -35,8 +35,16 @@ import { ElTable, ElTableColumn, ElPagination } from 'element-plus';
 
 const props = defineProps({
   tabledata:Array,
-  title:String
+  title:String,
+  jumpImage: Function,
 });
+
+
+// 处理行点击事件，接收索引参数
+const handleRowClick = (row, column, event, index) => {  
+
+  props.jumpImage(row.index);
+};
 
 const tableData = ref([...props.tabledata]);
 

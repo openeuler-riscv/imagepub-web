@@ -31,6 +31,8 @@ const router = createRouter({
         return ({
         /* "v2/zh_CN/products/milkv/pioneer.json" */
         productUri:  `v2/${getLang(route)}/products/${route.params.vendor}/${route.params.product}.json` ,
+        vendor:route.params.vendor,
+        product:route.params.product,
         lang: getLang(route)
       })
       }
@@ -41,7 +43,8 @@ const router = createRouter({
       name: "image",
       component: () => import("../pages/image/index.vue"),
       props: (route) => ({
-        productUri: route.params.product,
+        productUri:  `v2/${getLang(route)}/products/${route.params.vendor}/${route.params.product}.json` ,
+        // productUri: route.params.product,
         version1: route.params.distro,
         version2: route.params.distro_rel,
         // date: route.params.date,

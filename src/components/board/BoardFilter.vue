@@ -136,9 +136,7 @@
             </el-checkbox-button>
           </el-checkbox-group>
            </div>
-            
-        </div>
-        
+        </div>      
       </div>
     </div>
   </div>
@@ -235,6 +233,7 @@ const handleFilterCheckAll = (key) => {
   }else {
     allOptions = props.otherFilters[key].options.map(v => v.profile || v.userspace || v);
   }
+  
   filter.selected = filter.checkAll ? allOptions : [];
   updateCheckState(key);
 };

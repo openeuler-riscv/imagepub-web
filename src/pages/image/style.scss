@@ -224,3 +224,31 @@
     font-size: 12px;
   }
 }
+
+
+:deep(.el-table .cell){
+    padding:0px
+}
+
+:deep(.el-table td.el-table__cell){
+    border-bottom: none;
+}
+
+.version-details{
+  margin-bottom: 24px;
+}
+
+.changelog-content {
+    font-size: 15px;
+    font-weight: 400;
+    white-space: normal;
+/* 限制最大高度为两行文字高度 (根据实际行高调整) */
+  max-height: 2.4em; /* 假设行高是 1.2em */
+  /* 隐藏超出部分 */
+  overflow: hidden;
+  /* 显示省略号 */
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* 显示 2 行 */
+  -webkit-box-orient: vertical;
+}

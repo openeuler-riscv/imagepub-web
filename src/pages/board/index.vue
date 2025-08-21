@@ -145,6 +145,8 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  vendor:String,
+  product:String
 });
 
 
@@ -152,12 +154,16 @@ const openDrawer = () => {
   drawerVisible.value = true;
 };
 
-const openImage = async (row) => {
+/* 进入镜像页面 */
+const openImage = async (index) => {
   const version1 = activeTab1.value; // 一级 Tab 值
   const version2 = activeTab2.value; // 二级 Tab 值
+
+  console.log(props.productUri,props.vendor,props.product)
+
   await router.push({
     // path: `/release/${props.productUri}/${version1}/${version2}/${row.date}`, // RESTful 路径
-    path: `/release/${version1}/${version2}/1/${props.productUri}/2`
+    path: `/release/${version1}/${version2}/${props.vendor}/${props.product}/${index}`
   });
 };
 

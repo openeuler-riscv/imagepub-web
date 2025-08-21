@@ -3,7 +3,7 @@
     <div v-if="childImageData && childImageData.length > 0" class="version-list">
         <div v-for="(v, index) in childImageData" :key="index" class="version-card" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
           <div class="version-des">{{ props.title }}</div>
-          <div class="vs-first" @click="handleActionClick(version)">
+          <div class="vs-first" @click="handleActionClick(0)">
             <div class="vs-label">
               <div class="vs-title">
                 <img src="@/assets/icons/board/version.svg" style="margin-right:4px"/>
@@ -34,16 +34,13 @@
 
           <div v-if="v.isExpanded">
             <!-- {{'这是第' + index + '项展开内容'}} -->
-            <SingleTable :tabledata="v?.version" :title="props.title" >
+            <SingleTable :jump-image="handleActionClick" :tabledata="v?.version?.map((k,i)=>({...k,index:i}))" :title="props.title" >
 
             </SingleTable>
           </div>
         
       </div>
     </div>
-
-   
-
   </div>
 </template>
 
@@ -85,10 +82,10 @@ watch(
 );
 
 /* 点击跳转镜像页面 */
-const handleActionClick = async (row) => {
-  await props.openImage(row);
-};
-
+const handleActionClick = async (index) => {
+  console.log(index)
+  await props.openImage(index);
+}
 
 </script>
 
@@ -225,9 +222,8 @@ html.dark {
 
   .changelog-content {
     font-size: 14px;
-  
     font-weight: 400;
-   white-space: normal;
+    white-space: normal;
   /* 限制最大高度为两行文字高度 (根据实际行高调整) */
       max-height: 2.4em; /* 假设行高是 1.2em */
       /* 隐藏超出部分 */
@@ -237,7 +233,7 @@ html.dark {
       display: -webkit-box;
       -webkit-line-clamp: 2; /* 显示 2 行 */
       -webkit-box-orient: vertical;
-      }
+    }
 
   .description {
     font-size: 14px;
