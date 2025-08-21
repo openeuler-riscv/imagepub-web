@@ -4,14 +4,12 @@
 
     <BoardDetail :boardDetail="boardDetail"></BoardDetail>
 
-    <div class="drawer-btn" @click="openDrawer">
+    <div class="drawer-btn" v-if="osList?.length>0" @click="openDrawer">
       <el-button  >
         <span>展示全部</span>
       </el-button>
        <CustomArrowIcon style="cursor:pointer;position:absolute;right:20px;top:16px"/>
     </div>
-
-
 
     <div v-if="isDataLoaded" class="box-card">
       <div style="width: 100%">
@@ -30,13 +28,6 @@
                   :name="release.name"
                  
               >
-                <!-- <BoardDescription
-                    v-if="boardDetail && boardDetail.imagesuites"
-                    :title="release.name"
-                    :description="getSuiteDescription(release)"
-                    :historyVersions="release.imagesuites?.flatMap(suite => suite.revisions?.map(i=>({...i,isExpanded:false})) || []) || []" 
-                    :open-image="openImage">
-                </BoardDescription> -->
                 <BoardDescription
                     v-if="boardDetail && boardDetail.imagesuites"
                     :title="release.name"
@@ -87,20 +78,15 @@ import { useRouter } from 'vue-router';
 import { ref, computed, onMounted, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import BoardDetail from "@/components/board/BoardDetail.vue";
-import { getProductVersion,getProductList } from '@/api/get-json';
 import './style.scss';
 import TopBackHome from "@/components/common/TopBackHome.vue";
 import BoardFilter from "@/components/board/BoardFilter.vue";
 import BoardDescription from "@/components/board/BoardDescription.vue";
 import { useI18n } from "vue-i18n";
 import { languageFetch } from "@/utils/languageFetch";
-import { useProductDataStore } from '@/store/productData'
 import CustomArrowIcon from '@/components/icon/CustomArrowIcon.vue'
 
 
-
-
-const productStore = useProductDataStore()
 const { t } = useI18n();
 const isDataLoaded = ref(false);
 const boardDetail = ref({});
@@ -143,7 +129,6 @@ const filters = ref({
 const activeTab1 = ref(""); // 存储一级Tab的name（如'openEuler'）
 const activeTab2 = ref(""); // 存储二级Tab的name（如'24.03-LTS-SP1'）
 const router = useRouter();
-const proUrl = ref("");
 const drawerVisible = ref(false);
 
 
@@ -168,7 +153,6 @@ const openDrawer = () => {
 };
 
 const openImage = async (row) => {
-  console.log(row)
   const version1 = activeTab1.value; // 一级 Tab 值
   const version2 = activeTab2.value; // 二级 Tab 值
   await router.push({
@@ -194,10 +178,9 @@ const getKernelOptions = ()=>{
   const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
   const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
   if (!currentRelease?.imagesuites) return [];
-
   return currentRelease.imagesuites
       .filter(suite => suite.kernel?.type)
-      .flatMap(suite => [{ version: suite.kernel.type }]);
+      .flatMap(suite => [{ version: suite.kernel.type }]).filter((item, index, self) => self.findIndex(el => el.version === item.version) === index);
 };
 
 
@@ -211,15 +194,14 @@ const getSuiteDescription = () => {
 };
 
 /* 搜索参数检索功能 */
-
 const getKernelVersions = () => {
   const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
   const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
   if (!currentRelease?.imagesuites) return [];
-
+  
   return currentRelease.imagesuites
       .filter(suite => suite.kernel?.version)
-      .flatMap(suite => [{ version: suite.kernel.version }]);
+      .flatMap(suite => [{ version: suite.kernel.version }]).filter((item, index, self) => self.findIndex(el => el.version === item.version) === index)
 };
 
 
@@ -228,21 +210,22 @@ const getIsaMabi = () => {
   const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
   const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
   if (!currentRelease?.imagesuites) return [];
+
   return currentRelease.imagesuites.flatMap((suite, suiteIndex) => {
     const isa = suite.isa;
     if (!isa || !isa.mabi) return [];
-    console.log("isa.mabi", isa.mabi);
     return {
       id: `${suiteIndex}-${0}`,
       profile: isa.mabi
     }
-  });
+  }).filter((item, index, self) => self.findIndex(el => el.profile === item.profile) === index);
 }
 
 const getIsaMarch = () => {
   const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
   const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
   if (!currentRelease?.imagesuites) return [];
+
   return currentRelease.imagesuites.flatMap((suite, suiteIndex) => {
     const isa = suite.isa;
     if (!isa || !isa.march) return [];
@@ -250,7 +233,7 @@ const getIsaMarch = () => {
       id: `${suiteIndex}-${index}`,
       profile: march
     }));
-  });
+  }).filter((item, index, self) => self.findIndex(el => el.profile === item.profile) === index);
 };
 
 const getUserspaces = () => {
@@ -261,8 +244,9 @@ const getUserspaces = () => {
   return currentRelease.imagesuites.flatMap((suite, index) => {
     const userSpaceList = suite.userspace;
     if (!userSpaceList) return [];
+
     return Array.isArray(userSpaceList)
-        ? userSpaceList.map((space, spaceIndex) => ({ id: `${index}-${spaceIndex}`, userspace: space }))
+        ? userSpaceList.map((space, spaceIndex) => ({ id: `${index}-${spaceIndex}`, userspace: space })).filter((item, index, self) => self.findIndex(el => el.userspace === item.userspace) === index)
         : [{ id: `${index}-0`, userspace: userSpaceList }];
   });
 };
@@ -271,11 +255,14 @@ const getInstallerTypes = () => {
   const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
   const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
   if (!currentRelease?.imagesuites) return [];
-
+  console.log([...new Set(
+      currentRelease.imagesuites.map(s => s.loader?.[0]).filter(Boolean)
+  )])
   return [...new Set(
       currentRelease.imagesuites.map(s => s.loader?.[0]).filter(Boolean)
-  )];
+  )].filter((item, index, self) => self.findIndex(el => el === item) === index);
 };
+
 
 // 监听Tab变化，更新相关数据（可选：用于数据联动）
 watch([activeTab1, activeTab2], ([newTab1, newTab2]) => {
@@ -329,24 +316,9 @@ const fetchBoardDetail = async () => {
   }
 };
 
-// 保持其他逻辑不变
-const fetchProductVersion = async () => {
-  try {
-    const response = await getProductVersion();
-    if (response && response.data) {
-      boardImageData.value = response.data;
-    } else {
-      ElMessage.error('获取产品版本失败：返回数据为空');
-    }
-  } catch (error) {
-    console.error('获取产品版本失败:', error);
-    ElMessage.error('获取产品版本失败：' + error.message);
-  }
-};
-
 onMounted(async () => {
   await fetchBoardDetail();
-  await fetchProductVersion();
+  // await fetchProductVersion();
 });
 </script>
 

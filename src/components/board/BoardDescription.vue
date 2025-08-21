@@ -70,11 +70,8 @@ const props = defineProps({
 const childImageData = ref([]);
 
 const toggleArrow = (Index) =>{
-  console.log(Index)
   childImageData.value[Index].isExpanded = !childImageData.value[Index].isExpanded
 }
-
-console.log(childImageData)
 
 
 // 初始化时深拷贝父组件数据
