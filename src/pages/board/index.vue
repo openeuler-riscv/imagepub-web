@@ -28,15 +28,21 @@
                   :key="releaseIndex"
                   :label="release.name"
                   :name="release.name"
-                  :isExpanded = release.isExpanded
+                 
               >
+                <!-- <BoardDescription
+                    v-if="boardDetail && boardDetail.imagesuites"
+                    :title="release.name"
+                    :description="getSuiteDescription(release)"
+                    :historyVersions="release.imagesuites?.flatMap(suite => suite.revisions?.map(i=>({...i,isExpanded:false})) || []) || []" 
+                    :open-image="openImage">
+                </BoardDescription> -->
                 <BoardDescription
                     v-if="boardDetail && boardDetail.imagesuites"
                     :title="release.name"
-                    :releaseIndex="releaseIndex"
-                     @update:computed-value="handleUpdate"
                     :description="getSuiteDescription(release)"
-                    :historyVersions="release.imagesuites?.flatMap(suite => suite.revisions || []) || []" :open-image="openImage">
+                    :historyVersions="release.imagesuites?.map(suite => ({isExpanded:false,version:suite.revisions})  || []) || []" 
+                    :open-image="openImage">
                 </BoardDescription>
               </el-tab-pane>
             </el-tabs>
@@ -156,17 +162,6 @@ const props = defineProps({
   },
 });
 
-console.log(proUrl.value)
-
-
-
-
-// 接收子组件的修改事件
-const handleUpdate = (newValue) => {
-  // 修改 computed 值（会触发上面的 setter）
-  console.log(newValue)
-};
-
 
 const openDrawer = () => {
   drawerVisible.value = true;
@@ -186,13 +181,9 @@ const openImage = async (row) => {
 const osList = computed(() =>
     boardDetail.value.imagesuites?.map(osItem => ({
       name: osItem.name,
-      releases: osItem.releases,
-      isExpanded:false
+      releases: osItem.releases
     })) || []
 );
-
-
-console.log(osList)
 
 // 辅助函数：获取对应OS的releases列表
 const getReleases = (osItem) => {
@@ -209,12 +200,17 @@ const getKernelOptions = ()=>{
       .flatMap(suite => [{ version: suite.kernel.type }]);
 };
 
+
+
+
 const getSuiteDescription = () => {
   const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
   const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
 
   return currentRelease?.imagesuites?.[0]?.description || '';
 };
+
+/* 搜索参数检索功能 */
 
 const getKernelVersions = () => {
   const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
@@ -296,19 +292,12 @@ watch([activeTab1, activeTab2], ([newTab1, newTab2]) => {
 
 // 保持原有数据加载逻辑，仅调整初始化Tab赋值
 const fetchBoardDetail = async () => {
-  const response = await getProductList();
-  console.log(props.productUri,response.data)
-  proUrl.value = response.data?.find(it=>it?.name === props.productUri)?.url;
-
-  
-
-
   try {
-    if (!proUrl?.value) {
+    if (!props.productUri) {
       ElMessage.error('路由参数 productUri 为空');
       return;
     }
-    const uri = `/${proUrl.value}`;
+    const uri = `/${props.productUri}`;
     // 创建一个请求实例，保存在变量中以便后续可以多次调用
     const request = languageFetch(uri);
 

@@ -1,16 +1,7 @@
 <template>
   <div class="component-container">
-    <div v-if="props.historyVersions && props.historyVersions.length > 0" class="version-list">
-      <!-- <div v-for="(version, index) in props.historyVersions" :key="index" class="version-card"
-      
-        @click="handleActionClick(version)" 
-        
-        @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave"> -->
-
-        <div v-for="(version, index) in props.historyVersions" :key="index" class="version-card"
-    
-        
-        @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
+    <div v-if="childImageData && childImageData.length > 0" class="version-list">
+        <div v-for="(v, index) in childImageData" :key="index" class="version-card" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
           <div class="version-des">{{ props.title }}</div>
           <div class="vs-first" @click="handleActionClick(version)">
             <div class="vs-label">
@@ -18,46 +9,53 @@
                 <img src="@/assets/icons/board/version.svg" style="margin-right:4px"/>
                 <span>{{t('version')}}</span>
               </div>
-              <div class="version-number">{{  props.title + '  '+ version.date }}</div>
+              <div class="version-number">{{  props.title + '  '+ v.version[0].date }}</div>
             </div>
             <div class="vs-label">
               <div class="vs-title">
                 <img src="@/assets/icons/board/log.svg" style="margin-right:4px"/>
                 <span>{{t('changeLog')}}</span>
               </div>
-              <div class="version-number changelog-content">  {{ version.changelog || '无变更说明' }}</div>
+              <div class="version-number changelog-content">  {{ v.version[0].changelog || '无变更说明' }}</div>
             </div>
           </div>
 
-          <div class="vs-more"  @click="toggleArrow(props.releaseIndex)">
+          <div class="vs-more"  @click="toggleArrow(index)">
             <img 
               width="10"
               height="10"
               style="margin-right:4px"
-              :src="props.isExpanded ? upArrow : downArrow" 
+              :src="v.isExpanded ? upArrow : downArrow" 
               alt="箭头图标" 
               class="arrow-icon"
-             
             >
             <div>{{t('allversion')}}</div>
+          </div>
+
+          <div v-if="v.isExpanded">
+            <!-- {{'这是第' + index + '项展开内容'}} -->
+            <SingleTable :tabledata="v?.version" :title="props.title" >
+
+            </SingleTable>
           </div>
         
       </div>
     </div>
+
+   
 
   </div>
 </template>
 
 <script setup>
 import { useI18n } from "vue-i18n";
-import { ref } from 'vue'
+import { ref, watch } from 'vue';
 import upArrow from '@/assets/icons/board/up.svg'
 import downArrow from '@/assets/icons/board/down.svg'
+import SingleTable from '@/components/board/SingleTable.vue'
 const { t } = useI18n()
 const props = defineProps({
   title: String,
-  isExpanded:Boolean,
-  releaseIndex:Number,
   description: String,
   historyVersions: {
     type: Array,
@@ -67,17 +65,33 @@ const props = defineProps({
 });
 
 
-const toggleArrow = (releaseIndex) =>{
-  emit('update:computed-value', releaseIndex);
-  //isClicked.value = !isClicked.value
+
+// 子组件内部维护一份独立的数据（深拷贝）
+const childImageData = ref([]);
+
+const toggleArrow = (Index) =>{
+  console.log(Index)
+  childImageData.value[Index].isExpanded = !childImageData.value[Index].isExpanded
 }
 
+console.log(childImageData)
+
+
+// 初始化时深拷贝父组件数据
+watch(
+  () => props.historyVersions,
+  (newVal) => {
+    // 深拷贝确保引用彻底断开
+    childImageData.value = JSON.parse(JSON.stringify(newVal));
+  },
+  { immediate: true } // 立即执行一次
+);
+
+/* 点击跳转镜像页面 */
 const handleActionClick = async (row) => {
   await props.openImage(row);
 };
 
-
-const emit = defineEmits(['update:computed-value']);
 
 </script>
 
@@ -154,8 +168,10 @@ html.dark {
 }
 
 .version-list {
+  
   display: grid;
   grid-template-columns: 1fr;
+  align-items: start;
   gap: 16px;
   transition: box-shadow 0.3s ease;
 
@@ -187,6 +203,7 @@ html.dark {
   cursor: pointer;
   border: 1px solid var(--theme-border);
   font-weight: 400;
+  display: inline-block;
 
   &:hover {
     box-shadow:
