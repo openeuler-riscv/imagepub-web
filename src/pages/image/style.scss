@@ -152,34 +152,41 @@
   color: var(--el-color-primary);
 }
 
+
 /* 表格样式 */
 .mirror-table {
   border-radius: 8px;
   overflow: hidden;
+  width: 100%;
+
+
+
+
+
 
   /* Element Plus Table Dark Mode */
-  :deep(.el-table) {
-    background-color: var(--theme-card) !important;
-    color: var(--theme-text) !important;
-    border-color: var(--theme-border) !important;
-  }
+  // :deep(.el-table) {
+  //   background-color: var(--theme-card) !important;
+  //   color: var(--theme-text) !important;
+  //   border-color: transparent !important;
+  // }
 
-  :deep(.el-table th) {
-    background-color: var(--theme-table-header) !important;
-    color: var(--theme-text) !important;
-    border-color: var(--theme-border) !important;
-  }
+  // :deep(.el-table th) {
+  //   background-color: var(--theme-table-header) !important;
+  //   color: var(--theme-text) !important;
+  //   border-color: var(--theme-border) !important;
+  // }
 
-  :deep(.el-table td) {
-    background-color: var(--theme-table-row) !important;
-    color: var(--theme-text) !important;
-    border-color: var(--theme-border) !important;
-  }
+  // :deep(.el-table td) {
+  //   background-color: var(--theme-table-row) !important;
+  //   color: var(--theme-text) !important;
+  //   border-color: var(--theme-border) !important;
+  // }
 
-  :deep(.el-table__body tr:hover) {
-    background-color: var(--theme-hover) !important;
-    color: var(--theme-text) !important;
-  }
+  // :deep(.el-table__body tr:hover) {
+  //   background-color: var(--theme-hover) !important;
+  //   color: var(--theme-text) !important;
+  // }
 
 }
 
@@ -226,6 +233,7 @@
 }
 
 
+
 :deep(.el-table .cell){
     padding:0px
 }
@@ -252,3 +260,12 @@
   -webkit-line-clamp: 2; /* 显示 2 行 */
   -webkit-box-orient: vertical;
 }
+
+.cell-content{
+  display: flex;
+  align-items: center;
+  .text-content{
+    margin-right: 8px;
+  }
+}
+

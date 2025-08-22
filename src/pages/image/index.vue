@@ -18,10 +18,10 @@
         <div class="image-list">
           <BoardInfoTitle :title="t('imageFile')" />  
             <div v-if=" mirrorList.length > 0">
-              <el-table :show-header="false"  :data="mirrorList" style="width: 100%" class="mirror-table">
-                <el-table-column prop="tags" :label="t('tag')" width="80" label-class-name="el-table-custom-label" >
+              <el-table :show-header="false"  :data="mirrorList" class="mirror-table" :row-class-name="'custom-row'">
+                <el-table-column prop="tags" :label="t('tag')" width="150" label-class-name="el-table-custom-label" >
                     <template #default="{ row }">
-                      <el-tag style="color:#fff;border:none" :color="row.tags[0] == '系统' ? '#012fa6': '#ff7300'">  {{ row.tags[0] }}</el-tag>
+                       {{ row.tags[0] }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="url" :label="t('imageFile')" min-width="150" label-class-name="el-table-custom-label">
@@ -30,17 +30,37 @@
                   </template>
                 </el-table-column>
                 
-                <el-table-column prop="hash.sha256" label="sha256" min-width="150" label-class-name="el-table-custom-label" >
-                  
-                   <template #default="{ row }">
-                      {{Object.keys(row.hash)?.[0]}}
+                <el-table-column prop="hash.sha256" label="sha256" width="100" label-class-name="el-table-custom-label" >
+
+                  <template #default="scope">
+                      <!-- 外层容器：文字 + 图标 -->
+                      <div class="cell-content">
+                        <!-- 文字内容 -->
+                        <span class="text-content">{{ Object.keys(scope.row.hash)?.[0] }}</span>
+                        
+                        <!-- 图标 + Popover 组合 -->
+                        <el-popover
+                          placement="top"
+                          width="250"
+                          trigger="hover"
+                          popper-style="border-radius: 12px;"
+                          :content="Object.values(scope.row.hash)?.[0]"
+                        >
+                          <!-- 触发 Popover 的图标 -->
+                          <template #reference>
+                            <el-icon class="info-icon">
+                              <WarningFilled style="color:#999" />
+                            </el-icon>
+                          </template>
+                        </el-popover>
+                      </div>
                     </template>
                 </el-table-column>
 
-                <el-table-column :label="t('operation')" min-width="50" label-class-name="el-table-custom-label">
+                <el-table-column :label="t('operation')" width="80" label-class-name="el-table-custom-label">
                   <template #default="scope">
                     <el-button @click="downloadFile(scope.row.url)" size="small" class="no-border">
-                      <i class="fa-solid fa-cloud-arrow-down fa-2x" style="opacity: 0.3;"></i>
+                      <img src="@/assets/icons/board/download.svg" width="18" height="18" />
                     </el-button>
                   </template>
                 </el-table-column>
@@ -74,6 +94,8 @@ import { ElMessage } from 'element-plus';
 import { useRoute } from 'vue-router';
 import BoardInfoTitle from "@/components/board/BoardInfoTitle.vue";
 import { useI18n } from "vue-i18n";
+import { WarningFilled } from '@element-plus/icons-vue';
+
 
 const { t } = useI18n();
 const route = useRoute();
@@ -158,3 +180,18 @@ const downloadFile = (url) => {
   a.click();
 };
 </script>
+
+<style lang="scss" scoped>
+:deep(.el-table td){
+  background-color: #f5f5f5 !important;
+  border-bottom: none !important;
+}
+:deep(.el-table tr){
+  margin-bottom: 12px !important;
+}
+
+.no-border{
+  background-color: transparent !important;
+}
+
+</style>
