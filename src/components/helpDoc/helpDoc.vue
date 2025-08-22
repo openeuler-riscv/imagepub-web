@@ -234,7 +234,7 @@ onMounted(() => {
   border-radius: 8px;
   padding: 12px 16px;
   margin-bottom: 16px;
-  box-shadow: 0 2px 12px 0 var(--theme-shadow);
+  /* box-shadow: 0 2px 12px 0 var(--theme-shadow); */
 }
 
 .info-detail {

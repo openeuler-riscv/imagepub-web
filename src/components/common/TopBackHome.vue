@@ -3,7 +3,7 @@
     <div class="top-bar-container">
       <div class="input-wrapper">
         <div class="left-section">
-          <CustomLogoIcon class="prefix-icon" />
+          <CustomLogoIcon class="prefix-icon" @click="goHome" />
           <el-button v-if="isBoard" @click="goHome" :icon="Back" round dark class="no-border-button">
             <span style="font-size: 1.75rem; font-family: PingFang SC-Regular">{{ t('backToHome') }}</span>
           </el-button>
@@ -130,6 +130,7 @@ const handleLanguageChange = () => {
 /* Logo图标样式 */
 .prefix-icon {
   margin-right: 0;
+  cursor: pointer;
 }
 
 /* 搜索区域容器样式 */
