@@ -66,8 +66,6 @@
 
       <!-- 镜像列表和帮助文档区域 -->
       <div class="content-toggle-area">
-        
-
         <!-- 帮助文档 -->
         <div class="bottom-container">
           <div v-if="helpVisible" class="help-doc-card">
@@ -77,6 +75,14 @@
         </div>
       </div>
     </div>
+
+    <div class="back-to-top" v-show="showBackToTop" @click="scrollToTop">
+      <img
+        src="@/assets/icons/home/Group 109@3x.svg"
+        alt="back to top"
+        class="up-arrow"
+      />
+  </div>
   </div>
 </template>
 
@@ -99,6 +105,7 @@ const markdownURL = ref('');
 const mirrorList = ref([]);
 const currentVersionInfo = ref(null);
 const helpVisible = ref(true);
+const showBackToTop = ref(false);
 
 const props = defineProps({
   productUri: String,
@@ -150,8 +157,6 @@ const processData = (data, targetVersion) => {
     version: targetVersion, // 补充显示版本号
   };
 
-  console.log(targetRelease)
-
   mirrorList.value = latestRevision.files || [];
   markdownURL.value = latestRevision.docs?.[0] || '';
 };
@@ -160,8 +165,28 @@ watch([route], () => {
   fetchImagePageData();
 });
 
+/* 回到顶部 */
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+};
+
+/* 监听页面滚动 */
+const handleScroll = () =>{
+  
+  showBackToTop.value = window.scrollY > 400;
+  console.log(window.scrollY,showBackToTop.value)
+  
+} 
+
+
+
+
 onMounted(() => {
   fetchImagePageData();
+  window.addEventListener("scroll", handleScroll);
 });
 
 const toggleContent = () => {
@@ -202,6 +227,36 @@ const downloadFile = (url) => {
 
 .text-content{
   margin-right: 8px;
+}
+
+.back-to-top {
+  position: fixed;
+  right: 64px;
+  bottom: 64px;
+  width: 72px;
+  height: 72px;
+  background: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 3px 2px 0 rgba(1, 47, 166, 0.02),
+    0 7px 5px 0 rgba(1, 47, 166, 0.03), 0 12px 10px 0 rgba(1, 47, 166, 0.04),
+    0 22px 18px 0 rgba(1, 47, 166, 0.04);
+  transition: all 0.3s ease;
+  z-index: 100;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 4px 8px rgba(1, 47, 166, 0.15);
+  }
+
+  .up-arrow {
+    width: 40px;
+    height: 40px;
+    transform: none;
+  }
 }
 
 
