@@ -44,12 +44,17 @@ const router = createRouter({
       component: () => import("../pages/image/index.vue"),
       props: (route) => ({
         productUri:  `v2/${getLang(route)}/products/${route.params.vendor}/${route.params.product}.json` ,
-        // productUri: route.params.product,
         version1: route.params.distro,
         version2: route.params.distro_rel,
-        // date: route.params.date,
+        imagesuiteIndex:route.params.image_receipe,
         lang: getLang(route)
       })
+    },
+    {
+      path: "/test",
+      name: "test",
+      component: () => import("../pages/image/test.vue"),
+      
     }
   ]
 });

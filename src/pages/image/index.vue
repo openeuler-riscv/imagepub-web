@@ -26,12 +26,12 @@
                 >
                   <!-- 每行包含的列（可根据需要调整） -->
                   <el-col :span="2">
-                    <div class="col-content">{{ item.tags[0] }}</div>
+                    <div class="col-content" style="min-width:80px;display:block">{{ item.tags[0] }}</div>
                   </el-col>
-                  <el-col :span="18">
+                  <el-col :span="17">
                     <div class="col-content">{{ item.url.split('/').pop() }}</div>
                   </el-col>
-                   <el-col :span="2">
+                   <el-col :span="3">
                     <div class="col-content">
                         <span class="text-content">{{ Object.keys(item.hash)?.[0] }}</span>
                         
@@ -60,7 +60,7 @@
                   
                 </el-row>
           
-        </div>
+            </div>
         </div>
       </div>
 
@@ -70,11 +70,64 @@
         <div class="bottom-container">
           <div v-if="helpVisible" class="help-doc-card">
            
-            <HelpDoc v-if="markdownURL !== ''" :markdownURL="markdownURL" :boardDetail="boardDetail" />
+            <HelpDoc v-if="markdownURL !== ''" :markdownURL="markdownURL" :docList="docList" :boardDetail="boardDetail" />
           </div>
         </div>
       </div>
     </div>
+
+
+    
+
+    <el-popover
+    :visible="visible"
+    placement="top-end"
+    :title="t('imageFile')"
+    :width="510"
+    :append-to="customContainer"
+    popper-style="border-radius:12px"
+    :close-on-click="false"
+    trigger="manual"
+     :close-on-click-outside="false"  
+    
+  >
+    <template #default>
+        <div v-if=" mirrorList.length > 0">
+             <el-row 
+                  v-for="(item, index) in mirrorList" 
+                  :key="item.id" 
+                  :gutter="10"
+                  class="custom-row"
+                >
+                  <!-- 每行包含的列（可根据需要调整） -->
+                  <el-col :span="5">
+                    <div class="col-content">{{ item.tags[0] }}</div>
+                  </el-col>
+                  <el-col :span="16">
+                    <div class="col-content" style="max-width:300px;display:block">{{ item.url.split('/').pop() }}</div>
+                  </el-col>
+
+                   <el-col :span="2">
+                    <div class="col-content"><el-button @click="downloadFile(item.url)" size="small" class="no-border">
+                      <img src="@/assets/icons/board/download.svg" width="18" height="18" />
+                    </el-button></div>
+                  </el-col>
+                  
+                </el-row>
+          
+            </div>
+      </template>
+    
+    <template #reference>
+      <div id="show-image" class="showImage" v-show="showBackToTop"  @click="visible = !visible">
+        <img
+          src="@/assets/icons/board/imageshow.svg"
+          alt="back to top"
+          class="up-arrow"
+        />
+      </div>
+    </template>
+  </el-popover>
 
     <div class="back-to-top" v-show="showBackToTop" @click="scrollToTop">
       <img
@@ -106,13 +159,19 @@ const mirrorList = ref([]);
 const currentVersionInfo = ref(null);
 const helpVisible = ref(true);
 const showBackToTop = ref(false);
+const docList = ref([])
+const visible = ref(false)
+
+const customContainer = ref(null);
 
 const props = defineProps({
   productUri: String,
   version1: String,
   version2: String,
-  date: String
+  imagesuiteIndex: String
 });
+
+
 
 // 数据获取与处理
 const fetchImagePageData = async () => {
@@ -127,7 +186,6 @@ const fetchImagePageData = async () => {
     const data = await response.json();
     boardDetail.value = data;
 
-    console.log(boardDetail.value)
     processData(data, props.version2); // 传递版本号用于匹配
   } catch (error) {
     ElMessage.error(`获取数据失败：${error.message}`);
@@ -146,11 +204,8 @@ const processData = (data, targetVersion) => {
     ElMessage.error(`未找到版本 ${targetVersion}`);
     return;
   }
-  
 
-  //const latestRevision = targetRelease?.imagesuites?.[0]?.revisions?.filter(r => r.date === props.date)?.[0] ?? null;  
-  const latestRevision = targetRelease?.imagesuites?.[0]?.revisions?.[0]
-    
+  const latestRevision = targetRelease?.imagesuites?.[props.imagesuiteIndex]?.revisions?.[route.query.revision]
     
       currentVersionInfo.value = {
     ...latestRevision,
@@ -159,6 +214,7 @@ const processData = (data, targetVersion) => {
 
   mirrorList.value = latestRevision.files || [];
   markdownURL.value = latestRevision.docs?.[0] || '';
+  docList.value = latestRevision.docs
 };
 
 watch([route], () => {
@@ -175,11 +231,10 @@ const scrollToTop = () => {
 
 /* 监听页面滚动 */
 const handleScroll = () =>{
-  
-  showBackToTop.value = window.scrollY > 400;
-  console.log(window.scrollY,showBackToTop.value)
-  
+   showBackToTop.value = window.scrollY > 400
 } 
+
+
 
 
 
@@ -187,6 +242,7 @@ const handleScroll = () =>{
 onMounted(() => {
   fetchImagePageData();
   window.addEventListener("scroll", handleScroll);
+  customContainer.value = document.getElementById('show-image');
 });
 
 const toggleContent = () => {
@@ -227,6 +283,36 @@ const downloadFile = (url) => {
 
 .text-content{
   margin-right: 8px;
+}
+
+.showImage{
+  position: fixed;
+  right: 64px;
+  bottom: 155px;
+  width: 72px;
+  height: 72px;
+  background: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 3px 2px 0 rgba(1, 47, 166, 0.02),
+    0 7px 5px 0 rgba(1, 47, 166, 0.03), 0 12px 10px 0 rgba(1, 47, 166, 0.04),
+    0 22px 18px 0 rgba(1, 47, 166, 0.04);
+  transition: all 0.3s ease;
+  z-index: 100;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 4px 8px rgba(1, 47, 166, 0.15);
+  }
+
+  .up-arrow {
+    width: 40px;
+    height: 40px;
+    transform: none;
+  }
 }
 
 .back-to-top {

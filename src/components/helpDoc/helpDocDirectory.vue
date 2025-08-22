@@ -2,9 +2,8 @@
   <div class="document-list-container">
     <div class="related-list">
       <BoardInfoTitle title="相关文档"></BoardInfoTitle>
-      <div class="related-list-item">文档1</div>
-      <div class="related-list-item">文档2</div>
-      <div class="related-list-item">文档3</div>
+      <div v-if="mdFiles.length=0">11</div>
+      <div v-else-if="mdFiles.length>0" class="related-list-item" v-for="file in mdFiles">{{file[0].text}}</div>
     </div>
     <div class="doc-directory">
       <DocTree :items="tocItems" :onClick="handleDocItemClick" :currentItem="currentDocItem" />
@@ -17,13 +16,17 @@
 import { ref, computed, onMounted, watch, onUnmounted, nextTick } from "vue";
 import DocTree from "@/components/treeNode/DocTree.vue";
 import BoardInfoTitle from "@/components/board/BoardInfoTitle.vue";
+import request from "@/utils/request";
 const props = defineProps({
   markdownContent: {
     type: String,
     required: true,
   },
+  docList:Array
 });
-
+const List = ref([])
+const mdFiles = ref([]);
+const isLoading = ref(true);
 // 用于存储目录结构
 const tocItems = ref([]);
 // 当前选中的文档项目
@@ -203,9 +206,10 @@ const parseTocFromMarkdown = (markdown) => {
 // 监听 markdownContent 的变化，更新目录结构
 watch(
   () => props.markdownContent,
+
   (newContent) => {
     if (newContent) {
-      tocItems.value = parseTocFromMarkdown(newContent);
+      tocItems.value = parseTocFromMarkdown(newContent)
 
       // 内容变化后，重新设置滚动监听
       nextTick(() => {
@@ -215,6 +219,35 @@ watch(
   },
   { immediate: true }
 );
+
+// 2. 存储结果的 Proxy 数组
+
+
+
+// 4. 核心：循环异步获取 md 文件（处理 Proxy 数组）
+const fetchAllMdFiles = async (arr) => {
+      mdFiles.value = []
+       if(arr){
+        for (const url of arr) {
+        
+          // 异步获取 md 文件
+          const content = await request.get(`/${url}`);
+          // 添加到结果数组（Proxy 数组会自动响应式更新）
+          mdFiles.value.push( parseTocFromMarkdown(content.data));
+        }
+        isLoading.value = false
+      }
+}
+
+ console.log(List)
+
+watch(
+  ()=>props.docList,
+  (arr)=>{
+  arr && fetchAllMdFiles(arr)
+
+  },{ immediate: true,deep: true  }
+)
 
 // 设置滚动监听
 const setupScrollListener = () => {
@@ -227,12 +260,14 @@ const setupScrollListener = () => {
   }
 };
 
+
 // 组件挂载时，解析 markdown 内容并设置滚动监听
 onMounted(() => {
   if (props.markdownContent) {
     tocItems.value = parseTocFromMarkdown(props.markdownContent);
-
   }
+
+
 
   // 等待DOM更新后设置滚动监听
   nextTick(() => {
@@ -247,6 +282,8 @@ onUnmounted(() => {
     markdownBody.removeEventListener("scroll", handleDocScroll);
   }
 });
+
+
 </script>
 
 <style scoped>

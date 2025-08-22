@@ -32,7 +32,8 @@
                     v-if="boardDetail && boardDetail.imagesuites"
                     :title="release.name"
                     :description="getSuiteDescription(release)"
-                    :historyVersions="release.imagesuites?.map(suite => ({isExpanded:false,version:suite.revisions})  || []) || []" 
+                    
+                    :historyVersions="release.imagesuites?.map((suite,index) => ({isExpanded:false,version:suite.revisions,imagesuiteIndex:index})  || []) || []" 
                     :open-image="openImage">
                 </BoardDescription>
               </el-tab-pane>
@@ -74,7 +75,7 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router';
+import { useRouter ,useRoute} from 'vue-router';
 import { ref, computed, onMounted, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import BoardDetail from "@/components/board/BoardDetail.vue";
@@ -129,6 +130,7 @@ const filters = ref({
 const activeTab1 = ref(""); // 存储一级Tab的name（如'openEuler'）
 const activeTab2 = ref(""); // 存储二级Tab的name（如'24.03-LTS-SP1'）
 const router = useRouter();
+const route = useRoute()
 const drawerVisible = ref(false);
 
 
@@ -155,15 +157,20 @@ const openDrawer = () => {
 };
 
 /* 进入镜像页面 */
-const openImage = async (index) => {
+const openImage = async (imageIndex,visionIndex) => {
   const version1 = activeTab1.value; // 一级 Tab 值
   const version2 = activeTab2.value; // 二级 Tab 值
 
   console.log(props.productUri,props.vendor,props.product)
-
+  const currentQuery = { ...route.query };
+   const newQuery = {
+    revision:visionIndex,
+    ...currentQuery
+  };
   await router.push({
     // path: `/release/${props.productUri}/${version1}/${version2}/${row.date}`, // RESTful 路径
-    path: `/release/${version1}/${version2}/${props.vendor}/${props.product}/${index}`
+    path: `/release/${version1}/${version2}/${props.vendor}/${props.product}/${imageIndex}`,
+    query:newQuery
   });
 };
 

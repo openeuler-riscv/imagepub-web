@@ -52,7 +52,7 @@ const isActive = computed(() => {
   const active = props.currentItem && props.item.id === props.currentItem.id && props.item.text === props.currentItem.text;
 
   if (active) {
-    console.log(props.currentItem, props.item, "我是当前项");
+    // console.log(props.currentItem, props.item, "我是当前项");
     return true;
   }
   return false;

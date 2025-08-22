@@ -3,7 +3,7 @@
     <div v-if="childImageData && childImageData.length > 0" class="version-list">
         <div v-for="(v, index) in childImageData" :key="index" class="version-card" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
           <div class="version-des">{{ props.title }}</div>
-          <div class="vs-first" @click="handleActionClick(0)">
+          <div class="vs-first" @click="handleActionClick(v.imagesuiteIndex,0)">
             <div class="vs-label">
               <div class="vs-title">
                 <img src="@/assets/icons/board/version.svg" style="margin-right:4px"/>
@@ -34,7 +34,7 @@
 
           <div v-if="v.isExpanded">
             <!-- {{'这是第' + index + '项展开内容'}} -->
-            <SingleTable :jump-image="handleActionClick" :tabledata="v?.version?.map((k,i)=>({...k,index:i}))" :title="props.title" >
+            <SingleTable :jump-image="handleActionClick" :imagesuiteIndex="v.imagesuiteIndex" :tabledata="v?.version?.map((k,i)=>({...k,index:i}))" :title="props.title" >
 
             </SingleTable>
           </div>
@@ -51,6 +51,9 @@ import upArrow from '@/assets/icons/board/up.svg'
 import downArrow from '@/assets/icons/board/down.svg'
 import SingleTable from '@/components/board/SingleTable.vue'
 const { t } = useI18n()
+// 子组件内部维护一份独立的数据（深拷贝）
+const childImageData = ref([]);
+
 const props = defineProps({
   title: String,
   description: String,
@@ -61,10 +64,6 @@ const props = defineProps({
   openImage: Function,
 });
 
-
-
-// 子组件内部维护一份独立的数据（深拷贝）
-const childImageData = ref([]);
 
 const toggleArrow = (Index) =>{
   childImageData.value[Index].isExpanded = !childImageData.value[Index].isExpanded
@@ -82,9 +81,9 @@ watch(
 );
 
 /* 点击跳转镜像页面 */
-const handleActionClick = async (index) => {
-  console.log(index)
-  await props.openImage(index);
+const handleActionClick = async (imageIndex,visionIndex) => {
+  console.log(imageIndex,visionIndex)
+  await props.openImage(imageIndex,visionIndex);
 }
 
 </script>

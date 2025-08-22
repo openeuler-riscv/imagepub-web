@@ -12,7 +12,7 @@
     <!-- 移动端侧边栏 -->
     <div class="sidebar-mobile sidebar-overlay" v-show="isMobile && showMobileSidebar"
       @click="showMobileSidebar = false">
-      <helpDocDirectory :markdownContent="markdownContent" />
+      <helpDocDirectory :markdownContent="markdownContent" :docList="props.docList" />
     </div>
 
     <div class="markdown-body">
@@ -70,7 +70,6 @@ marked.setOptions({
 
 const renderer = new marked.Renderer({
   text(text) {
-    console.log(text, "text");
     return he.decode(text);
   },
 });
@@ -137,6 +136,7 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  docList:Array
 });
 const markdownContent = ref("");
 const parsedMarkdown = ref("");

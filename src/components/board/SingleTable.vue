@@ -37,13 +37,14 @@ const props = defineProps({
   tabledata:Array,
   title:String,
   jumpImage: Function,
+  imagesuiteIndex:Number
 });
 
 
 // 处理行点击事件，接收索引参数
 const handleRowClick = (row, column, event, index) => {  
 
-  props.jumpImage(row.index);
+  props.jumpImage(props.imagesuiteIndex,row.index);
 };
 
 const tableData = ref([...props.tabledata]);
