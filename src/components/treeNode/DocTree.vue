@@ -1,12 +1,10 @@
 <template>
   <div class="doc-tree">
-    <div class="tree-header">目录</div>
-    <div class="search-box">
+    <BoardInfoTitle title="目录"></BoardInfoTitle>
+    <!-- <div class="search-box">
       <input type="text" v-model="searchQuery" placeholder="搜索目录..." class="search-input" />
-      <!-- Assuming you might want icons later, keeping placeholders -->
-      <!-- <i class="fa fa-search search-icon"></i> -->
-      <!-- <i v-if="searchQuery" class="fa fa-times-circle clear-icon" @click="searchQuery = ''"></i> -->
-    </div>
+     
+    </div> -->
     <div class="tree-container">
       <ul class="tree-list" v-if="filteredItems.length > 0">
         <doc-tree-item v-for="item in filteredItems" :key="item.id" :item="item" :onClick="onClick"
@@ -22,6 +20,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import DocTreeItem from './DocTreeItem.vue';
+import BoardInfoTitle from "@/components/board/BoardInfoTitle.vue";
 
 const props = defineProps({
   items: {

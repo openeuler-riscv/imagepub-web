@@ -265,11 +265,8 @@ onUnmounted(() => {
 }
 
 .related-list {
-  margin-top: 20px;
-  padding: 20px 14px;
   background: var(--theme-card);
-  border-radius: 8px;
-  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.04);
+
   color: var(--theme-text);
   transition: background 0.3s, color 0.3s;
 }
@@ -277,7 +274,7 @@ onUnmounted(() => {
 .related-list-item {
   padding: 10px;
   border-radius: 5px;
-  background-color: var(--theme-hover);
+  background-color: #f5f5f5;
   margin: 10px;
   color: var(--theme-text);
   transition: background 0.3s, color 0.3s;

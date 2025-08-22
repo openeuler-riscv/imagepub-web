@@ -71,7 +71,7 @@
         <!-- 帮助文档 -->
         <div class="bottom-container">
           <div v-if="helpVisible" class="help-doc-card">
-            <h2 class="version-info-title">{{ t('documentation') }}</h2>
+           
             <HelpDoc v-if="markdownURL !== ''" :markdownURL="markdownURL" :boardDetail="boardDetail" />
           </div>
         </div>

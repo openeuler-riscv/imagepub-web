@@ -12,6 +12,7 @@
   --theme-table-header: #f5f7fa;
   --theme-table-row: #ffffff;
   --theme-shadow: rgba(0, 0, 0, 0.06);
+  --el-color-primary:#012fa6;
 }
 
 :root.dark {
