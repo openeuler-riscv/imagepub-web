@@ -22,13 +22,13 @@
             <BoardInfoTitle :title="t('boardInfo')" />
             <el-row>
               <el-col :span="8" >
-                  <el-row style="color:#666;margin-bottom:8px">{{ t('vendorName') }}: </el-row>
+                  <el-row style="margin-bottom:8px">{{ t('vendorName') }}: </el-row>
                   <el-row class="text-limit-16 text-style" >{{ boardDetail?.vendor?.name }}</el-row>
               </el-col>
               <el-col :span="8"> 
-                <el-row style="color:#666;margin-bottom:8px">{{ t('socModel') }}:</el-row> 
+                <el-row style="margin-bottom:8px">{{ t('socModel') }}:</el-row> 
                 <el-row class="text-limit-32 text-style">{{ boardDetail?.soc?.name }}</el-row></el-col>
-              <el-col :span="8"><el-row style="color:#666;margin-bottom:8px">{{ t('boardType') }}:</el-row> 
+              <el-col :span="8"><el-row style="margin-bottom:8px">{{ t('boardType') }}:</el-row> 
                 <el-row class="text-style">{{ boardDetail?.type }}</el-row></el-col>
             </el-row>
             
@@ -129,12 +129,7 @@ const changeMainImage = (index) => {
 </script>
 
 <style scoped>
-li {
-  list-style-type: circle; /* 空心原点样式 */
-  font-size: 15px;
-  color:#333
-  
-}
+
 
 .board-container {
   display: flex;
@@ -161,6 +156,8 @@ li {
   box-shadow: 0 3px 12px 0 rgba(0,0,0,0.08);
   transition: background 0.3s, color 0.3s, border-color 0.3s;
 }
+
+
 
 /* 板卡主图 */
 .board-image {
@@ -202,10 +199,6 @@ li {
   transition: background 0.3s, color 0.3s, border-color 0.3s;
 }
 
-.text-style{
-  font-size: 16px !important;
-  color:#333
-}
 
 .text-limit-16 {
   /* 限制宽度为16个字符宽度 */

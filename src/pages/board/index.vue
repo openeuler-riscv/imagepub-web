@@ -6,7 +6,7 @@
 
     <div class="drawer-btn" v-if="osList?.length>0" @click="openDrawer">
       <el-button  >
-        <span>展示全部</span>
+        <span>{{t('showall')}}</span>
       </el-button>
        <CustomArrowIcon style="cursor:pointer;position:absolute;right:20px;top:16px"/>
     </div>
@@ -611,6 +611,9 @@ html.dark {
   --el-checkbox-button-checked-text-color: #e0e0e0;
   --el-checkbox-button-checked-border-color: #555;
 
+
+
+
   :deep(.el-checkbox-button__inner) {
     background-color: #1e1e1e;
     border: 1px solid #555 !important;
@@ -635,17 +638,16 @@ html.dark {
   .filter-title {
     color: #7ca0f8;
   }
-
   :deep(.top-tabs .el-tabs__active-bar),
   :deep(.el-tabs__item.is-active),
   :deep(.el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active) {
-    color: #7ca0f8;
-    background-color: #1e1e1e;
+    color: #006aff;
+    background-color: transparent;
   }
 
 
   :deep(.el-tabs__item:hover) {
-    color: #7ca0f8;
+    color: #006aff;
   }
 
   :deep(.sub-tabs) {
@@ -662,11 +664,11 @@ html.dark {
   }
 
   :deep(.el-tabs__nav) {
-    background-color: #1a1a1a;
+    background-color: transparent;
   }
 
   :deep(.el-tabs__content) {
-    background-color: #1a1a1a;
+    background-color: transparent;
     color: #ccc;
   }
 

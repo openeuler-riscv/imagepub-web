@@ -7,6 +7,7 @@
 <script setup>
 import icon from '@/assets/icons/board/Frame.png';
 
+
 </script>
 <style scoped>
 

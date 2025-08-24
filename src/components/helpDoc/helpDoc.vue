@@ -17,18 +17,18 @@
 
     <div class="markdown-body">
       <div class="board-info-2">
-        <BoardInfoTitle name="板卡信息"></BoardInfoTitle>
+        <BoardInfoTitle :title="t('boardInfo')"></BoardInfoTitle>
         <div class="info-detail">
           <div id="board-block">
-            <div id="title">厂商名称：</div>
+            <div id="title">{{t('vendorName')}}：</div>
             <div id="content">{{ boardDetail?.vendor?.name }}</div>
           </div>
           <div id="board-block">
-            <div id="title">Soc型号：</div>
+            <div id="title">{{t('socModel')}}：</div>
             <div id="content">{{ boardDetail?.soc?.name }}</div>
           </div>
           <div id="board-block">
-            <div id="title">板卡类型:</div>
+            <div id="title">{{t('boardType')}}:</div>
             <div id="content">{{ boardDetail?.type }}</div>
           </div>
         </div>
@@ -51,7 +51,9 @@ import "highlight.js/styles/github.css";
 import path from "path-browserify";
 import helpDocDirectory from "@/components/helpDoc/helpDocDirectory.vue";
 import BoardInfoTitle from "@/components/board/BoardInfoTitle.vue";
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const baseUrl = ref("");
 // 配置marked插件
 marked.use(

@@ -3,7 +3,12 @@ import ProductItem from "@/components/ProductItem.vue";
 import { ref, computed, onMounted, nextTick, onUnmounted, watch } from "vue";
 import { useRoute,useRouter } from "vue-router";
 import { getProductList } from "@/api/get-json";
-
+import ZH from '@/components/icon/CustomZH.vue'
+import EN from '@/components/icon/CustomEN.vue'
+import DarkModeButton from "@/components/common/DarkModeButton.vue";
+import { useI18n } from 'vue-i18n';
+import { setCookie } from '@/utils/cookie';
+import emitter from '@/utils/eventBus.js';
 defineOptions({
   name: "home"
 });
@@ -27,6 +32,8 @@ const productList = ref([]);
 const randomPlaceholder = ref("");
 const placeholderTimer = ref(null);
 const lastPlaceholder = ref("");
+
+const { t, locale } = useI18n();
 
 const nameMapping = {
   soc: "SoC型号",
@@ -191,6 +198,29 @@ const getMenuTitle = computed(() => menuId => {
   }
   return dropMenu.value.find(item => item.id === menuId)?.name;
 });
+/* 切换语言 */
+const handleLanguageChange = () => {
+  const newLang = locale.value === 'zh_CN' ? 'en_US' : 'zh_CN';
+  locale.value = newLang;
+  setCookie('lang', newLang);
+
+  let i18nPath = route.path;
+
+  if(i18nPath.includes('zh_CN')){
+    i18nPath = i18nPath.replace('zh_CN', 'en_US');
+  }else if(i18nPath.includes('en_US')){
+    i18nPath = i18nPath.replace('en_US', 'zh_CN');
+  }
+  router.push({
+    path: i18nPath,
+    query: {
+      ...route.query,
+      lang: newLang
+    }
+  });
+  emitter.emit('languageChanged', newLang);
+  fetchProductList()
+};
 
 const handleSearchInput = e => {
   searchKeyword.value = e.target.value;
@@ -243,6 +273,9 @@ watch(() => route.query, (newQuery) => {
     searchKeyword.value = newQuery.kw || ''
     searchQuery.value = newQuery.kw || ''
   }
+
+
+
 }, { immediate: true }) // 初始化时立即执行
 
 
@@ -470,10 +503,18 @@ onMounted(async () => {
 
 <template>
   <div class="setting">
-    <div class="setting-icon">
+    <div class="right-section" >
+      <DarkModeButton />
+      <el-button  @click="handleLanguageChange" round dark class="no-border-button" > 
+        <ZH v-if="route.query.lang === 'zh_CN'"/>
+        <EN v-else />
+        </el-button>
+    </div>
+
+    <!-- <div class="setting-icon">
       <img src="" />
     </div>
-    <div class="setting-icon"></div>
+    <div class="setting-icon"></div> -->
   </div>
   <div class="logo">
     <img src="@/assets/logo/Frame1@3x.svg" alt="OERC Logo" />
@@ -907,4 +948,9 @@ $border-color: #f1faff;
     transform: none;
   }
 }
+
+.no-border-button{
+  border: none !important;
+}
+
 </style>

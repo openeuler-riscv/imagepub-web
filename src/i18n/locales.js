@@ -41,11 +41,12 @@ const messages = {
         isaMabi: "接口类型：",
         reset:"重置",
         confirm:"确定",
-        allversion:"全部版本"
+        allversion:"全部版本",
+        showall:"展示全部"
 
     },
     en_US: {
-        backToHome: 'Back to Home',
+        backToHome: 'Home',
         searchPlaceholder: 'Board information',
         toggleLanguage: 'EN/ZH',
         boardInfo: 'Board information',
@@ -72,7 +73,7 @@ const messages = {
         versionNumber: 'Version Number:',
         changeLog: 'Change Log',
         versionInfo: 'Version Info',
-        version: 'version',
+        version: 'Version',
         imageFile: 'Image File',
         tag: 'Tag',
         operation:'Operation',
@@ -81,12 +82,13 @@ const messages = {
         viewHelpDocumentation:'View the help documentation',
         documentation:"Documentation",
         releaseDate: "ReleaseDate",
-        backToPreviousPage: "Back To Previous Page",
+        backToPreviousPage: "Previous",
         isaMarch: "isaMarch:",
         isaMabi: "isaMabi:",
         reset:"Reset",
         confirm:"确定",
-         allversion:"All Versoins"
+         allversion:"All Versoins",
+         showall:"All"
     }
 };
 

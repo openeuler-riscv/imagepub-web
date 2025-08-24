@@ -49,12 +49,6 @@ const router = createRouter({
         imagesuiteIndex:route.params.image_receipe,
         lang: getLang(route)
       })
-    },
-    {
-      path: "/test",
-      name: "test",
-      component: () => import("../pages/image/test.vue"),
-      
     }
   ]
 });

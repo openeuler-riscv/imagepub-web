@@ -10,7 +10,9 @@
 </template>
 
 <script setup>
-import { Sunny, Moon } from '@element-plus/icons-vue'
+// import { Sunny, Moon } from '@element-plus/icons-vue'
+import Sunny from '@/components/icon/CustomSunny.vue'
+import Moon from '@/components/icon/CustomMoon.vue'
 import { useDarkModeStore } from '@/store/darkMode'
 import { storeToRefs } from 'pinia'
 

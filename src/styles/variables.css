@@ -13,11 +13,12 @@
   /* 深色主题变量 */
   --app-bg: #121212;
   --app-text: #ffffff;
-  --app-border: #4c4d4f;
+  --app-border: #999;
   --app-hover: #2c2c2c;
   --app-card-bg: #2c2c2c;
   --app-input-bg: #2c2c2c;
   --app-shadow: rgba(0, 0, 0, 0.3);
+  --el-color-primary:#ccc;
 }
 
 /* 全局过渡效果 */

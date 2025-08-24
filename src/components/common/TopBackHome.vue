@@ -3,8 +3,8 @@
     <div class="top-bar-container">
       <div class="input-wrapper">
         <div class="left-section">
-          <CustomLogoIcon class="prefix-icon" @click="goHome" />
-          <el-button v-if="isBoard" @click="goHome" :icon="Back" round dark class="no-border-button">
+          <CustomLogoIcon class="prefix-icon" dark @click="goHome" />
+          <el-button v-if="isBoard" @click="goHome" :icon="Back"  round dark class="no-border-button">
             <span style="font-size: 1.75rem; font-family: PingFang SC-Regular">{{ t('backToHome') }}</span>
           </el-button>
 
@@ -18,9 +18,12 @@
             <CustomSearchIcon class="search-icon" />
           </div>
         </div>
-        <div class="right-section">
+        <div class="right-section" >
           <DarkModeButton />
-          <el-button round @click="handleLanguageChange">{{ t('toggleLanguage') }}</el-button>
+          <el-button  @click="handleLanguageChange" round dark class="no-border-button" > 
+            <ZH v-if="route.query.lang === 'zh_CN'"/>
+            <EN v-else />
+            </el-button>
         </div>
       </div>
     </div>
@@ -40,6 +43,8 @@ import { useI18n } from 'vue-i18n';
 import { setCookie } from '@/utils/cookie';
 import { defineEmits } from 'vue';
 import {useDarkModeStore} from "@/store/darkMode.js";
+import ZH from '@/components/icon/CustomZH.vue'
+import EN from '@/components/icon/CustomEN.vue'
 import emitter from '@/utils/eventBus.js';
 const router = useRouter();
 const route = useRoute();
@@ -52,6 +57,8 @@ const props = defineProps({
     default: true
   }
 });
+
+console.log(route.query.lang)
 
 // 初始化主题
 const darkModeStore = useDarkModeStore();
@@ -198,7 +205,7 @@ const handleLanguageChange = () => {
 }
 
 .no-border-button :deep(.el-icon){
-      color:#000 !important;
+      /* color:#000 ; */
       font-size: 24px !important;
     }
 

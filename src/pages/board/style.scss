@@ -195,15 +195,27 @@
   line-height: 40px;
 }
 
+.text-style{
+  font-size: 16px !important;
+  color:#333
+}
+
+li {
+  list-style-type: circle; /* 空心原点样式 */
+  font-size: 15px;
+  color:#333
+  
+}
+
 /* Dark mode styles (only applied when html has .dark class) */
 html.dark {
   .detail-container {
     background-color: #121212;
-    color: #e0e0e0;
+    color: #ccc;
   }
 
   .box-card {
-    background-color: #1e1e1e;
+    background-color: transparent;
     color: #e0e0e0;
   }
 
@@ -230,7 +242,7 @@ html.dark {
   }
 
   .filter-title {
-    color: #7ca0f8;
+    color: #0061ff;
   }
 
   .info-item h4 {
@@ -252,5 +264,12 @@ html.dark {
   .home-button:hover {
     color: #a0c0ff;
     background: rgba(124, 160, 248, 0.1);
+  }
+
+  li, .text-style{
+    color:#999
+  }
+  .draw-btn{
+    color:#999
   }
 }
