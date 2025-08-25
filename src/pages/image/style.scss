@@ -240,3 +240,20 @@
   }
 }
 
+html.dark{
+    .el-popper.is-light {
+    background-color: #222;
+    box-shadow: none;
+    border:none;
+  }
+  .el-popover__title{
+    color:#ccc !important
+  }
+
+  .el-popper.is-light > .el-popper__arrow::before {
+    background-color: #222;
+    border:none;
+
+  }
+}
+

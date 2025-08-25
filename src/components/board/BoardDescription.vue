@@ -121,7 +121,7 @@ const handleActionClick = async (imageIndex,visionIndex) => {
   margin-top: 16px;
   padding:16px;
   &:hover{
-    background-color: #BEE3F833;
+    background-color: #e6eaf6;
   }
 }
 

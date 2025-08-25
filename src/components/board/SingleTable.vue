@@ -94,7 +94,7 @@ const handleCurrentChange = (val) => {
   font-size: 15px;
   color:#000;
   &:hover{
-    background-color: #BEE3F833;
+    background-color: #e6eaf6;
   }
 }
 

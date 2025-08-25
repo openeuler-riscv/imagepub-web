@@ -306,16 +306,6 @@ html.dark {
     }
   }
 
-  :deep(.el-popper.is-light > .el-popper__arrow::before) {
-    background-color: #222 !important;
-    border-color: #555 !important;
-  }
-
-
-  .back-to-top{
-    background-color: #222;
-  }
-
   :deep(.el-tabs__item:hover) {
     color: #0061ff;
   }

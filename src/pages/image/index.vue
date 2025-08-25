@@ -121,7 +121,14 @@
     <template #reference>
       <div id="show-image" class="showImage" v-show="showBackToTop"  @click="visible = !visible">
         <img
+          v-if="!isDark"
           src="@/assets/icons/board/imageshow.svg"
+          alt="back to top"
+          class="up-arrow"
+        />
+         <img
+          v-else
+          src="@/assets/icons/board/imageshowDark.svg"
           alt="back to top"
           class="up-arrow"
         />
@@ -131,10 +138,19 @@
 
     <div class="back-to-top" v-show="showBackToTop" @click="scrollToTop">
       <img
+        v-if="isDark"
+        src="@/assets/icons/home/backtop.svg"
+        alt="back to top"
+        class="up-arrow"
+      />
+
+      <img
+        v-else
         src="@/assets/icons/home/Group 109@3x.svg"
         alt="back to top"
         class="up-arrow"
       />
+
   </div>
   </div>
 </template>
@@ -149,6 +165,12 @@ import { useRoute } from 'vue-router';
 import BoardInfoTitle from "@/components/board/BoardInfoTitle.vue";
 import { useI18n } from "vue-i18n";
 import { WarningFilled } from '@element-plus/icons-vue';
+
+import { useDarkModeStore } from '@/store/darkMode'
+import { storeToRefs } from 'pinia'
+
+const store = useDarkModeStore()
+const { isDark } = storeToRefs(store)
 
 
 const { t } = useI18n();
@@ -352,10 +374,24 @@ html.dark{
   .text-style{color:#999};
   .custom-row{
     background-color: #000;
+    color:#ccc;
     &:hover{
       background-color: #131e2c;
     }
   }
+
+  #show-image,.back-to-top {
+    background-color: #222;
+  }
+
+  :deep(.el-popper){
+    background-color: #222 !important;
+  }
+
+
+
+
+
 
 }
 
