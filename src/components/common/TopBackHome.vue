@@ -12,12 +12,58 @@
             <span style="font-size: 1.75rem; font-family: PingFang SC-Regular">{{ t('backToPreviousPage') }}</span>
           </el-button>
         </div>
-        <div class="detail-search-container">
-          <div class="search-box">
-            <el-input class="input-container" :placeholder="t('searchPlaceholder')" size="large" />
-            <CustomSearchIcon class="search-icon" />
+
+      <div id="searchDetail">
+        <input
+          type="text"
+          class="search-input"
+          v-model="searchKeyword"
+          @input="handleSearchInput"
+          @keyup.enter="handleSearch"
+          @blur="handleInputBlur"
+          ref="searchInputRef"
+    
+        />
+        <div
+          :class="['search-img', { 'search-button': searchKeyword }]"
+          @click="searchKeyword ? handleSearch() : handleSearchIconClick()"
+        >
+          
+          <button v-if="searchKeyword" class="search-text" type="button">搜 索</button>
+          <img
+            v-else-if="!isDark"
+            src="@/assets/icons/home/Group 2.png"
+            alt=""
+          />
+          <img
+            v-else
+            src="@/assets/logo/Group2Dark.svg"
+            alt=""
+          />
+
+        </div>
+
+        <div
+          v-if="showSuggestions && searchSuggestions.length > 0"
+          class="search-suggestions"
+        >
+          <div
+            v-for="item in searchSuggestions"
+            :key="item.id"
+            class="suggestion-item"
+            @click="handleSuggestionClick(item)"
+          >
+            <div class="suggestion-content">
+              <div class="suggestion-name">{{ item.displayName }}</div>
+            </div>
           </div>
         </div>
+      </div>
+
+
+
+
+
         <div class="right-section" >
           <DarkModeButton />
           <el-button  @click="handleLanguageChange" dark class="no-border-button" > 
@@ -33,7 +79,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch,computed,onMounted, nextTick } from 'vue';
 import { Back } from "@element-plus/icons-vue";
 import CustomLogoIcon from "@/components/icon/CustomLogoIcon.vue";
 import CustomSearchIcon from "@/components/icon/CustomSearchIcon.vue";
@@ -46,10 +92,33 @@ import {useDarkModeStore} from "@/store/darkMode.js";
 import ZH from '@/components/icon/CustomZH.vue'
 import EN from '@/components/icon/CustomEN.vue'
 import emitter from '@/utils/eventBus.js';
+import { getProductList } from "@/api/get-json";
+
 const router = useRouter();
 const route = useRoute();
 const { t, locale } = useI18n();
 const emits = defineEmits(['language-change']);
+
+const searchKeyword = ref("");
+const searchQuery = ref("");
+const showSuggestions = ref(false);
+const isSearched = ref(false);
+const searchInputRef = ref(null);
+const selectedOptions = ref({});
+const showOptions = ref({});
+const showSearchInput = ref(false);
+const productList = ref([]);
+
+
+
+onMounted(async () => {
+  await fetchProductList();
+  document.addEventListener("click", closeAllOptions);
+  document.addEventListener("click", closeSearchSuggestions);  
+
+});
+
+
 
 const props = defineProps({
   isBoard: {
@@ -58,7 +127,26 @@ const props = defineProps({
   }
 });
 
-console.log(route.query.lang)
+const closeAllOptions = () => {
+  showOptions.value = {};
+};
+
+
+const closeSearchSuggestions = e => {
+  if (!e.target.closest(".search-container")) {
+    showSuggestions.value = false;
+  }
+};
+
+const fetchProductList = async () => {
+  try {
+    const response = await getProductList();
+    productList.value = response.data;
+    await nextTick();
+  } catch (error) {
+    console.error("获取产品列表失败:", error);
+  }
+};
 
 // 初始化主题
 const darkModeStore = useDarkModeStore();
@@ -68,6 +156,7 @@ const routeVersion = ref(0);
 
 const goHome = () => router.push('/');
 const goBack = () => router.back();
+
 
 watch(() => [route.path, route.query.lang], () => {
   routeVersion.value += 1;
@@ -94,10 +183,181 @@ const handleLanguageChange = () => {
   });
   emitter.emit('languageChanged', newLang);
 };
+
+
+
+const searchSuggestions = computed(() => {
+  if (!searchKeyword.value) return [];
+  
+  const addedSuggestions = new Set();
+  const suggestions = [];
+
+  productList.value.forEach(item => {
+    const keyword = searchKeyword.value.toLowerCase();
+    let suggestion = null;
+
+    if (item.soc && 
+        item.soc.name && 
+        item.soc.name.toLowerCase().includes(keyword)) {
+      const socSuggestion = `${item.soc.vendor} ${item.soc.name}`;
+      if (!addedSuggestions.has(socSuggestion)) {
+        suggestion = {
+          ...item,
+          displayName: socSuggestion,
+          type: 'soc'
+        };
+        addedSuggestions.add(socSuggestion);
+      }
+    }
+
+    else if (item.name.toLowerCase().includes(keyword)) {
+      const nameSuggestion = `${item.vendor.name} ${item.name}`;
+      if (!addedSuggestions.has(nameSuggestion)) {
+        suggestion = {
+          ...item,
+          displayName: nameSuggestion,
+          type: 'product'
+        };
+        addedSuggestions.add(nameSuggestion);
+      }
+    }
+
+    else if (item.vendor.name.toLowerCase().includes(keyword)) {
+      if (!addedSuggestions.has(item.vendor.name)) {
+        suggestion = {
+          ...item,
+          displayName: item.vendor.name,
+          type: 'vendor'
+        };
+        addedSuggestions.add(item.vendor.name);
+      }
+    }
+
+    if (suggestion) {
+      suggestions.push(suggestion);
+    }
+  });
+
+  return suggestions.slice(0, 5);
+});
+
+
+const handleSearch = () => {
+  if (searchKeyword.value) {
+    showSuggestions.value = false;
+    isSearched.value = true;
+    searchQuery.value = searchKeyword.value;
+  }
+  debouncedSync(searchKeyword.value)
+};
+
+// 防抖函数
+const debounce = (func, delay) => {
+  let timer = null
+  return (...args) => {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      func.apply(this, args)
+    }, delay)
+  }
+}
+
+
+// 同步搜索关键词到URL
+const syncToUrl = (value) => {
+  // 保留当前路由的其他参数
+  // router.replace({
+  //   ...route,
+  //   query: {
+  //     ...route.query,
+  //     kw: value || undefined
+  //   }
+  // })
+   router.push({
+    path: `/`,
+    query:{
+      ...route.query,
+      kw: value || undefined
+    }
+  });
+}
+
+// 防抖处理的同步函数
+const debouncedSync = debounce(syncToUrl, 300)
+
+const handleSearchIconClick = () => {
+  if (!searchKeyword.value) {
+    showSearchInput.value = true;
+
+  }
+};
+
+const handleInputBlur = () => {
+    setTimeout(() => {
+      showSuggestions.value = false;
+      if (!searchKeyword.value) {
+        const searchInput = document.querySelector("#searchDetail");
+        showSearchInput.value = false;
+      }
+    }, 200);
+};
+
+const handleSuggestionClick = item => {
+  if (item.type === 'soc') {
+    searchKeyword.value = item.soc.name;
+  } else if (item.type === 'vendor') {
+    searchKeyword.value = item.vendor.name;
+  } else {
+    searchKeyword.value = item.name;
+  }
+  showSuggestions.value = false;
+};
+
+const handleMenuClick = (menuId, event) => {
+  event.stopPropagation();
+  showOptions.value[menuId] = !showOptions.value[menuId];
+  Object.keys(showOptions.value).forEach(key => {
+    if (Number(key) !== menuId) {
+      showOptions.value[key] = false;
+    }
+  });
+};
+
+const handleOptionSelect = (menuId, option, event) => {
+  event.stopPropagation();
+  selectedOptions.value[menuId] = option;
+  showOptions.value[menuId] = false;
+};
+
+
+const handleSearchInput = e => {
+  searchKeyword.value = e.target.value;
+  if (!searchKeyword.value) {
+    isSearched.value = false;
+    searchQuery.value = "";
+    router.replace({
+      ...route,
+      query: {
+        ...route.query,
+        kw: undefined
+      }
+    })
+  }
+  showSuggestions.value = true;
+};
+
+
 </script>
 
 
-<style scoped>
+<style scoped lang="scss">
+
+@use "sass:color" as color;
+$primary-blue: #012fa6;
+$secondary-blue: #4a77ca;
+$light-blue: #789edb;
+$border-color: #f1faff;
+
 /* 主容器样式 */
 .main-container {
   display: flex;
@@ -151,53 +411,6 @@ const handleLanguageChange = () => {
   position: relative;
 }
 
-.search-box {
-  width: 100%;
-  position: relative;
-  display: flex;
-  align-items: center;
-
-  .input-container {
-    width: 100%;
-    :deep(.el-input__wrapper) {
-      border-radius: 20px;
-      padding-right: 40px;
-      box-shadow: 0 0 0 1px #e4e7ed;
-
-      &:hover {
-        box-shadow: 0 0 0 1px #a8b4cc;
-      }
-
-      &.is-focus {
-        box-shadow: 0 0 0 1px #409eff;
-      }
-    }
-  }
-  .no-border-button {
-    border: none !important;
-    
-    
-  }
-}
-
-.search-icon {
-  position: absolute;
-  right: 12px;
-  top: 36%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  color: #606266;
-
-  &:hover {
-    color: #409eff;
-  }
-}
 
 .no-border-button {
   border: none !important;
@@ -225,22 +438,6 @@ const handleLanguageChange = () => {
       width: 100%;
       padding: 0 15px;
       box-sizing: border-box;
-    }
-
-    .search-box {
-      width: 100%;
-
-      .input-container {
-        :deep(.el-input__wrapper) {
-          padding-right: 35px;
-        }
-      }
-    }
-
-    .search-icon {
-      right: 10px;
-      width: 44px;
-      height: 44px;
     }
   }
 
@@ -291,27 +488,152 @@ const handleLanguageChange = () => {
   color: var(--theme-text);
 }
 
-.search-box .input-container :deep(.el-input__wrapper) {
-  background-color: #f5f5f5;
-  box-shadow: 0 0 0 1px var(--theme-border);
+
+
+#searchDetail {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 72px;
   border-radius: 16px;
-  height:60px;
-  font-size: 16px;
+  box-sizing: border-box;
+  background-color: #f5f5f5;
+  transition: background-color 0.3s ease;
+
+  &.active {
+    background-color: #f0f0f0;
+  }
+
+  .search-input {
+    font-family: PingFang SC-Regular;
+    color: $light-blue;
+    width: 100%;
+    border: none;
+    font-size: 20px;
+    outline: none;
+    padding: 0 16px;
+    box-sizing: border-box;
+    background-color: #f5f5f5;
+    &::placeholder {
+      color: $light-blue;
+      opacity: 0.8;
+      font-size: 20px;
+    }
+  }
+
+  .search-img {
+    width: 56px;
+    height: 56px;
+    padding: 8px 20px 8px 0;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+
+    &.search-button {
+      background: $primary-blue;
+      border-radius: 12px;
+      margin-right: 16px;
+      padding: 0;
+      box-sizing: border-box;
+      cursor: pointer;
+      width: 95px;
+      height: 43px;
+      font-size: 20px;
+      text-align: center;
+
+      &:hover {
+        background: color.scale($primary-blue, $lightness: -5%);
+      }
+
+      .search-text {
+        width: 100%;
+        height: 100%;
+        color: #ffffff;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-family: PingFang SC-Regular;
+        white-space: nowrap;
+        font-size: inherit;
+
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+  }
+  
+  .search-suggestions {
+      width: 100%;
+      position: absolute;
+      top: 85%;
+      left: 0;
+      margin-top: 16px;
+      background-color: #fff;
+      z-index: 1001;
+      padding: 8px;
+      border-radius: 0px 0px 20px 20px;
+      box-shadow: 0 3px 2px 0 rgba(1, 47, 166, 0.02),
+        0 7px 5px 0 rgba(1, 47, 166, 0.03),
+        0 12px 10px 0 rgba(1, 47, 166, 0.04),
+        0 22px 18px 0 rgba(1, 47, 166, 0.04);
+      box-sizing: border-box;
+          .suggestion-item {
+      display: flex;
+      align-items: center;
+      height: 38px;
+      padding: 0 24px;
+      box-sizing: border-box;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-radius: 12px;
+
+      &:hover {
+        background: rgba(1, 47, 166, 0.1);
+      }
+
+      .suggestion-content {
+        flex: 1;
+        white-space: nowrap;
+
+        .suggestion-name {
+          font-size: 20px;
+          text-overflow: ellipsis;
+          max-width: 1100px;
+          overflow: hidden;
+        }
+      }
+
+      &.selected {
+        background: rgba(1, 47, 166, 0.1);
+        border-radius: 10px;
+      }
+    }
+
+
+    }
+
 }
 
-.search-box .input-container :deep(.el-input__wrapper:hover) {
-  box-shadow: 0 0 0 1px var(--theme-hover);
+
+html.dark{
+  #searchDetail {
+    height: 80px;
+    background-color: #333;
+    .search-input{
+      background-color: #333;
+      color:#999
+    }
+
+    .search-suggestions{
+      background-color: #333;
+      margin-top: -8px;
+    }
+  }
 }
 
-.search-box .input-container :deep(.el-input__wrapper.is-focus) {
-  box-shadow: 0 0 0 1px var(--el-color-primary);
-}
-
-.search-icon {
-  color: var(--theme-text);
-}
-
-.search-icon:hover {
-  color: var(--el-color-primary);
-}
 </style>

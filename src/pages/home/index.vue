@@ -540,18 +540,6 @@ onMounted(async () => {
         <img v-else src="@/assets/icons/home/Group 4.png" style="position:relative;bottom:6px" alt="search icon" />
       </div>
       <div id="search">
-        <!-- <input
-          type="text"
-          class="search-input"
-          v-model="searchKeyword"
-          @input="handleSearchInput"
-          @keyup.enter="handleSearch"
-          :placeholder="randomPlaceholder"
-          @blur="handleInputBlur"
-          ref="searchInputRef"
-          v-show="!isSticky || (isSticky && showSearchInput)"
-          
-        /> -->
         <input
           type="text"
           class="search-input"
@@ -582,8 +570,6 @@ onMounted(async () => {
 
         </div>
 
-       
-
         <div
           v-if="showSuggestions && searchSuggestions.length > 0"
           class="search-suggestions"
@@ -600,6 +586,9 @@ onMounted(async () => {
           </div>
         </div>
       </div>
+
+
+      
         <div v-if="isSticky" class="setting" style="top:0">
           <div class="right-section" >
             <div class="setting-icon">

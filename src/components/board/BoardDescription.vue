@@ -92,7 +92,6 @@ watch(
 
 /* 点击跳转镜像页面 */
 const handleActionClick = async (imageIndex,visionIndex) => {
-  console.log(imageIndex,visionIndex)
   await props.openImage(imageIndex,visionIndex);
 }
 
