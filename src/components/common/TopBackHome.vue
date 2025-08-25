@@ -60,10 +60,6 @@
         </div>
       </div>
 
-
-
-
-
         <div class="right-section" >
           <DarkModeButton />
           <el-button  @click="handleLanguageChange" dark class="no-border-button" > 
@@ -82,7 +78,6 @@
 import { ref, watch,computed,onMounted, nextTick } from 'vue';
 import { Back } from "@element-plus/icons-vue";
 import CustomLogoIcon from "@/components/icon/CustomLogoIcon.vue";
-import CustomSearchIcon from "@/components/icon/CustomSearchIcon.vue";
 import DarkModeButton from "@/components/common/DarkModeButton.vue";
 import { useRouter, useRoute } from "vue-router";
 import { useI18n } from 'vue-i18n';
@@ -265,14 +260,6 @@ const debounce = (func, delay) => {
 
 // 同步搜索关键词到URL
 const syncToUrl = (value) => {
-  // 保留当前路由的其他参数
-  // router.replace({
-  //   ...route,
-  //   query: {
-  //     ...route.query,
-  //     kw: value || undefined
-  //   }
-  // })
    router.push({
     path: `/`,
     query:{
