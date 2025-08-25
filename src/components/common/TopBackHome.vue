@@ -20,7 +20,7 @@
         </div>
         <div class="right-section" >
           <DarkModeButton />
-          <el-button  @click="handleLanguageChange" round dark class="no-border-button" > 
+          <el-button  @click="handleLanguageChange" dark class="no-border-button" > 
             <EN v-if="route.query.lang === 'zh_CN'"/>
             <ZH v-else />
             </el-button>
@@ -281,7 +281,7 @@ const handleLanguageChange = () => {
 .right-section {
   display: flex;
   align-items: center;
-  gap: 12px;
+  /* gap: 12px; */
 }
 
 /* 使用主题变量 */

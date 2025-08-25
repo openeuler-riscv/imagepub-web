@@ -504,17 +504,16 @@ onMounted(async () => {
 <template>
   <div class="setting">
     <div class="right-section" >
-      <DarkModeButton />
-      <el-button  @click="handleLanguageChange" round dark class="no-border-button" > 
-        <EN v-if="route.query.lang === 'zh_CN'"/>
-        <ZH v-else />
-        </el-button>
-    </div>
-
-    <!-- <div class="setting-icon">
-      <img src="" />
-    </div>
-    <div class="setting-icon"></div> -->
+      <div class="setting-icon">
+        <DarkModeButton />
+      </div>
+      <div class="setting-icon">
+          <el-button  @click="handleLanguageChange" round dark class="no-border-button" > 
+          <EN v-if="route.query.lang === 'zh_CN'"/>
+          <ZH v-else />
+          </el-button>
+      </div>
+      </div>
   </div>
   <div class="logo">
     <img src="@/assets/logo/Frame1@3x.svg" alt="OERC Logo" />
@@ -618,9 +617,13 @@ $border-color: #f1faff;
 .setting-icon{
   width: 36px;
   height: 36px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   margin-right: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
 }
 
 .logo {
@@ -948,9 +951,14 @@ $border-color: #f1faff;
     transform: none;
   }
 }
-
+.right-section{
+  display: flex;
+}
 .no-border-button{
   border: none !important;
+  &:hover{
+      transform: scale(1.1);
+  }
 }
 
 </style>
