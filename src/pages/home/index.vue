@@ -9,6 +9,11 @@ import DarkModeButton from "@/components/common/DarkModeButton.vue";
 import { useI18n } from 'vue-i18n';
 import { setCookie } from '@/utils/cookie';
 import emitter from '@/utils/eventBus.js';
+import './style.scss';
+import { useDarkModeStore } from '@/store/darkMode'
+import { storeToRefs } from 'pinia'
+
+
 defineOptions({
   name: "home"
 });
@@ -17,6 +22,9 @@ defineOptions({
 
 const router = useRouter()
 const route = useRoute();
+const store = useDarkModeStore()
+const { isDark } = storeToRefs(store)
+
 
 const searchKeyword = ref("");
 const searchQuery = ref("");
@@ -107,7 +115,7 @@ const searchSuggestions = computed(() => {
     }
 
     else if (item.name.toLowerCase().includes(keyword)) {
-      const nameSuggestion = `${item.vendor} ${item.name}`;
+      const nameSuggestion = `${item.vendor.name} ${item.name}`;
       if (!addedSuggestions.has(nameSuggestion)) {
         suggestion = {
           ...item,
@@ -118,14 +126,14 @@ const searchSuggestions = computed(() => {
       }
     }
 
-    else if (item.vendor.toLowerCase().includes(keyword)) {
-      if (!addedSuggestions.has(item.vendor)) {
+    else if (item.vendor.name.toLowerCase().includes(keyword)) {
+      if (!addedSuggestions.has(item.vendor.name)) {
         suggestion = {
           ...item,
-          displayName: item.vendor,
+          displayName: item.vendor.name,
           type: 'vendor'
         };
-        addedSuggestions.add(item.vendor);
+        addedSuggestions.add(item.vendor.name);
       }
     }
 
@@ -176,7 +184,7 @@ const filteredProductList = computed(() => {
     filtered = filtered.filter(
       product =>
         product.name.toLowerCase().includes(keyword) ||
-        product.vendor.toLowerCase().includes(keyword) ||
+        product.vendor.name.toLowerCase().includes(keyword) ||
         (product.soc &&
           product.soc.name &&
           product.soc.name.toLowerCase().includes(keyword))
@@ -190,9 +198,9 @@ const getMenuTitle = computed(() => menuId => {
   if (selectedOptions.value[menuId]) {
     if (
       typeof selectedOptions.value[menuId] === "object" &&
-      selectedOptions.value[menuId].vendor
+      selectedOptions.value[menuId].vendor.name
     ) {
-      return `${selectedOptions.value[menuId].vendor} ${selectedOptions.value[menuId].name}`;
+      return `${selectedOptions.value[menuId].vendor.name} ${selectedOptions.value[menuId].name}`;
     }
     return selectedOptions.value[menuId];
   }
@@ -325,7 +333,7 @@ const handleSuggestionClick = item => {
   if (item.type === 'soc') {
     searchKeyword.value = item.soc.name;
   } else if (item.type === 'vendor') {
-    searchKeyword.value = item.vendor;
+    searchKeyword.value = item.vendor.name;
   } else {
     searchKeyword.value = item.name;
   }
@@ -502,8 +510,9 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div v-if="!isSticky" class="setting">
-    <div class="right-section" >
+  <div class="page-container">
+    <div v-if="!isSticky" class="setting">
+      <div class="right-section" >
       <div class="setting-icon">
         <DarkModeButton />
       </div>
@@ -516,7 +525,8 @@ onMounted(async () => {
       </div>
   </div>
   <div class="logo">
-    <img src="@/assets/logo/Frame1@3x.svg" alt="OERC Logo" />
+    <img v-if="!isDark" src="@/assets/logo/Frame1@3x.svg" alt="OERC Logo" />
+    <img v-else src="@/assets/logo/logoDark.svg" alt="OERC Logo" />
   </div>
   <div class="search-container">
     <div class="search-bar">
@@ -552,12 +562,19 @@ onMounted(async () => {
           :class="['search-img', { 'search-button': searchKeyword }]"
           @click="searchKeyword ? handleSearch() : handleSearchIconClick()"
         >
+          
+          <button v-if="searchKeyword" class="search-text" type="button">搜 索</button>
           <img
-            v-if="!searchKeyword"
+            v-else-if="!isDark"
             src="@/assets/icons/home/Group 2.png"
             alt=""
           />
-          <button v-else class="search-text" type="button">搜 索</button>
+          <img
+            v-else
+            src="@/assets/logo/Group2Dark.svg"
+            alt=""
+          />
+
         </div>
 
        
@@ -622,369 +639,13 @@ onMounted(async () => {
       class="up-arrow"
     />
   </div>
+  </div>
+  
 </template>
 
 <style scoped lang="scss">
-@use "sass:color" as color;
-$primary-blue: #012fa6;
-$secondary-blue: #4a77ca;
-$light-blue: #789edb;
-$border-color: #f1faff;
-
-.setting{
-  position: sticky;
-  top:40px;
-
-  display: flex;
-  justify-content: end;
-  align-items: center;
-}
-
-.setting-icon{
-  width: 36px;
-  height: 36px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  margin-right: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-}
-
-.logo {
-  margin: 214px 625px 0;
-  height: 65px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  img {
-    height: 100%;
-    width: auto;
-    object-fit: contain;
-  }
-}
-
-.search-container {
-  box-sizing: border-box;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  transition: all 0.3s ease;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  .search-bar {
-    margin: 48px auto;
-    width: 65%;
-    height: 72px;
-    border-radius: 24px;
-    border: 4px solid $primary-blue;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #ffffff;
-    transition: all 0.3s ease;
-    box-sizing: border-box;
-    position: relative;
-    #search {
-      position: static !important;
-      .search-suggestions {
-        position: absolute;
-        width: 100%;
-        top: -4px;
-        right: -4px;
-        background: #ffffff;
-        border-radius: 24px;
-        box-shadow: 0 3px 2px 0 rgba(1, 47, 166, 0.02),
-          0 7px 5px 0 rgba(1, 47, 166, 0.03),
-          0 12px 10px 0 rgba(1, 47, 166, 0.04),
-          0 22px 18px 0 rgba(1, 47, 166, 0.04);
-        padding: 80px 0 16px 0;
-        box-sizing: border-box;
-        z-index: -1;
-
-        .suggestion-item {
-          display: flex;
-          align-items: center;
-          height: 38px;
-          padding: 0 24px;
-          box-sizing: border-box;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          border-radius: 12px;
-
-          &:hover {
-            background: rgba(1, 47, 166, 0.1);
-          }
-
-          .suggestion-content {
-            flex: 1;
-            white-space: nowrap;
-
-            .suggestion-name {
-              font-size: 20px;
-              text-overflow: ellipsis;
-              max-width: 1100px;
-              overflow: hidden;
-            }
-          }
-
-          &.selected {
-            background: rgba(1, 47, 166, 0.1);
-            border-radius: 10px;
-          }
-        }
-      }
-    }
-
-    .circle-img {
-      width: 56px;
-      height: 56px;
-      padding: 8px 0 8px 16px;
-      box-sizing: border-box;
-    }
-
-    #search {
-      position: relative;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-      height: 72px;
-      border-radius: 24px;
-      box-sizing: border-box;
-      background-color: transparent;
-      transition: background-color 0.3s ease;
-
-      &.active {
-        background-color: #f0f0f0;
-      }
-
-      .search-input {
-        font-family: PingFang SC-Regular;
-        color: $light-blue;
-        width: 100%;
-        border: none;
-        font-size: 20px;
-        outline: none;
-        padding: 0 8px;
-        box-sizing: border-box;
-        &::placeholder {
-          color: $light-blue;
-          opacity: 0.8;
-          font-size: 20px;
-        }
-      }
-
-      .search-img {
-        width: 56px;
-        height: 56px;
-        padding: 8px 20px 8px 0;
-        box-sizing: border-box;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s ease;
-
-        &.search-button {
-          background: $primary-blue;
-          border-radius: 12px;
-          margin-right: 16px;
-          padding: 0;
-          box-sizing: border-box;
-          cursor: pointer;
-          width: 95px;
-          height: 43px;
-          font-size: 20px;
-          text-align: center;
-
-          &:hover {
-            background: color.scale($primary-blue, $lightness: -5%);
-          }
-
-          .search-text {
-            width: 100%;
-            height: 100%;
-            color: #ffffff;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-family: PingFang SC-Regular;
-            white-space: nowrap;
-            font-size: inherit;
-
-            &:focus {
-              outline: none;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  &.sticky {
-    padding:0px 0 0;
-    box-sizing: border-box;
-    .search-bar {
-      position: relative;
-      width:90%;
-      height: 96px;
-      margin: 0;
-      border-color: $border-color;
-      padding-right: 11px;
-      box-shadow: 0 3px 2px 0 rgba(1, 47, 166, 0.02),
-        0 7px 5px 0 rgba(1, 47, 166, 0.03), 0 12px 10px 0 rgba(1, 47, 166, 0.04),
-        0 22px 18px 0 rgba(1, 47, 166, 0.04);
-      box-sizing: border-box;
-      .circle-img {
-        padding: 8px 0 8px 16px;
-        width: 224px;
-        height: 63px;
-        display: flex;
-        align-items: center;
-        box-sizing: border-box;
-        img {
-          width: 160px;
-          height: 48px;
-          object-fit: contain;
-          margin-left: 16px;
-        }
-      }
-
-      #search {
-        background-color: transparent;
-        transition: all 0.3s ease;
-        width: 615px;
-        position: relative !important;
-        &:focus-within {
-          background-color: #f0f0f0;
-          .search-input {
-            pointer-events: none;
-
-            &::placeholder {
-              color: $light-blue;
-              content: v-bind(randomPlaceholder);
-            }
-
-            &:focus {
-              pointer-events: auto;
-            }
-          }
-        }
-
-        .search-input {
-          background-color: transparent;
-
-          &::placeholder {
-            color: transparent;
-          }
-        }
-
-        .search-img {
-          margin-left: auto;
-        }
-        .search-suggestions {
-          width: 100%;
-          position: absolute;
-          top: 85%;
-          left: 0;
-          margin-top: 16px;
-          border: 4px solid #cccccc;
-          z-index: 1001;
-          padding: 16px;
-          border-radius: 20px;
-          box-shadow: 0 3px 2px 0 rgba(1, 47, 166, 0.02),
-            0 7px 5px 0 rgba(1, 47, 166, 0.03),
-            0 12px 10px 0 rgba(1, 47, 166, 0.04),
-            0 22px 18px 0 rgba(1, 47, 166, 0.04);
-          box-sizing: border-box;
-        }
-      }
-    }
-  }
-}
 
 
 
-.product-area {
-  box-sizing: border-box;
-  margin: 32px 0;
-  width: 100%;
-  box-sizing: border-box;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  .sum {
-    font-size: 18px;
-    width: 240px;
-    color: $light-blue;
-    margin-right: auto;
-    margin-left: 7%;
-  }
-
-  .product-list {
-    box-sizing: border-box;
-    overflow: hidden;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding-bottom: 20px;
-    gap: 16px;
-    flex-wrap: wrap;
-    padding: 0 10%;
-    min-height: 330px;
-    .dummy-wrapper {
-      #product-dummy {
-        width: 240px;
-        height: 1px;
-        background-color: transparent;
-        display: block;
-      }
-    }
-  }
-}
-
-.back-to-top {
-  position: fixed;
-  right: 64px;
-  bottom: 64px;
-  width: 72px;
-  height: 72px;
-  background: #ffffff;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 3px 2px 0 rgba(1, 47, 166, 0.02),
-    0 7px 5px 0 rgba(1, 47, 166, 0.03), 0 12px 10px 0 rgba(1, 47, 166, 0.04),
-    0 22px 18px 0 rgba(1, 47, 166, 0.04);
-  transition: all 0.3s ease;
-  z-index: 100;
-
-  &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 4px 8px rgba(1, 47, 166, 0.15);
-  }
-
-  .up-arrow {
-    width: 40px;
-    height: 40px;
-    transform: none;
-  }
-}
-.right-section{
-  display: flex;
-}
-.no-border-button{
-  border: none !important;
-  &:hover{
-      transform: scale(1.1);
-  }
-}
 
 </style>

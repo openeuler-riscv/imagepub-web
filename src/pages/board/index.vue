@@ -161,7 +161,6 @@ const openImage = async (imageIndex,visionIndex) => {
   const version1 = activeTab1.value; // 一级 Tab 值
   const version2 = activeTab2.value; // 二级 Tab 值
 
-  console.log(props.productUri,props.vendor,props.product)
   const currentQuery = { ...route.query };
    const newQuery = {
     revision:visionIndex,
