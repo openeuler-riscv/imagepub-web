@@ -12,7 +12,7 @@ import emitter from '@/utils/eventBus.js';
 import './style.scss';
 import { useDarkModeStore } from '@/store/darkMode'
 import { storeToRefs } from 'pinia'
-
+import { throttle } from 'lodash-es'; // 推荐使用es模块版本
 
 defineOptions({
   name: "home"
@@ -388,7 +388,7 @@ const changeViewportWidth = () => {
 
 onUnmounted(() => {
   window.removeEventListener("resize", changeViewportWidth);
-  window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('scroll', throttledScroll)
   if (placeholderTimer.value) {
     clearInterval(placeholderTimer.value);
   }
@@ -454,15 +454,16 @@ const startRandomPlaceholder = () => {
 };
 
 
+
 /* 监听页面滚动 */
 const handleScroll = () => {
    const searchContainer = document.querySelector(".search-container");
   const searchInput = document.querySelector(".search-input");
   const originalPlaceholder = searchInput.placeholder;
 
-    showBackToTop.value = window.scrollY > 500;
+    showBackToTop.value = window.scrollY > 400;
 
-    if (window.scrollY > 285) {
+    if (window.scrollY > 385) {
       isSticky.value = true;
       searchInput.placeholder = "";
       showSearchInput.value = false;
@@ -475,9 +476,9 @@ const handleScroll = () => {
         searchInputDiv.style.backgroundColor = "transparent";
       }
       searchContainer.classList.add("sticky");
-    } else if (
-      window.scrollY < 200 &&
-      searchContainer.classList.contains("sticky")
+    } 
+    else if (
+      window.scrollY < 285  && searchContainer.classList.contains("sticky")
     ) {
       isSticky.value = false;
       const searchInputDiv = document.querySelector("#search");
@@ -488,6 +489,9 @@ const handleScroll = () => {
     }
   };
 
+  // 节流处理：每100ms最多执行一次
+const throttledScroll = throttle(handleScroll, 100);
+
 
 onMounted(async () => {
 
@@ -497,7 +501,7 @@ onMounted(async () => {
   window.addEventListener("resize", changeViewportWidth);
   document.addEventListener("click", closeAllOptions);
   document.addEventListener("click", closeSearchSuggestions);  
-  window.addEventListener("scroll", handleScroll);
+  window.addEventListener("scroll", throttledScroll);
 
   const keyword = route.query.kw;
   if (keyword) {
@@ -531,7 +535,8 @@ onMounted(async () => {
   <div class="search-container">
     <div class="search-bar">
       <div class="circle-img">
-        <img v-if="isSticky" src="@/assets/logo/Frame1@3x.svg"  alt="logo" />
+        <img v-if="isSticky && !isDark" src="@/assets/logo/Frame1@3x.svg"  alt="logo" />
+         <img v-else-if="isSticky && isDark" src="@/assets/logo/frame3Dark.png"  alt="logo" />
         <img v-else src="@/assets/icons/home/Group 4.png" style="position:relative;bottom:6px" alt="search icon" />
       </div>
       <div id="search">
@@ -601,7 +606,7 @@ onMounted(async () => {
               <DarkModeButton />
             </div>
             <div class="setting-icon">
-                <el-button  @click="handleLanguageChange" round dark class="no-border-button" > 
+                <el-button  @click="handleLanguageChange" dark class="no-border-button" > 
                 <EN v-if="route.query.lang === 'zh_CN'"/>
                 <ZH v-else />
                 </el-button>
@@ -634,18 +639,24 @@ onMounted(async () => {
   </div>
   <div class="back-to-top" v-show="showBackToTop" @click="scrollToTop">
     <img
-      src="@/assets/icons/home/Group 109@3x.svg"
-      alt="back to top"
-      class="up-arrow"
-    />
+        v-if="isDark"
+        src="@/assets/icons/home/backtop.svg"
+        alt="back to top"
+        class="up-arrow"
+      />
+
+      <img
+        v-else
+        src="@/assets/icons/home/Group 109@3x.svg"
+        alt="back to top"
+        class="up-arrow"
+      />
   </div>
   </div>
   
 </template>
 
 <style scoped lang="scss">
-
-
 
 
 </style>

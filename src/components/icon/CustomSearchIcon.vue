@@ -7,7 +7,7 @@
   />
 
   <img v-else
-      src="../../assets/icons/home/Group2Dark.svg"
+      src="../../assets//logo/Group2Dark.svg"
       alt=""
       style="width: 5vh;height: 5vh;margin: 8px"
 

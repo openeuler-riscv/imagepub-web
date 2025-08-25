@@ -48,7 +48,7 @@ const productImage = computed(() => {
 });
 
 const perProductStyle = computed(() => {
-  if (props.info.status !== "SUPPORTED") return { "opacity": 0.4 };
+  if (props.info.available !== true) return { "opacity": 0.4 };
   return {};
 });
 
@@ -124,6 +124,18 @@ const perProductStyle = computed(() => {
   -webkit-box-orient: vertical;
   white-space: normal;
   line-height: 20px;
+  }
+}
+
+html.dark{
+  .product-item{
+    background-color: #212121;
+    .product-item-name{
+      color:#ccc;
+    }
+    .product-item-desc{
+      color:#999
+    }
   }
 }
 
