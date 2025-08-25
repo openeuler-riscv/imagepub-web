@@ -21,8 +21,8 @@
         <div class="right-section" >
           <DarkModeButton />
           <el-button  @click="handleLanguageChange" round dark class="no-border-button" > 
-            <ZH v-if="route.query.lang === 'zh_CN'"/>
-            <EN v-else />
+            <EN v-if="route.query.lang === 'zh_CN'"/>
+            <ZH v-else />
             </el-button>
         </div>
       </div>

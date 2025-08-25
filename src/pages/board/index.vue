@@ -13,14 +13,14 @@
 
     <div v-if="isDataLoaded" class="box-card">
       <div style="width: 100%">
-        <el-tabs v-model="activeTab1" class="top-tabs">
+        <el-tabs v-model="activeTab1" class="top-tabs dark">
           <el-tab-pane
               v-for="(osItem, osIndex) in osList"
               :key="osIndex"
               :label="osItem.name"
               :name="osItem.name"
           >
-            <el-tabs v-model="activeTab2" class="sub-tabs" type="border-card">
+            <el-tabs v-model="activeTab2" class="sub-tabs dark" type="border-card">
               <el-tab-pane
                   v-for="(release, releaseIndex) in getReleases(osItem)"
                   :key="releaseIndex"
@@ -513,7 +513,6 @@ onMounted(async () => {
 
 :deep(.sub-tabs) {
   margin-top: 20px;
-  border-top: 1px solid #ebedf0;
 }
 
 :deep(.top-tabs + .sub-tabs-container) {
@@ -642,25 +641,20 @@ html.dark {
   :deep(.el-tabs__item.is-active),
   :deep(.el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active) {
     color: #006aff;
-    background-color: transparent;
   }
+
+    :deep(.top-tabs .el-tabs__active-bar){
+      background-color: #006aff;
+    }
 
 
   :deep(.el-tabs__item:hover) {
     color: #006aff;
   }
 
-  :deep(.sub-tabs) {
-    border-top: 1px solid #444;
-  }
 
   :deep(.sub-tabs) .title {
     color: #7ca0f8;
-  }
-
-  :deep(.el-tabs--border-card) {
-    background-color: #1a1a1a;
-    border-color: #444;
   }
 
   :deep(.el-tabs__nav) {
@@ -673,21 +667,20 @@ html.dark {
   }
 
   :deep(.el-tabs--border-card) {
-    background-color: #1a1a1a;
-    border-color: #444;
-
-    .el-tabs__header {
-      background-color: #1a1a1a;
-      border-bottom-color: #444;
-    }
+  
 
     .el-tabs__item {
       color: #999;
-      border-color: #444;
+      background-color: #333;
+      border:1px solid #666;
 
       &.is-active {
-        color: #fff;
-        background-color: #2a2a2a;
+        color:#fff !important;
+        background-color: #012fa6;
+        border:none
+      }
+      &:hover{
+        color:#fff
       }
     }
   }

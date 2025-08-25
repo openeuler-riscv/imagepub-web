@@ -6,14 +6,16 @@
           <div class="vs-first" @click="handleActionClick(v.imagesuiteIndex,0)">
             <div class="vs-label">
               <div class="vs-title">
-                <img src="@/assets/icons/board/version.svg" style="margin-right:4px"/>
+                <img v-if="isDark"  src="@/assets/icons/board/versiondark.svg" style="margin-right:4px" />
+                <img v-else src="@/assets/icons/board/version.svg" style="margin-right:4px"/>
                 <span>{{t('version')}}</span>
               </div>
               <div class="version-number">{{  props.title + '  '+ v.version[0].date }}</div>
             </div>
             <div class="vs-label">
               <div class="vs-title">
-                <img src="@/assets/icons/board/log.svg" style="margin-right:4px"/>
+                 <img v-if="isDark"  src="@/assets/icons/board/logdark.svg" style="margin-right:4px" />
+                <img v-else src="@/assets/icons/board/log.svg" style="margin-right:4px"/>
                 <span>{{t('changeLog')}}</span>
               </div>
               <div class="version-number changelog-content">  {{ v.version[0].changelog || '无变更说明' }}</div>
@@ -25,7 +27,7 @@
               width="10"
               height="10"
               style="margin-right:4px"
-              :src="v.isExpanded ? upArrow : downArrow" 
+              :src="v.isExpanded ? isDark ?upArrowDark :upArrow : isDark?downArrowDark : downArrow" 
               alt="箭头图标" 
               class="arrow-icon"
             >
@@ -33,7 +35,6 @@
           </div>
 
           <div v-if="v.isExpanded">
-            <!-- {{'这是第' + index + '项展开内容'}} -->
             <SingleTable :jump-image="handleActionClick" :imagesuiteIndex="v.imagesuiteIndex" :tabledata="v?.version?.map((k,i)=>({...k,index:i}))" :title="props.title" >
 
             </SingleTable>
@@ -48,8 +49,17 @@
 import { useI18n } from "vue-i18n";
 import { ref, watch } from 'vue';
 import upArrow from '@/assets/icons/board/up.svg'
+import upArrowDark from '@/assets/icons/board/upDark.svg'
 import downArrow from '@/assets/icons/board/down.svg'
+import downArrowDark from '@/assets/icons/board/downDark.svg'
+
 import SingleTable from '@/components/board/SingleTable.vue'
+import { useDarkModeStore } from '@/store/darkMode'
+import { storeToRefs } from 'pinia'
+
+const store = useDarkModeStore()
+const { isDark } = storeToRefs(store)
+
 const { t } = useI18n()
 // 子组件内部维护一份独立的数据（深拷贝）
 const childImageData = ref([]);
@@ -161,7 +171,6 @@ html.dark {
 }
 
 .version-list {
-  
   display: grid;
   grid-template-columns: 1fr;
   align-items: start;

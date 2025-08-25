@@ -96,7 +96,6 @@ const handleCurrentChange = (val) => {
   &:hover{
     background-color: #BEE3F833;
   }
-  
 }
 
 .pagination-container {

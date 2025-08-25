@@ -7,11 +7,11 @@
             <el-row>
               <el-col :span="8" >
                   <el-row> <BoardInfoTitle :title="t('versionInfo')" /> </el-row>
-                  <el-row class="text-limit-16 text-style" style="font-size:15px;color:#333" > {{ currentVersionInfo?.version }}{{ currentVersionInfo?.date }}</el-row>
+                  <el-row class="text-limit-16 text-style" style="font-size:15px;" > {{ currentVersionInfo?.version }}{{ currentVersionInfo?.date }}</el-row>
               </el-col>
               <el-col :span="16"> 
                 <el-row ><BoardInfoTitle :title="t('changeLog')" /> </el-row> 
-                <el-row style="color:#333" class="text-limit-32 text-style changelog-content">{{ currentVersionInfo?.changelog || '无更新日志' }}</el-row></el-col>
+                <el-row class="text-limit-32 text-style changelog-content">{{ currentVersionInfo?.changelog || '无更新日志' }}</el-row></el-col>
               
             </el-row>
         </div>
@@ -266,7 +266,6 @@ const downloadFile = (url) => {
   display: flex;
   align-items: center;
   padding-left: 12px;
-
 }
 
 .col-content{
@@ -345,5 +344,19 @@ const downloadFile = (url) => {
   }
 }
 
+.text-style{
+  color:#333
+}
+
+html.dark{
+  .text-style{color:#999};
+  .custom-row{
+    background-color: #000;
+    &:hover{
+      background-color: #131e2c;
+    }
+  }
+
+}
 
 </style>

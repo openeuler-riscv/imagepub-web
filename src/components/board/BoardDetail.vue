@@ -151,7 +151,7 @@ const changeMainImage = (index) => {
   width: 100%;
   border-radius: 20px;
   background: var(--theme-card);
-  color: var(--theme-text);
+  /* color: var(--theme-text); */
   border: 1px solid var(--theme-border);
   box-shadow: 0 3px 12px 0 rgba(0,0,0,0.08);
   transition: background 0.3s, color 0.3s, border-color 0.3s;
@@ -176,7 +176,7 @@ const changeMainImage = (index) => {
   /* width: 33%; */
   margin-bottom: 10px;
   background: var(--theme-card);
-  color: var(--theme-text);
+  /* color: var(--theme-text); */
   padding: 10px 8px;
   box-sizing: border-box;
   transition: background 0.3s, color 0.3s, border-color 0.3s;

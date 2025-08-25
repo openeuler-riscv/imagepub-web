@@ -19,12 +19,12 @@
   /* 深色主题 */
   --theme-bg: #181a1b;
   --theme-bg-secondary: #232425;
-  --theme-text: #999;
+  --theme-text: #ccc;
   --theme-text-secondary: #a0a0a0;
   --theme-text-title:#ccc;
   --theme-border: #33363a;
   --theme-hover: #232425;
-  --theme-card: #232425;
+  --theme-card: #151515;
   --theme-input: #232425;
   --theme-table-header: #232425;
   --theme-table-row: #181a1b;
