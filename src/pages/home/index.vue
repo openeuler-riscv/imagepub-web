@@ -502,7 +502,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="setting">
+  <div v-if="!isSticky" class="setting">
     <div class="right-section" >
       <div class="setting-icon">
         <DarkModeButton />
@@ -525,7 +525,7 @@ onMounted(async () => {
         <img v-else src="@/assets/icons/home/Group 4.png" style="position:relative;bottom:6px" alt="search icon" />
       </div>
       <div id="search">
-        <input
+        <!-- <input
           type="text"
           class="search-input"
           v-model="searchKeyword"
@@ -536,6 +536,17 @@ onMounted(async () => {
           ref="searchInputRef"
           v-show="!isSticky || (isSticky && showSearchInput)"
           
+        /> -->
+        <input
+          type="text"
+          class="search-input"
+          v-model="searchKeyword"
+          @input="handleSearchInput"
+          @keyup.enter="handleSearch"
+          :placeholder="randomPlaceholder"
+          @blur="handleInputBlur"
+          ref="searchInputRef"
+    
         />
         <div
           :class="['search-img', { 'search-button': searchKeyword }]"
@@ -548,6 +559,8 @@ onMounted(async () => {
           />
           <button v-else class="search-text" type="button">搜 索</button>
         </div>
+
+       
 
         <div
           v-if="showSuggestions && searchSuggestions.length > 0"
@@ -565,6 +578,19 @@ onMounted(async () => {
           </div>
         </div>
       </div>
+        <div v-if="isSticky" class="setting" style="top:0">
+          <div class="right-section" >
+            <div class="setting-icon">
+              <DarkModeButton />
+            </div>
+            <div class="setting-icon">
+                <el-button  @click="handleLanguageChange" round dark class="no-border-button" > 
+                <EN v-if="route.query.lang === 'zh_CN'"/>
+                <ZH v-else />
+                </el-button>
+            </div>
+            </div>
+        </div>
     </div>
   </div>
 
@@ -803,7 +829,7 @@ $border-color: #f1faff;
     box-sizing: border-box;
     .search-bar {
       position: relative;
-      width: 80%;
+      width:90%;
       height: 96px;
       margin: 0;
       border-color: $border-color;
@@ -909,7 +935,7 @@ $border-color: #f1faff;
     padding-bottom: 20px;
     gap: 16px;
     flex-wrap: wrap;
-    padding: 0 119px;
+    padding: 0 10%;
     min-height: 330px;
     .dummy-wrapper {
       #product-dummy {
