@@ -8,7 +8,6 @@ export const getProductList = () => {
     if (!lang) {
         lang = "zh_CN"; //默认中文
     }
-    console.log("lag",lang);
     return request.get(`/v2/${lang}/boards.json`);
 }
 

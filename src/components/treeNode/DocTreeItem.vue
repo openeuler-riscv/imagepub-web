@@ -226,4 +226,17 @@ const findActiveChild = (children, activeId) => {
   opacity: 0;
   max-height: 0;
 }
+
+
+html.dark{
+  .tree-item{
+    .item-content{
+      &.active {
+        color: #0061ff
+      }
+    }
+    
+  }
+}
+
 </style>

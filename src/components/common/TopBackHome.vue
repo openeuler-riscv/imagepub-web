@@ -20,6 +20,7 @@
           v-model="searchKeyword"
           @input="handleSearchInput"
           @keyup.enter="handleSearch"
+           :placeholder="randomPlaceholder"
           @blur="handleInputBlur"
           ref="searchInputRef"
     
@@ -75,7 +76,7 @@
 </template>
 
 <script setup>
-import { ref, watch,computed,onMounted, nextTick } from 'vue';
+import { ref, watch,computed,onMounted, nextTick,onUnmounted } from 'vue';
 import { Back } from "@element-plus/icons-vue";
 import CustomLogoIcon from "@/components/icon/CustomLogoIcon.vue";
 import DarkModeButton from "@/components/common/DarkModeButton.vue";
@@ -88,6 +89,10 @@ import ZH from '@/components/icon/CustomZH.vue'
 import EN from '@/components/icon/CustomEN.vue'
 import emitter from '@/utils/eventBus.js';
 import { getProductList } from "@/api/get-json";
+import { storeToRefs } from 'pinia'
+
+const store = useDarkModeStore()
+const { isDark } = storeToRefs(store)
 
 const router = useRouter();
 const route = useRoute();
@@ -103,15 +108,45 @@ const selectedOptions = ref({});
 const showOptions = ref({});
 const showSearchInput = ref(false);
 const productList = ref([]);
+const randomPlaceholder = ref("");
+const placeholderTimer = ref(null);
+const lastPlaceholder = ref("");
 
 
 
 onMounted(async () => {
   await fetchProductList();
+  startRandomPlaceholder();
   document.addEventListener("click", closeAllOptions);
   document.addEventListener("click", closeSearchSuggestions);  
 
 });
+
+
+const startRandomPlaceholder = () => {
+  randomPlaceholder.value = getRandomProduct();
+  placeholderTimer.value = setInterval(() => {
+    randomPlaceholder.value = getRandomProduct();
+  }, 5000);
+};
+
+const getRandomProduct = () => {
+  if (!productList.value || productList.value.length === 0) {
+    return "";
+  }
+
+  let newPlaceholder;
+  do {
+    const randomIndex = Math.floor(Math.random() * productList.value.length);
+    newPlaceholder = productList.value[randomIndex].name;
+  } while (
+    newPlaceholder === lastPlaceholder.value &&
+    productList.value.length > 1
+  );
+
+  lastPlaceholder.value = newPlaceholder;
+  return newPlaceholder;
+};
 
 
 
@@ -275,7 +310,9 @@ const debouncedSync = debounce(syncToUrl, 300)
 const handleSearchIconClick = () => {
   if (!searchKeyword.value) {
     showSearchInput.value = true;
-
+      nextTick(() => {
+      searchInputRef.value.placeholder = randomPlaceholder.value;
+    });
   }
 };
 
@@ -332,6 +369,12 @@ const handleSearchInput = e => {
   }
   showSuggestions.value = true;
 };
+
+onUnmounted(() => {
+  if (placeholderTimer.value) {
+    clearInterval(placeholderTimer.value);
+  }
+});
 
 
 </script>

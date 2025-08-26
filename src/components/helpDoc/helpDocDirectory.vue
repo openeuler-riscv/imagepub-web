@@ -2,8 +2,7 @@
   <div class="document-list-container">
     <div class="related-list">
       <BoardInfoTitle title="相关文档"></BoardInfoTitle>
-      <div v-if="mdFiles.length=0">11</div>
-      <div v-else-if="mdFiles.length>0" class="related-list-item" v-for="file in mdFiles">{{file[0].text}}</div>
+      <div class="related-list-item" >{{mdFiles[0]?.text}}</div>
     </div>
     <div class="doc-directory">
       <DocTree :items="tocItems" :onClick="handleDocItemClick" :currentItem="currentDocItem" />
@@ -13,19 +12,20 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch, onUnmounted, nextTick } from "vue";
+import { ref, onMounted, watch, onUnmounted, nextTick } from "vue";
 import DocTree from "@/components/treeNode/DocTree.vue";
 import BoardInfoTitle from "@/components/board/BoardInfoTitle.vue";
-import request from "@/utils/request";
 const props = defineProps({
   markdownContent: {
     type: String,
     required: true,
   },
-  docList:Array
+  docContent:Array
 });
-const List = ref([])
+
+
 const mdFiles = ref([]);
+
 const isLoading = ref(true);
 // 用于存储目录结构
 const tocItems = ref([]);
@@ -212,42 +212,30 @@ watch(
       tocItems.value = parseTocFromMarkdown(newContent)
 
       // 内容变化后，重新设置滚动监听
-      nextTick(() => {
-        setupScrollListener();
-      });
+      // nextTick(() => {
+      //   setupScrollListener();
+      // });
     }
   },
   { immediate: true }
 );
 
-// 2. 存储结果的 Proxy 数组
-
-
-
-// 4. 核心：循环异步获取 md 文件（处理 Proxy 数组）
-const fetchAllMdFiles = async (arr) => {
-      mdFiles.value = []
-       if(arr){
-        for (const url of arr) {
-        
-          // 异步获取 md 文件
-          const content = await request.get(`/${url}`);
-          // 添加到结果数组（Proxy 数组会自动响应式更新）
-          mdFiles.value.push( parseTocFromMarkdown(content.data));
-        }
-        isLoading.value = false
-      }
-}
-
- console.log(List)
-
-watch(
-  ()=>props.docList,
-  (arr)=>{
-  arr && fetchAllMdFiles(arr)
-
-  },{ immediate: true,deep: true  }
-)
+watch(props.docContent,async (content)=>{
+  console.log(content)
+  if (!content) return;
+  
+  console.log(content)
+   if (content) {
+      mdFiles.value = parseTocFromMarkdown(content[0])
+    }
+    mdFiles.value = [...mdFiles.value]
+    await nextTick()
+},
+  { deep: true, // 若异步数据是对象/数组，需开启深度监听
+    immediate: true // 不立即执行（等异步数据返回后再处理）})
+  })
+  
+  console.log(props.docContent)
 
 // 设置滚动监听
 const setupScrollListener = () => {
@@ -266,13 +254,10 @@ onMounted(() => {
   if (props.markdownContent) {
     tocItems.value = parseTocFromMarkdown(props.markdownContent);
   }
-
-
-
   // 等待DOM更新后设置滚动监听
-  nextTick(() => {
-    setupScrollListener();
-  });
+  // nextTick(() => {
+  //   setupScrollListener();
+  // });
 });
 
 // 组件卸载时，移除滚动监听

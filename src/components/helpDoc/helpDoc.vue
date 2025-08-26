@@ -12,7 +12,7 @@
     <!-- 移动端侧边栏 -->
     <div class="sidebar-mobile sidebar-overlay" v-show="isMobile && showMobileSidebar"
       @click="showMobileSidebar = false">
-      <helpDocDirectory :markdownContent="markdownContent" :docList="props.docList" />
+      <helpDocDirectory :markdownContent="markdownContent" v-if="docContent.length>0" :docList="props.docList" :docContent="docContent" />
     </div>
 
     <div class="markdown-body">
@@ -55,6 +55,7 @@ import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 const baseUrl = ref("");
+
 // 配置marked插件
 marked.use(
   markedHighlight({
@@ -141,6 +142,7 @@ const props = defineProps({
   docList:Array
 });
 const markdownContent = ref("");
+const docContent = ref([])
 const parsedMarkdown = ref("");
 
 const parseMarkdown = () => {
@@ -167,10 +169,29 @@ const fetchData = async () => {
   }
 };
 
+console.log(docContent)
+
+const fetchAllMdFiles = async (arr) => {
+    
+      for (const url of arr) {
+        // 异步获取 md 文件
+        const content = await request.get(`/${url}`);
+        docContent.value.push(content.data)
+      
+      }
+  
+}
+
+
 onMounted(() => {
   baseUrl.value = path.dirname(`/${props.markdownURL}`);
   fetchData();
+  fetchAllMdFiles(props.docList)
 });
+
+
+
+
 
 // 响应式状态
 const showMobileSidebar = ref(false);

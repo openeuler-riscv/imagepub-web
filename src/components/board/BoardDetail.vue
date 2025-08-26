@@ -10,8 +10,9 @@
             <el-image
                 v-for="(pic, index) in boardDetail?.pictures || []"
                 :key="index"
+                :class="{ 'active-border': index === activeImageIndex }"
                 :src="getImageSrc(pic)"
-                style="width: 60px; height: 45px; margin-right: 10px; cursor: pointer; border: saddlebrown 1px solid;"
+                style="width: 60px; height: 45px; margin-right: 10px; cursor: pointer; border-radius:4px"
                 @click="changeMainImage(index)"
             />
           </div>
@@ -82,6 +83,7 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 const currentImageSrc = ref('');
 const props = defineProps({ boardDetail: {} });
+const activeImageIndex = ref(0)
 
 watch(
     () => props.boardDetail,
@@ -125,6 +127,7 @@ const getLowSpeedInterfaces = () =>
 
 const changeMainImage = (index) => {
   currentImageSrc.value = props.boardDetail.pictures?.[index] || '';
+  activeImageIndex.value = index
 };
 </script>
 
@@ -223,6 +226,10 @@ const changeMainImage = (index) => {
 }
 .interface-list{
   display: flex;
+}
+
+.active-border{
+  border:1px solid #012fa6
 }
 
 
