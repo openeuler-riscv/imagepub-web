@@ -142,6 +142,7 @@
 
 <script setup>
 import { useI18n } from "vue-i18n";
+import { defineProps, defineEmits } from 'vue';
 import BoardInfoTitle from "./BoardInfoTitle.vue";
 const { t } = useI18n();
 const props = defineProps({
@@ -183,6 +184,11 @@ const props = defineProps({
   }
 });
 
+
+// 定义触发给父组件的事件
+const emit = defineEmits(['toggle-filter']);
+
+
 const updateCheckState = (key) => {
   const filter = props.filters[key];
   const allItems =
@@ -202,6 +208,7 @@ const updateCheckState = (key) => {
   //filter.isIndeterminate = checkedCount > 0 && checkedCount < allItems.length;
 
   filter.isIndeterminate = checkedCount > 0 && checkedCount < allItems.length ? false :true
+  emit('toggle-filter', {filters:props.filters,isFilter:true});
 
 };
 

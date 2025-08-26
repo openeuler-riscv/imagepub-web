@@ -26,14 +26,21 @@
                   :key="releaseIndex"
                   :label="release.name"
                   :name="release.name"
-                 
               >
                 <BoardDescription
-                    v-if="boardDetail && boardDetail.imagesuites"
+                    v-if="boardDetail && boardDetail.imagesuites && !isFilter"
                     :title="release.name"
                     :description="getSuiteDescription(release)"
                     
                     :historyVersions="release.imagesuites?.map((suite,index) => ({isExpanded:false,version:suite.revisions,imagesuiteIndex:index})  || []) || []" 
+                    :open-image="openImage">
+                </BoardDescription>
+
+                 <BoardDescription
+                    v-if="isFilter"
+                    :title="release.name"
+                    :description="getSuiteDescription(release)"
+                    :historyVersions="filterimagesuites?.map((suite,index) => ({isExpanded:false,version:suite.revisions,imagesuiteIndex:index})  || []) || []" 
                     :open-image="openImage">
                 </BoardDescription>
               </el-tab-pane>
@@ -51,6 +58,7 @@
        <template #default>
         <div>
           <BoardFilter
+             @toggle-filter="handleFilter"
             :filters="filters"
             :kernelVersions="getKernelVersions(release)"
             :kernelOptions="getKernelOptions(release)"
@@ -93,7 +101,8 @@ const { t } = useI18n();
 const isDataLoaded = ref(false);
 const boardDetail = ref({});
 const boardImageData = ref({});
-
+const isFilter = ref(false)
+const filterimagesuites = ref([])
 const filters = ref({
   kernel: {
     selected: ref([]),
@@ -128,7 +137,6 @@ const filters = ref({
   },
 });
 
-console.log(filters)
 
 const activeTab1 = ref(""); // 存储一级Tab的name（如'openEuler'）
 const activeTab2 = ref(""); // 存储二级Tab的name（如'24.03-LTS-SP1'）
@@ -137,8 +145,20 @@ const route = useRoute()
 const drawerVisible = ref(false);
 
 
+
+// 接收子组件的事件，更新父组件状态
+const handleFilter = (newState) => {
+  isFilter.value = newState.isFilter
+  const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
+  const currentImagesuites = currentOs?.releases?.find(release => release.name === activeTab2.value)?.imagesuites;
+  console.log(222,currentImagesuites)
+
+  
+
+
+};
+
 const resetClick = () =>{
-  console.log(filters)
   filters.value = {
   kernel: {
     selected: ref([]),
@@ -305,9 +325,7 @@ const getInstallerTypes = () => {
   const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
   const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
   if (!currentRelease?.imagesuites) return [];
-  console.log([...new Set(
-      currentRelease.imagesuites.map(s => s.loader?.[0]).filter(Boolean)
-  )])
+
   return [...new Set(
       currentRelease.imagesuites.map(s => s.loader?.[0]).filter(Boolean)
   )].filter((item, index, self) => self.findIndex(el => el === item) === index);
@@ -325,6 +343,7 @@ watch([activeTab1, activeTab2], ([newTab1, newTab2]) => {
     });
   }
 });
+
 
 
 // 保持原有数据加载逻辑，仅调整初始化Tab赋值
@@ -368,7 +387,6 @@ const fetchBoardDetail = async () => {
 
 onMounted(async () => {
   await fetchBoardDetail();
-  // await fetchProductVersion();
 });
 </script>
 
