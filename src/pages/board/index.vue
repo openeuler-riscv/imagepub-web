@@ -46,6 +46,7 @@
         v-model="drawerVisible"
         title="筛选"
         placement="right"
+        :modal="false"
       >
        <template #default>
         <div>
@@ -56,7 +57,7 @@
             :isaMabi = "getIsaMabi(release)"
             :isaMarch = "getIsaMarch(release)"
             :otherFilters="{
-            userspace: { label: t('preInstalledList'), options: getUserspaces(release) },
+            flavor: { label: t('preInstalledList'), options: getUserspaces(release) },
             installer: { label: t('bootLoader'), options: getInstallerTypes(release) }
           }"
         ></BoardFilter>
@@ -67,7 +68,7 @@
          <template #footer>
             <div style="flex: auto">
               <el-button color="#012fa6" class="drawer-footer-btn" @click="resetClick">{{t('reset')}}</el-button>
-              <el-button type="primary" class="drawer-footer-cnf" @click="confirmClick">{{t('confirm')}}</el-button>
+              <!-- <el-button type="primary" class="drawer-footer-cnf" @click="confirmClick">{{t('confirm')}}</el-button> -->
             </div>
           </template>
       </el-drawer>
@@ -96,36 +97,38 @@ const boardImageData = ref({});
 const filters = ref({
   kernel: {
     selected: ref([]),
-    checkAll: ref(false),
-    isIndeterminate: ref(true),
+    checkAll: ref(true),
+    isIndeterminate: ref(false),
     all: ['RVCK', 'VENDOR', 'TORVALDS']
   },
   kernels: {
     selected: ref([]),
-    checkAll: ref(false),
-    isIndeterminate: ref(true)
+    checkAll: ref(true),
+    isIndeterminate: ref(false)
   },
   isaMabi: {
     selected: ref([]),
-    checkAll: ref(false),
-    isIndeterminate: ref(true)
+    checkAll: ref(true),
+    isIndeterminate: ref(false)
   },
   isaMarch: {
     selected: ref([]),
-    checkAll: ref(false),
-    isIndeterminate: ref(true)
+    checkAll: ref(true),
+    isIndeterminate: ref(false)
   },
-  userspace: {
+  flavor: {
     selected: ref([]),
-    checkAll: ref(false),
-    isIndeterminate: ref(true)
+    checkAll: ref(true),
+    isIndeterminate: ref(false)
   },
   installer: {
     selected: ref([]),
-    checkAll: ref(false),
-    isIndeterminate: ref(true),
+    checkAll: ref(true),
+    isIndeterminate: ref(false),
   },
 });
+
+console.log(filters)
 
 const activeTab1 = ref(""); // 存储一级Tab的name（如'openEuler'）
 const activeTab2 = ref(""); // 存储二级Tab的name（如'24.03-LTS-SP1'）
@@ -135,11 +138,44 @@ const drawerVisible = ref(false);
 
 
 const resetClick = () =>{
-  console.log(22)
+  console.log(filters)
+  filters.value = {
+  kernel: {
+    selected: ref([]),
+    checkAll: ref(true),
+    isIndeterminate: ref(false),
+    all: ['RVCK', 'VENDOR', 'TORVALDS']
+  },
+  kernels: {
+    selected: ref([]),
+    checkAll: ref(true),
+    isIndeterminate: ref(false)
+  },
+  isaMabi: {
+    selected: ref([]),
+    checkAll: ref(true),
+    isIndeterminate: ref(false)
+  },
+  isaMarch: {
+    selected: ref([]),
+    checkAll: ref(true),
+    isIndeterminate: ref(false)
+  },
+  flavor: {
+    selected: ref([]),
+    checkAll: ref(true),
+    isIndeterminate: ref(false)
+  },
+  installer: {
+    selected: ref([]),
+    checkAll: ref(true),
+    isIndeterminate: ref(false),
+  },
+}
 }
 
 const confirmClick = () =>{
-  console.log(11)
+  drawerVisible.value = false
 }
 
 const props = defineProps({
@@ -253,14 +289,16 @@ const getUserspaces = () => {
   const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
   if (!currentRelease?.imagesuites) return [];
 
-  return currentRelease.imagesuites.flatMap((suite, index) => {
-    const userSpaceList = suite.userspace;
+
+    return currentRelease.imagesuites.flatMap((suite, index) => {
+    const userSpaceList = suite.flavor;
     if (!userSpaceList) return [];
 
-    return Array.isArray(userSpaceList)
-        ? userSpaceList.map((space, spaceIndex) => ({ id: `${index}-${spaceIndex}`, userspace: space })).filter((item, index, self) => self.findIndex(el => el.userspace === item.userspace) === index)
-        : [{ id: `${index}-0`, userspace: userSpaceList }];
-  });
+      return Array.isArray(userSpaceList)
+          ? userSpaceList.map((space, spaceIndex) => ({ id: `${index}-${spaceIndex}`, flavor: space })).filter((item, index, self) => self.findIndex(el => el.flavor === item.flavor) === index)
+          : [{ id: `${index}-0`, flavor: userSpaceList }];
+    });
+
 };
 
 const getInstallerTypes = () => {
@@ -282,8 +320,8 @@ watch([activeTab1, activeTab2], ([newTab1, newTab2]) => {
     // 示例：Tab切换时重置过滤条件
     Object.keys(filters.value).forEach(key => {
       filters.value[key].selected = [];
-      filters.value[key].checkAll = false;
-      filters.value[key].isIndeterminate = true;
+      filters.value[key].checkAll = true;
+      filters.value[key].isIndeterminate = false;
     });
   }
 });
@@ -391,11 +429,6 @@ onMounted(async () => {
   border-bottom: 1px solid #d9d9d9 !important;
   margin-bottom: 16px !important;
 }
-
-
-
-
-
 
 
 /* 默认样式（浅色模式） */
@@ -602,6 +635,12 @@ onMounted(async () => {
   font-weight: bold;
 }
 
+
+:deep(.el-drawer__footer){
+  text-align: left;;
+}
+
+
 /* 暗黑模式样式 */
 html.dark {
   /* checkbox 相关 */
@@ -610,7 +649,16 @@ html.dark {
   --el-checkbox-button-checked-border-color: #555;
 
 
+  :deep(.el-drawer){
+    background-color: #151515;
+  }
+  :deep(.el-drawer__title){
+    color: #fff;
+  }
 
+  :deep(.el-drawer__close-btn){
+    color:#ccc;
+  }
 
   :deep(.el-checkbox-button__inner) {
     background-color: #1e1e1e;
@@ -636,6 +684,7 @@ html.dark {
   .filter-title {
     color: #7ca0f8;
   }
+
   :deep(.top-tabs .el-tabs__active-bar),
   :deep(.el-tabs__item.is-active),
   :deep(.el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active) {
@@ -666,8 +715,6 @@ html.dark {
   }
 
   :deep(.el-tabs--border-card) {
-  
-
     .el-tabs__item {
       color: #999;
       background-color: #333;
@@ -682,6 +729,11 @@ html.dark {
         color:#fff
       }
     }
+  }
+
+  .drawer-footer-btn{
+    border-color: #ccc !important;
+    color:#ccc !important
   }
 }
 </style>

@@ -2,7 +2,7 @@
   <div class="document-list-container">
     <div class="related-list">
       <BoardInfoTitle title="相关文档"></BoardInfoTitle>
-      <div class="related-list-item" >{{mdFiles[0]?.text}}</div>
+      <div v-if="filteredItems" class="related-list-item" >{{filteredItems[0]?.text}}</div>
     </div>
     <div class="doc-directory">
       <DocTree :items="tocItems" :onClick="handleDocItemClick" :currentItem="currentDocItem" />
@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, onUnmounted, nextTick } from "vue";
+import { ref, onMounted, watch, onUnmounted, nextTick,computed } from "vue";
 import DocTree from "@/components/treeNode/DocTree.vue";
 import BoardInfoTitle from "@/components/board/BoardInfoTitle.vue";
 const props = defineProps({
@@ -212,28 +212,42 @@ watch(
       tocItems.value = parseTocFromMarkdown(newContent)
 
       // 内容变化后，重新设置滚动监听
-      // nextTick(() => {
-      //   setupScrollListener();
-      // });
+      nextTick(() => {
+        setupScrollListener();
+      });
     }
   },
   { immediate: true }
 );
 
-watch(props.docContent,async (content)=>{
-  console.log(content)
-  if (!content) return;
+
+const filteredItems = computed(() => {
+  if(props.docContent){
+      return parseTocFromMarkdown(props.docContent[0])
+  }
+  else{
+    return props.docContent
+  }
+
+});
+
+console.log(filteredItems)
+
+
+// watch(props.docContent,async (content)=>{
+//   console.log(content)
+//   if (!content) return;
   
-  console.log(content)
-   if (content) {
-      mdFiles.value = parseTocFromMarkdown(content[0])
-    }
-    mdFiles.value = [...mdFiles.value]
-    await nextTick()
-},
-  { deep: true, // 若异步数据是对象/数组，需开启深度监听
-    immediate: true // 不立即执行（等异步数据返回后再处理）})
-  })
+//   console.log(content)
+//    if (content) {
+//       mdFiles.value = parseTocFromMarkdown(content[0])
+//     }
+//     mdFiles.value = [...mdFiles.value]
+//     await nextTick()
+// },
+//   { deep: true, // 若异步数据是对象/数组，需开启深度监听
+//     immediate: true // 不立即执行（等异步数据返回后再处理）})
+//   })
   
   console.log(props.docContent)
 
@@ -255,9 +269,9 @@ onMounted(() => {
     tocItems.value = parseTocFromMarkdown(props.markdownContent);
   }
   // 等待DOM更新后设置滚动监听
-  // nextTick(() => {
-  //   setupScrollListener();
-  // });
+  nextTick(() => {
+    setupScrollListener();
+  });
 });
 
 // 组件卸载时，移除滚动监听

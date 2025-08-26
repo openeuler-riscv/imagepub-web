@@ -42,7 +42,8 @@ const messages = {
         reset:"重置",
         confirm:"确定",
         allversion:"全部版本",
-        showall:"展示全部"
+        showall:"展示全部",
+        any:"任意"
 
     },
     en_US: {
@@ -88,7 +89,8 @@ const messages = {
         reset:"Reset",
         confirm:"确定",
          allversion:"All Versoins",
-         showall:"All"
+         showall:"All",
+         any:"Any"
     }
 };
 

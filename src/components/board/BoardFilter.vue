@@ -10,13 +10,13 @@
                <el-checkbox-button
                   v-model="filters.kernel.checkAll"
                   :indeterminate="filters.kernel.isIndeterminate"
-                  @change="handleKernelCheckAll"
+                  @change="handleFilterCheckAll('kernel')"
                   style="margin-right: 10px;height:32px"
               >
-                {{ t('all') }}
+                {{ t('any') }}
               </el-checkbox-button>
 
-              <el-checkbox-group v-model="filters.kernel.selected" @change="handleKernelChange">
+              <el-checkbox-group v-model="filters.kernel.selected" @change="handleFilterChange('kernel')">
                 <el-checkbox-button
                     v-for="item in kernelOptions"
                     :key="item"
@@ -37,7 +37,7 @@
                     @change="handleFilterCheckAll('kernels')"
                      style="margin-right: 10px;height:32px"
                 >
-                  {{ t('all') }}
+                  {{ t('any') }}
                 </el-checkbox-button>
 
                 <el-checkbox-group v-model="filters.kernels.selected" @change="handleFilterChange('kernels')">
@@ -70,7 +70,7 @@
                   @change="handleFilterCheckAll('isaMabi')"
                   style="margin-right: 10px;height:32px"
               >
-                {{ t('all') }}
+                {{ t('any') }}
               </el-checkbox-button>
               <el-checkbox-group v-model="filters.isaMabi.selected" @change="handleFilterChange('isaMabi')">
                 <el-checkbox-button
@@ -93,7 +93,7 @@
                   @change="handleFilterCheckAll('isaMarch')"
                   style="margin-right: 10px;height:32px"
               >
-                {{ t('all') }}
+                {{ t('any') }}
               </el-checkbox-button>
               <el-checkbox-group v-model="filters.isaMarch.selected" @change="handleFilterChange('isaMarch')">
                 <el-checkbox-button
@@ -104,9 +104,7 @@
                   {{ item.profile }}
                 </el-checkbox-button>
               </el-checkbox-group>
-
             </div>
-           
           </div>
         </div>
       </el-container>
@@ -118,21 +116,21 @@
       <div :style="{ display: 'flex', flexDirection: 'column',position:'relative',bottom:'12px',height:'32px' }">
         <div class="filter-item">
            <div style="display:flex;flex-wrap:wrap;">
-              <el-checkbox-button
+            <el-checkbox-button
               v-model="filters[key].checkAll"
               :indeterminate="filters[key].isIndeterminate"
               @change="handleFilterCheckAll(key)"
               style="margin-right: 10px;height:32px"
           >
-            {{ t('all') }}
+            {{ t('any') }}
           </el-checkbox-button>
           <el-checkbox-group v-model="filters[key].selected" @change="handleFilterChange(key)">
             <el-checkbox-button
                 v-for="item in filter.options"
                 :key="item.id || item"
-                :value="item.profile || item.userspace || item"
+                :value="item.profile || item.flavor || item"
             >
-              {{ item.profile || item.userspace || item }}
+              {{ item.profile || item.flavor || item }}
             </el-checkbox-button>
           </el-checkbox-group>
            </div>
@@ -155,7 +153,7 @@ const props = defineProps({
       kernels: {},
       isaMabi:{},
       isaMarch:{},
-      userspace: {},
+      flavor: {},
       installer: {}
     })
   },
@@ -179,7 +177,7 @@ const props = defineProps({
     type: Object,
     default: () => ({
       isa: { label: 'ISA 基线', options: [] },
-      userspace: { label: '预装列表', options: [] },
+      flavor: { label: '预装列表', options: [] },
       installer: { label: '引导器', options: [] }
     })
   }
@@ -196,27 +194,17 @@ const updateCheckState = (key) => {
                   ? props.isaMabi.map(v => v.profile)
                   : key === 'isaMarch'
                       ? props.isaMarch.map(v => v.profile)
-                      : props.otherFilters[key]?.options?.map(v => v.profile || v.userspace || v) || [];
+                      : props.otherFilters[key]?.options?.map(v => v.profile || v.flavor || v) || [];
 
   const checkedCount = filter.selected.length;
-  filter.checkAll = checkedCount === allItems.length;
-  filter.isIndeterminate = checkedCount > 0 && checkedCount < allItems.length;
+  // filter.checkAll = checkedCount === allItems.length;
+  filter.checkAll = filter.selected.length > 0 ? false:true
+  //filter.isIndeterminate = checkedCount > 0 && checkedCount < allItems.length;
+
+  filter.isIndeterminate = checkedCount > 0 && checkedCount < allItems.length ? false :true
+
 };
 
-
-// kernel 部分：全选逻辑
-const handleKernelCheckAll = (val) => {
-  props.filters.kernel.selected = val
-      ? props.kernelOptions.map(v => v.version)
-      : [];
-  props.filters.kernel.isIndeterminate = false;
-};
-
-const handleKernelChange = (value) => {
-  const checkedCount = value.length;
-  props.filters.kernel.checkAll = checkedCount === props.kernelOptions.length;
-  props.filters.kernel.isIndeterminate = checkedCount > 0 && checkedCount < props.kernelOptions.length;
-};
 
 // 通用：其他 key 的全选逻辑
 const handleFilterCheckAll = (key) => {
@@ -231,10 +219,11 @@ const handleFilterCheckAll = (key) => {
   } else if (key === 'isaMarch') {
     allOptions = props.isaMarch.map(v => v.profile);
   }else {
-    allOptions = props.otherFilters[key].options.map(v => v.profile || v.userspace || v);
+    allOptions = props.otherFilters[key].options.map(v => v.profile || v.flavor || v);
   }
   
-  filter.selected = filter.checkAll ? allOptions : [];
+  //filter.selected = filter.checkAll ? allOptions : [];
+  filter.selected = filter.checkAll ? []:allOptions;
   updateCheckState(key);
 };
 
@@ -242,18 +231,27 @@ const handleFilterCheckAll = (key) => {
 const handleFilterChange = (key) => {
   updateCheckState(key);
 };
+
+
+
 </script>
+
+
+
+
+
+
+
+
 
 <style scoped>
 
 /* Dark mode specific color for labels */
 .dark .filter-label,
 .dark .filter-label-center {
-  color: #333 !important;
   font-size: 14px;
   /* Adjusted color for dark mode */
 }
-
 
 
 
@@ -271,20 +269,13 @@ const handleFilterChange = (key) => {
     align-items: flex-start;
   }
 
-
-
-
-
-
-
-
 :deep(.el-checkbox-button__inner) {
   font-size: 15px;
   font-weight: 400;
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
   border-radius: 5px !important;
   color: var(--theme-text) !important;
-  border: clamp(1px, 0.2vw, 1px) solid #ccc !important;
+  border: clamp(1px, 0.2vw, 1px) solid #ccc;
   transition: all 0.2s;
   white-space: nowrap;
   overflow: visible;
@@ -315,13 +306,12 @@ const handleFilterChange = (key) => {
 :deep(.el-checkbox-button.is-checked .el-checkbox-button__inner) {
 
   color: var(--el-color-primary) !important;
-  border: clamp(1px, 0.2vw, 2px) solid var(--el-color-primary) !important;
+  border: clamp(1px, 0.2vw, 2px) solid var(--el-color-primary);
   box-shadow: none;
   font-weight: 500;
 }
 
 :deep(.el-checkbox-button__inner:hover) {
-  color: #000 !important;
   border:clamp(1px, 0.2vw, 2px) solid #012fa6 !important;
 }
 
@@ -387,4 +377,30 @@ const handleFilterChange = (key) => {
     color: var(--theme-text) !important;
   }
 }
+
+
+.dark{
+  .filter-new-label{
+    color:#999
+  }
+  :deep(.el-checkbox-button__inner){
+    background-color: #333 !important;
+  }
+
+  :deep(.el-checkbox-button__inner:hover) {
+    background-color: #012fa6 !important;
+    border: 1px solid #012fa6 !important
+  }
+
+  :deep(.el-checkbox-button.is-checked .el-checkbox-button__inner){
+    border-color: #012fa6 !important;
+    color: #fff !important;
+    border:clamp(1px, 0.2vw, 2px) solid #012fa6 !important;
+    background-color: #012fa6 !important;
+  }
+
+  
+}
+
+
 </style>
