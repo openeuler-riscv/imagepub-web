@@ -148,6 +148,9 @@ const drawerVisible = ref(false);
 const fiterTargetSuits = (filter,originSuits) => {
 
   console.log(filter,originSuits)
+
+  
+
   const resusltSuits = originSuits?.filter(a=>{
     if(filter.flavor.selected.length>0 && a.flavor){
       return filter.flavor.selected.includes(a?.flavor)
@@ -175,7 +178,7 @@ const fiterTargetSuits = (filter,originSuits) => {
     else return e
   }).filter(f=>{
     if(filter.kernels.selected.length>0 && f.kernel.version){
-      return filter.kernel.selected.includes(f.kernel.version)
+      return filter.kernels.selected.includes(f.kernel.version)
     }
     else return f
   })
