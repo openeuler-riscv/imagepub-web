@@ -208,7 +208,6 @@ const updateCheckState = (key) => {
   //filter.isIndeterminate = checkedCount > 0 && checkedCount < allItems.length;
 
   filter.isIndeterminate = checkedCount > 0 && checkedCount < allItems.length ? false :true
-  console.log(props.filters)
   const temp = props.filters
 
   emit('toggle-filter', {filters:props.filters,isFilter: temp.flavor.checkAll && temp.installer.checkAll && temp.isaMabi.checkAll &&  temp.isaMarch.checkAll && temp.kernel.checkAll &&temp.kernels.checkAll ?false:true } );

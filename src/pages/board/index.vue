@@ -53,7 +53,7 @@
         v-model="drawerVisible"
         title="筛选"
         placement="right"
-        :modal="false"
+        :modal="true"
       >
        <template #default>
         <div>
@@ -149,7 +149,7 @@ const fiterTargetSuits = (filter,originSuits) => {
 
   console.log(filter,originSuits)
 
-  
+
 
   const resusltSuits = originSuits?.filter(a=>{
     if(filter.flavor.selected.length>0 && a.flavor){
