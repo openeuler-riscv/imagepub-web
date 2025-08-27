@@ -62,6 +62,7 @@
             :filters="filters"
             :kernelVersions="getKernelVersions(release)"
             :kernelOptions="getKernelOptions(release)"
+            :suitesForSelect = "suitesForSelect()"
             :isaMabi = "getIsaMabi(release)"
             :isaMarch = "getIsaMarch(release)"
             :otherFilters="{
@@ -144,13 +145,9 @@ const router = useRouter();
 const route = useRoute()
 const drawerVisible = ref(false);
 
-
+/* 过滤功能 */
 const fiterTargetSuits = (filter,originSuits) => {
-
-  console.log(filter,originSuits)
-
-
-
+  console.log(filter)
   const resusltSuits = originSuits?.filter(a=>{
     if(filter.flavor.selected.length>0 && a.flavor){
       return filter.flavor.selected.includes(a?.flavor)
@@ -290,6 +287,23 @@ const getKernelOptions = ()=>{
       .filter(suite => suite.kernel?.type)
       .flatMap(suite => [{ version: suite.kernel.type }]).filter((item, index, self) => self.findIndex(el => el.version === item.version) === index);
 };
+
+/* 返回当前镜像suits */
+const suitesForSelect = ()=>{
+  const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
+  const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
+  if (!currentRelease?.imagesuites) return [];
+  return currentRelease.imagesuites?.map(s=>({
+    id:s?.id,
+    flavor:[s.flavor],
+    isaMabi:[s.isa.mabi],
+    isaMarch:[...s.isa.march],
+    kernel:[s.kernel.type],
+    kernels:[s.kernel.version],
+    installer:[...s.loader]
+
+  }))
+}
 
 
 
