@@ -1,7 +1,7 @@
 <template>
   <div class="help-doc">
     <div class="sidebar" :class="{ 'hidden': isMobile }">
-      <helpDocDirectory :markdownContent="markdownContent" />
+      <helpDocDirectory :markdownContent="markdownContent" :docContent="docContent" @change-markdown="changeMarkdown" />
     </div>
 
     <!-- 移动端目录按钮 -->
@@ -12,7 +12,7 @@
     <!-- 移动端侧边栏 -->
     <div class="sidebar-mobile sidebar-overlay" v-show="isMobile && showMobileSidebar"
       @click="showMobileSidebar = false">
-      <helpDocDirectory :markdownContent="markdownContent" v-if="docContent.length>0" :docList="props.docList" :docContent="docContent" />
+      <helpDocDirectory :markdownContent="markdownContent" :docContent="docContent"  />
     </div>
 
     <div class="markdown-body">
@@ -141,6 +141,8 @@ const props = defineProps({
   },
   docList:Array
 });
+
+
 const markdownContent = ref("");
 const docContent = ref([])
 const parsedMarkdown = ref("");
@@ -157,9 +159,14 @@ const parseMarkdown = () => {
   }
 };
 
-const fetchData = async () => {
+/* 切换相关文件显示 */
+const changeMarkdown = (index) =>{
+  fetchData(props.docList[index])
+}
+
+const fetchData = async (url) => {
   try {
-    const markdown = await request.get(`/${props.markdownURL}`);
+    const markdown = await request.get(`/${url}`);
     markdownContent.value = markdown.data;
     parseMarkdown();
   } catch (error) {
@@ -169,23 +176,23 @@ const fetchData = async () => {
   }
 };
 
-console.log(docContent)
-
 const fetchAllMdFiles = async (arr) => {
+  try{
+    for (const url of arr) {
+      // 异步获取 md 文件
+      const content = await request.get(`/${url}`);
+      docContent.value.push(content.data)
     
-      for (const url of arr) {
-        // 异步获取 md 文件
-        const content = await request.get(`/${url}`);
-        docContent.value.push(content.data)
-      
-      }
-  
+    }
+  }catch(error) {
+     console.error("获取Markdown文件列表", error);
+  }
 }
 
 
 onMounted(() => {
   baseUrl.value = path.dirname(`/${props.markdownURL}`);
-  fetchData();
+  fetchData(props.markdownURL);
   fetchAllMdFiles(props.docList)
 });
 

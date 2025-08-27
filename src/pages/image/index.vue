@@ -229,7 +229,7 @@ const processData = (data, targetVersion) => {
 
   const latestRevision = targetRelease?.imagesuites?.[props.imagesuiteIndex]?.revisions?.[route.query.revision]
     
-      currentVersionInfo.value = {
+  currentVersionInfo.value = {
     ...latestRevision,
     version: targetVersion, // 补充显示版本号
   };

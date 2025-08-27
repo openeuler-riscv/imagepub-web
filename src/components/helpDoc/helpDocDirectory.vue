@@ -1,8 +1,17 @@
 <template>
   <div class="document-list-container">
-    <div class="related-list">
+    <div class="related-list"  v-if="mdFiles?.length>0" >
       <BoardInfoTitle title="相关文档"></BoardInfoTitle>
-      <div v-if="filteredItems" class="related-list-item" >{{filteredItems[0]?.text}}</div>
+      <el-tooltip
+        v-for="(it,index) in mdFiles"
+        class="box-item"
+        effect="dark"
+        :content="it[0]?.text"
+        placement="top"
+      >
+         <div @click="showMarkDown(index)" class="related-list-item" >{{it[0]?.text}}</div>
+      </el-tooltip>
+     
     </div>
     <div class="doc-directory">
       <DocTree :items="tocItems" :onClick="handleDocItemClick" :currentItem="currentDocItem" />
@@ -22,6 +31,11 @@ const props = defineProps({
   },
   docContent:Array
 });
+const emit = defineEmits(['change-markdown'])
+
+const showMarkDown = (index) =>{
+  emit('change-markdown', index)
+}
 
 
 const mdFiles = ref([]);
@@ -221,35 +235,21 @@ watch(
 );
 
 
-const filteredItems = computed(() => {
-  if(props.docContent){
-      return parseTocFromMarkdown(props.docContent[0])
-  }
-  else{
-    return props.docContent
-  }
-
-});
-
-console.log(filteredItems)
 
 
-// watch(props.docContent,async (content)=>{
-//   console.log(content)
-//   if (!content) return;
+
+watch(props.docContent, (content)=>{
+  if (!content) return;
+   if (content && content.length>0) {
+      mdFiles.value = content?.map(i=>parseTocFromMarkdown(i)) 
+    }
+},
+  { deep: true, // 若异步数据是对象/数组，需开启深度监听
+    immediate: true // 不立即执行（等异步数据返回后再处理）})
+  })
+
+  console.log(mdFiles)
   
-//   console.log(content)
-//    if (content) {
-//       mdFiles.value = parseTocFromMarkdown(content[0])
-//     }
-//     mdFiles.value = [...mdFiles.value]
-//     await nextTick()
-// },
-//   { deep: true, // 若异步数据是对象/数组，需开启深度监听
-//     immediate: true // 不立即执行（等异步数据返回后再处理）})
-//   })
-  
-  console.log(props.docContent)
 
 // 设置滚动监听
 const setupScrollListener = () => {
@@ -314,5 +314,20 @@ onUnmounted(() => {
   margin: 10px;
   color: var(--theme-text);
   transition: background 0.3s, color 0.3s;
+    white-space: nowrap;
+  /* 隐藏超出部分 */
+  overflow: hidden;
+  /* 超出时显示省略号 */
+  text-overflow: ellipsis;
+  cursor: pointer;
+  &:hover {
+    background-color: var(--theme-hover); /* Hover background */
+  }
+}
+
+html.dark{
+  .related-list-item {
+    background-color: #000;
+  }
 }
 </style>
