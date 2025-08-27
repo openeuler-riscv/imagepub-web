@@ -304,13 +304,11 @@ const updateCheckState = (key,kind) => {
 
   emit('toggle-filter', {filters:props.filters,isFilter: tagFilter ?false:true } );
 
-  /* 单项点击 */
+  if(!tagFilter){
+    /* 单项点击 */
     if(kind ==2){
       /* 更新选择按钮,只在不止一个imagesuit情况下进行处理 */
-      if((!filterBtn.value && props.suitesForSelect.length >1) || (filterBtn.value && selectedSuits.value.length>1 )){
-
-
-
+      if( (!filterBtn.value && props.suitesForSelect.length >1) || (filterBtn.value && selectedSuits.value.length>1 )){
         /* 区分判断是第一次选择还是后面的多次选择 */
         if(!filterBtn.value){
           filterBtn.value = true /* 设置进行btn过滤的标志位 */
@@ -319,11 +317,11 @@ const updateCheckState = (key,kind) => {
         else{
           currentSuits.value = selectedSuits.value
         }
-
-
         /* 更新、筛选每个选择模块的按钮 */
         selectedSuits.value = currentSuits.value?.filter(c=>hasCommonElements(filter.selected,c[key]))
-        
+
+
+        console.log(currentSuits,selectedSuits)
         filterkernelOptions.value = mergeArrayValues(selectedSuits.value, 'kernel')
         filterkernelVersions.value = mergeArrayValues(selectedSuits.value, 'kernels')
         filterisaMabi.value = mergeArrayValues(selectedSuits.value, 'isaMabi')
@@ -335,10 +333,24 @@ const updateCheckState = (key,kind) => {
     else{
         /* 全选点击 */
         console.log(currentSuits,selectedSuits)
-        
-
-
     }
+  }
+  /* 所有都是全选 */
+  else{
+    filterBtn.value = false;
+    currentSuits.value = [];
+    selectedSuits.value = []
+    filterkernelOptions.value = []
+    filterkernelVersions.value = []
+    filterisaMabi.value = []
+    filterisaMarch.value =[]
+    filterotherFilters.value.flavor.options = [] 
+    filterotherFilters.value.installer.options = [] 
+  
+  }
+
+
+  
 };
 
 /* 数组去重 */
@@ -387,7 +399,8 @@ const handleFilterCheckAll = (key) => {
   }
   
   //filter.selected = filter.checkAll ? allOptions : [];
-  filter.selected = filter.checkAll ? []:allOptions;
+  //filter.selected = filter.checkAll ? []:allOptions;\
+  filter.selected=[]
   updateCheckState(key,1);
 };
 
