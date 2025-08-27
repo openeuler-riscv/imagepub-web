@@ -332,7 +332,30 @@ const updateCheckState = (key,kind) => {
     }
     else{
         /* 全选点击 */
-        console.log(currentSuits,selectedSuits)
+        switch(key) {
+          case 'kernel':
+            filterkernelOptions.value = allItems
+            break; 
+          case 'kernels':
+            filterkernelVersions.value = allItems
+            break;
+          case 'isaMabi': 
+            filterisaMabi.value = allItems
+            break; 
+          case 'isaMarch':
+            filterisaMarch.value = allItems
+            break;
+          case 'flavor':
+            filterotherFilters.value.flavor.options = allItems
+            break; 
+          case 'installer':
+            filterotherFilters.value.installer.options = allItems 
+            break;
+          
+          default:
+            
+        }
+        console.log(key,allItems)
     }
   }
   /* 所有都是全选 */
@@ -348,9 +371,6 @@ const updateCheckState = (key,kind) => {
     filterotherFilters.value.installer.options = [] 
   
   }
-
-
-  
 };
 
 /* 数组去重 */
