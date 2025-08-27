@@ -244,13 +244,6 @@ const handleFilterChange = (key) => {
 </script>
 
 
-
-
-
-
-
-
-
 <style scoped>
 
 /* Dark mode specific color for labels */

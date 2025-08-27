@@ -4,9 +4,10 @@
 
     <BoardDetail :boardDetail="boardDetail"></BoardDetail>
 
-    <div class="drawer-btn" v-if="osList?.length>0" @click="openDrawer">
+    <div class="drawer-btn" v-if="osList?.length>0" @click="openDrawer"  :class="{ 'active-border': isFilter}">
       <el-button  >
-        <span>{{t('showall')}}</span>
+        <span v-if="!isFilter">{{t('showall')}}</span>
+        <span v-else style="font-size:24px;color:#012fa6">*</span>
       </el-button>
        <CustomArrowIcon style="cursor:pointer;position:absolute;right:20px;top:16px"/>
     </div>
@@ -31,7 +32,6 @@
                     v-if="boardDetail && boardDetail.imagesuites && !isFilter"
                     :title="release.name"
                     :description="getSuiteDescription(release)"
-                    
                     :historyVersions="release.imagesuites?.map((suite,index) => ({isExpanded:false,version:suite.revisions,imagesuiteIndex:index})  || []) || []" 
                     :open-image="openImage">
                 </BoardDescription>
@@ -145,53 +145,90 @@ const route = useRoute()
 const drawerVisible = ref(false);
 
 
+const fiterTargetSuits = (filter,originSuits) => {
+
+  console.log(filter,originSuits)
+  const resusltSuits = originSuits?.filter(a=>{
+    if(filter.flavor.selected.length>0 && a.flavor){
+      return filter.flavor.selected.includes(a?.flavor)
+    }
+    else return a
+  }).filter(b=>{
+    if(filter.installer.selected.length>0 && b.loader.length>0){
+      return filter.installer.selected.includes(b?.loader?.[0])
+    }
+    else return b
+  }).filter(c=>{
+    if(filter.isaMabi.selected.length>0 && c.isa.mabi){
+      return filter.isaMabi.selected.includes(c.isa.mabi)
+    }
+    else return c
+  }).filter(d=>{
+    if(filter.isaMarch.selected.length>0 && d.isa.march.length>0){
+      return filter.isaMarch.selected.filter(x=>d.isa.march.includes(x))
+    }
+    else return d
+  }).filter(e=>{
+    if(filter.kernel.selected.length>0 && e.kernel.type){
+      return filter.kernel.selected.includes(e.kernel.type)
+    }
+    else return e
+  }).filter(f=>{
+    if(filter.kernels.selected.length>0 && f.kernel.version){
+      return filter.kernel.selected.includes(f.kernel.version)
+    }
+    else return f
+  })
+
+  return resusltSuits
+
+}
+
+
 
 // 接收子组件的事件，更新父组件状态
 const handleFilter = (newState) => {
   isFilter.value = newState.isFilter
   const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
   const currentImagesuites = currentOs?.releases?.find(release => release.name === activeTab2.value)?.imagesuites;
-  console.log(222,currentImagesuites)
-
-  
-
-
+  filterimagesuites.value = fiterTargetSuits(newState.filters,currentImagesuites)
 };
 
 const resetClick = () =>{
   filters.value = {
-  kernel: {
-    selected: ref([]),
-    checkAll: ref(true),
-    isIndeterminate: ref(false),
-    all: ['RVCK', 'VENDOR', 'TORVALDS']
-  },
-  kernels: {
-    selected: ref([]),
-    checkAll: ref(true),
-    isIndeterminate: ref(false)
-  },
-  isaMabi: {
-    selected: ref([]),
-    checkAll: ref(true),
-    isIndeterminate: ref(false)
-  },
-  isaMarch: {
-    selected: ref([]),
-    checkAll: ref(true),
-    isIndeterminate: ref(false)
-  },
-  flavor: {
-    selected: ref([]),
-    checkAll: ref(true),
-    isIndeterminate: ref(false)
-  },
-  installer: {
-    selected: ref([]),
-    checkAll: ref(true),
-    isIndeterminate: ref(false),
-  },
-}
+    kernel: {
+      selected: ref([]),
+      checkAll: ref(true),
+      isIndeterminate: ref(false),
+      all: ['RVCK', 'VENDOR', 'TORVALDS']
+    },
+    kernels: {
+      selected: ref([]),
+      checkAll: ref(true),
+      isIndeterminate: ref(false)
+    },
+    isaMabi: {
+      selected: ref([]),
+      checkAll: ref(true),
+      isIndeterminate: ref(false)
+    },
+    isaMarch: {
+      selected: ref([]),
+      checkAll: ref(true),
+      isIndeterminate: ref(false)
+    },
+    flavor: {
+      selected: ref([]),
+      checkAll: ref(true),
+      isIndeterminate: ref(false)
+    },
+    installer: {
+      selected: ref([]),
+      checkAll: ref(true),
+      isIndeterminate: ref(false),
+    }
+  }
+  isFilter.value = false
 }
 
 const confirmClick = () =>{
@@ -407,14 +444,18 @@ onMounted(async () => {
   background:#012fa6 !important
 }
 
-  :deep(.el-tabs__header)
-  {
-    background-color: transparent 
-  }
+:deep(.el-tabs__header)
+{
+  background-color: transparent 
+}
 
-  :deep(.el-tabs--border-card){
-    background-color: transparent;
-  }
+:deep(.el-tabs--border-card){
+  background-color: transparent;
+}
+
+.active-border{
+  border:2px solid #012fa6 !important;
+}
 
 
 
