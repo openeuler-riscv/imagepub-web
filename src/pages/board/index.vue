@@ -616,8 +616,9 @@ onMounted(async () => {
 }
 
 :deep(.top-tabs .el-tabs__active-bar) {
-  background-color: #102e9f;
+  background-color: #012fa6;
   height: 3px;
+  border-radius: 6px;
 }
 
 :deep(.sub-tabs) {
@@ -634,7 +635,7 @@ onMounted(async () => {
 }
 
 :deep(.el-tabs__item.is-active) {
-  color: #102e9f;
+  color: #012fa6;
 }
 
 
@@ -669,7 +670,7 @@ onMounted(async () => {
 
 :deep(.el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active),
 :deep(.el-tabs--border-card > .el-tabs__header .el-tabs__item:hover) {
-  color: #102e9f;
+  color: #012fa6;
 }
 
 :deep(.sub-tabs.el-tabs--border-card) {
