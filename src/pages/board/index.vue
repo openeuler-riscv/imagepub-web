@@ -148,7 +148,7 @@ const drawerVisible = ref(false);
 
 /* 过滤功能 */
 const fiterTargetSuits = (filter,originSuits) => {
-  console.log(filter)
+  // console.log(filter)
   const resusltSuits = originSuits?.filter(a=>{
     if(filter.flavor.selected.length>0 && a.flavor){
       return filter.flavor.selected.includes(a?.flavor)

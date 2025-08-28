@@ -322,8 +322,6 @@ const updateCheckState = (key,kind) => {
         /* 更新、筛选每个选择模块的按钮 */
         selectedSuits.value = currentSuits.value?.filter(c=>hasCommonElements(filter.selected,c[key]))
 
-
-        console.log(currentSuits,selectedSuits)
         filterkernelOptions.value = mergeArrayValues(selectedSuits.value, 'kernel')
         filterkernelVersions.value = mergeArrayValues(selectedSuits.value, 'kernels')
         filterisaMabi.value = mergeArrayValues(selectedSuits.value, 'isaMabi')
@@ -333,7 +331,35 @@ const updateCheckState = (key,kind) => {
       }  
     }
     else{
-        
+              /* 全选点击 */
+         console.log(currentSuits,22,selectedSuits,33,props.filters)
+
+         console.log(Object.keys(props.filters))
+         Object.keys(temp)?.filter(a=>temp[a].checkAll)?.map(b=>{
+          switch(b) {
+            case 'kernel':
+              filterkernelOptions.value =  props.kernelOptions.map(v => v.version)
+              break; 
+            case 'kernels':
+              filterkernelVersions.value = props.kernelVersions.map(v => v.version)
+              break;
+            case 'isaMabi': 
+              filterisaMabi.value = props.isaMabi.map(v => v.profile)
+              break; 
+            case 'isaMarch':
+              filterisaMarch.value = props.isaMarch.map(v => v.profile)
+              break;
+            case 'flavor':
+              filterotherFilters.value.flavor.options = props.otherFilters[b]?.options?.map(v => v.profile || v.flavor || v)
+              break; 
+            case 'installer':
+              filterotherFilters.value.installer.options = props.otherFilters[b]?.options?.map(v => v.profile || v.flavor || v) 
+              break;
+            
+            default:
+              
+          }
+         })
         /*1、点击任意应该出现当前所有选项，但是存在其他选项的限制，因此要判断当前放开所有的选择里面，是否有其他选择限制不显示的suits  */
 
 
@@ -341,32 +367,8 @@ const updateCheckState = (key,kind) => {
 
         /* 若有其他选择限制，找到被限制的suits，在当前要放开的选项中过滤掉仅该suits独有的选项 */
 
-        console.log(currentSuits,selectedSuits)
-      /* 全选点击 */
-        switch(key) {
-          case 'kernel':
-            filterkernelOptions.value = allItems
-            break; 
-          case 'kernels':
-            filterkernelVersions.value = allItems
-            break;
-          case 'isaMabi': 
-            filterisaMabi.value = allItems
-            break; 
-          case 'isaMarch':
-            filterisaMarch.value = allItems
-            break;
-          case 'flavor':
-            filterotherFilters.value.flavor.options = allItems
-            break; 
-          case 'installer':
-            filterotherFilters.value.installer.options = allItems 
-            break;
-          
-          default:
-            
-        }
-        console.log(key,allItems)
+
+        
     }
   }
   /* 所有都是全选 */
@@ -441,9 +443,7 @@ const handleFilterChange = (key) => {
 };
 
 watch(()=>props.isFilter, (value) => {
-  console.log(value)
   if (!value) {
-    console.log(66666666)
      filterBtn.value = false;
     currentSuits.value = [];
     selectedSuits.value = []
