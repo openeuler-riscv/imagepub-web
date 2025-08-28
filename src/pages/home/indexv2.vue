@@ -52,7 +52,7 @@ import CustomPrefixIcon from "@/components/icon/CustomPrefixIcon.vue";
 import CustomSearchIcon from "@/components/icon/CustomSearchIcon.vue";
 import { getProductList } from "@/api/get-json";
 import { ElMessage } from "element-plus";
-import { useRouter } from "vue-router";
+import { useRouter,useRoute } from "vue-router";
 import './style.scss';
 import { watch } from 'vue';
 import {getCookie} from "@/utils/cookie.js";
@@ -61,6 +61,7 @@ const {t} = useI18n();
 const productList = ref([]);
 const allProducts = ref([]);
 const router = useRouter();
+const route = useRoute()
 const searchCondition = reactive({
   searchValue: "",
   socSearch: "",

@@ -76,9 +76,6 @@
       </div>
     </div>
 
-
-    
-
     <el-popover
     :visible="visible"
     placement="top-end"
@@ -186,6 +183,9 @@ const visible = ref(false)
 
 const customContainer = ref(null);
 
+
+console.log(route)
+
 const props = defineProps({
   productUri: String,
   version1: String,
@@ -235,7 +235,7 @@ const processData = (data, targetVersion) => {
   };
 
   mirrorList.value = latestRevision.files || [];
-  markdownURL.value = latestRevision.docs?.[0] || '';
+  markdownURL.value = latestRevision.docs?.[route.query.doc] || '';
   docList.value = latestRevision.docs
 };
 

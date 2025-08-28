@@ -305,7 +305,6 @@ const updateCheckState = (key,kind) => {
 
   emit('toggle-filter', {filters:props.filters,isFilter: tagFilter ?false:true } );
 
-  console.log(11)
   if(!tagFilter){
     /* 单项点击 */
     if(kind ==2){

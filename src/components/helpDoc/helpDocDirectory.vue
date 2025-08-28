@@ -237,7 +237,7 @@ watch(
 
 
 
-
+/* 监听传入markdown文件列表内容 */
 watch(props.docContent, (content)=>{
   if (!content) return;
    if (content && content.length>0) {
@@ -247,8 +247,6 @@ watch(props.docContent, (content)=>{
   { deep: true, // 若异步数据是对象/数组，需开启深度监听
     immediate: true // 不立即执行（等异步数据返回后再处理）})
   })
-
-  console.log(mdFiles)
   
 
 // 设置滚动监听

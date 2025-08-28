@@ -185,7 +185,14 @@ darkModeStore.initTheme();
 const routeVersion = ref(0);
 
 const goHome = () => router.push('/');
-const goBack = () => router.back();
+const goBack = () => {
+  router.push({
+    path: `/board/${route.params.vendor}/${route.params.product}`,
+    query:{
+      lang:route.query.lang
+    }
+  })
+};
 
 
 watch(() => [route.path, route.query.lang], () => {
@@ -298,7 +305,7 @@ const syncToUrl = (value) => {
    router.push({
     path: `/`,
     query:{
-      ...route.query,
+      lang:route.query.lang,
       kw: value || undefined
     }
   });

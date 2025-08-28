@@ -52,7 +52,10 @@ import path from "path-browserify";
 import helpDocDirectory from "@/components/helpDoc/helpDocDirectory.vue";
 import BoardInfoTitle from "@/components/board/BoardInfoTitle.vue";
 import { useI18n } from 'vue-i18n';
+import { useRoute,useRouter } from 'vue-router'
 
+const router = useRouter()
+const route = useRoute()
 const { t } = useI18n();
 const baseUrl = ref("");
 
@@ -162,6 +165,11 @@ const parseMarkdown = () => {
 /* 切换相关文件显示 */
 const changeMarkdown = (index) =>{
   fetchData(props.docList[index])
+  const currentQuery = { ...route.query,doc:index }
+   router.push({
+    path: route.path, // 保持当前路径不变
+    query: currentQuery // 合并后的 query 参数
+  })
 }
 
 const fetchData = async (url) => {

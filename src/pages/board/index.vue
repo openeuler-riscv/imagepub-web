@@ -9,7 +9,7 @@
         <span v-if="!isFilter">{{t('showall')}}</span>
         <span v-else style="font-size:24px;color:#012fa6">*</span>
       </el-button>
-       <CustomArrowIcon style="cursor:pointer;position:absolute;right:20px;top:16px"/>
+       <CustomArrowIcon  :isFilter="isFilter"  style="cursor:pointer;position:absolute;right:20px;top:16px"/>
     </div>
 
     <div v-if="isDataLoaded" class="box-card">
@@ -148,7 +148,6 @@ const drawerVisible = ref(false);
 
 /* 过滤功能 */
 const fiterTargetSuits = (filter,originSuits) => {
-  // console.log(filter)
   const resusltSuits = originSuits?.filter(a=>{
     if(filter.flavor.selected.length>0 && a.flavor){
       return filter.flavor.selected.includes(a?.flavor)
@@ -258,7 +257,8 @@ const openImage = async (imageIndex,visionIndex) => {
   const currentQuery = { ...route.query };
    const newQuery = {
     revision:visionIndex,
-    ...currentQuery
+    ...currentQuery,
+    doc:0
   };
   await router.push({
     // path: `/release/${props.productUri}/${version1}/${version2}/${row.date}`, // RESTful 路径
@@ -659,13 +659,24 @@ onMounted(async () => {
   margin-left: 0px !important;
 }
 
+:deep(.el-tabs__nav-wrap>.el-tabs__active-bar) {
+  width: 30px !important; /* 自定义长度，根据需要调整 */
+  /* 可选：居中显示（默认是左对齐） */
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+
+
 :deep(.el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active){
-  border-left: none !important;
-  border-right: none !important;
+  border:1px solid #012fa6
 }
 
 :deep(.el-tabs--border-card>.el-tabs__header .el-tabs__item){
-  border:none
+  /* border:none */
+  background-color: #fff;
+  color:#000;
+  border:1px solid #ccc
 }
 
 :deep(.el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active),

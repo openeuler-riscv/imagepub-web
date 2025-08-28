@@ -20,7 +20,6 @@ service.interceptors.request.use(config => {
 // 响应拦截
 service.interceptors.response.use(
   res => {
-    // console.log(res.data);
     if (res.status >= 200 && res.status < 300) {
       return res;
     }
