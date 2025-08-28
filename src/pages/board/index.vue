@@ -58,6 +58,7 @@
        <template #default>
         <div>
           <BoardFilter
+            :isFilter="isFilter"
              @toggle-filter="handleFilter"
             :filters="filters"
             :kernelVersions="getKernelVersions(release)"

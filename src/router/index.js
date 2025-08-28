@@ -49,6 +49,10 @@ const router = createRouter({
         imagesuiteIndex:route.params.image_receipe,
         lang: getLang(route)
       })
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: '/' // 重定向到首页
     }
   ]
 });

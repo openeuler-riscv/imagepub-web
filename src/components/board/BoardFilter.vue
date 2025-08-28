@@ -214,7 +214,7 @@
 
 <script setup>
 import { useI18n } from "vue-i18n";
-import { defineProps, defineEmits,ref } from 'vue';
+import { defineProps, defineEmits,ref,watch } from 'vue';
 import BoardInfoTitle from "./BoardInfoTitle.vue";
 const { t } = useI18n();
 
@@ -256,7 +256,8 @@ const props = defineProps({
       installer: { label: '引导器', options: [] }
     })
   },
-  suitesForSelect:{}
+  suitesForSelect:{},
+  isFilter:Boolean
 });
 
 const filterBtn = ref(false)
@@ -304,6 +305,7 @@ const updateCheckState = (key,kind) => {
 
   emit('toggle-filter', {filters:props.filters,isFilter: tagFilter ?false:true } );
 
+
   if(!tagFilter){
     /* 单项点击 */
     if(kind ==2){
@@ -331,7 +333,16 @@ const updateCheckState = (key,kind) => {
       }  
     }
     else{
-        /* 全选点击 */
+        
+        /*1、点击任意应该出现当前所有选项，但是存在其他选项的限制，因此要判断当前放开所有的选择里面，是否有其他选择限制不显示的suits  */
+
+
+        /* 若无其他选项限制，则放开所有选项 */
+
+        /* 若有其他选择限制，找到被限制的suits，在当前要放开的选项中过滤掉仅该suits独有的选项 */
+
+        console.log(currentSuits,selectedSuits)
+      /* 全选点击 */
         switch(key) {
           case 'kernel':
             filterkernelOptions.value = allItems
@@ -429,6 +440,21 @@ const handleFilterChange = (key) => {
   updateCheckState(key,2);
 };
 
+watch(()=>props.isFilter, (value) => {
+  console.log(value)
+  if (!value) {
+    console.log(66666666)
+     filterBtn.value = false;
+    currentSuits.value = [];
+    selectedSuits.value = []
+    filterkernelOptions.value = []
+    filterkernelVersions.value = []
+    filterisaMabi.value = []
+    filterisaMarch.value =[]
+    filterotherFilters.value.flavor.options = [] 
+    filterotherFilters.value.installer.options = [] 
+  }
+},{immediate:true,deep:true});
 
 
 </script>
