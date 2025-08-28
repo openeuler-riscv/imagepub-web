@@ -34,27 +34,27 @@
                    <el-col :span="3">
                     <div class="col-content">
                         <span class="text-content">{{ Object.keys(item.hash)?.[0] }}</span>
-                        
-                        
-                        <el-popover
-                          placement="top"
-                          width="250"
+                        <el-tooltip
+                         placement="top"
+                          width="150"
                           trigger="hover"
-                          popper-style="border-radius: 12px;"
+                          popper-style="border-radius: 12px;font-size:14px"
                           :content="Object.values(item.hash)?.[0]"
                         >
                           
-                          <template #reference>
                             <el-icon class="info-icon">
                               <WarningFilled style="color:#999" />
                             </el-icon>
-                          </template>
-                        </el-popover>
+                        
+                        </el-tooltip>  
+                        
+                     
                     </div>
                   </el-col>
                    <el-col :span="2">
                     <div class="col-content"><el-button @click="downloadFile(item.url)" size="small" class="no-border">
-                      <img src="@/assets/icons/board/download.svg" width="18" height="18" />
+                      <img v-if="!isDark" src="@/assets/icons/board/download.svg" width="18" height="18" />
+                       <img v-else src="@/assets/icons/board/downloadDark.svg" width="18" height="18" />
                     </el-button></div>
                   </el-col>
                   
@@ -77,19 +77,22 @@
     </div>
 
     <el-popover
-    :visible="visible"
-    placement="top-end"
-    :title="t('imageFile')"
-    :width="510"
-    :append-to="customContainer"
-    popper-style="border-radius:12px"
-    :close-on-click="false"
-    trigger="manual"
-     :close-on-click-outside="false"  
-    
+      :visible="visible"
+      placement="top-end"
+      :title="t('imageFile')"
+      :width="510"
+      :append-to="customContainer"
+        popper-style="border-radius:12px;padding:0px"
+      :close-on-click="false"
+      trigger="click"
+     
+      :close-on-click-outside="false"
+      :close-on-press-escape="false"  
   >
+
     <template #default>
-        <div v-if=" mirrorList.length > 0">
+        <el-icon :size="18" class="closeIcon" style="position: absolute;right: 12px;top: 10px;}"><Close /></el-icon>
+        <div  @click.stop="handlepopClick" class="popover-body" v-if=" mirrorList.length > 0">
              <el-row 
                   v-for="(item, index) in mirrorList" 
                   :key="item.id" 
@@ -105,8 +108,9 @@
                   </el-col>
 
                    <el-col :span="2">
-                    <div class="col-content"><el-button @click="downloadFile(item.url)" size="small" class="no-border">
-                      <img src="@/assets/icons/board/download.svg" width="18" height="18" />
+                    <div class="col-content"><el-button @click.stop="downloadFile(item.url)" size="small" class="no-border">
+                      <img v-if="!isDark" src="@/assets/icons/board/download.svg" width="18" height="18" />
+                       <img v-else src="@/assets/icons/board/downloadDark.svg" width="18" height="18" />
                     </el-button></div>
                   </el-col>
                   
@@ -161,14 +165,13 @@ import { ElMessage } from 'element-plus';
 import { useRoute } from 'vue-router';
 import BoardInfoTitle from "@/components/board/BoardInfoTitle.vue";
 import { useI18n } from "vue-i18n";
-import { WarningFilled } from '@element-plus/icons-vue';
+import { WarningFilled,Close } from '@element-plus/icons-vue';
 
 import { useDarkModeStore } from '@/store/darkMode'
 import { storeToRefs } from 'pinia'
 
 const store = useDarkModeStore()
 const { isDark } = storeToRefs(store)
-
 
 const { t } = useI18n();
 const route = useRoute();
@@ -184,14 +187,18 @@ const visible = ref(false)
 const customContainer = ref(null);
 
 
-console.log(route)
-
 const props = defineProps({
   productUri: String,
   version1: String,
   version2: String,
   imagesuiteIndex: String
 });
+
+
+const handlepopClick = () =>{
+  return 
+}
+
 
 
 
@@ -257,10 +264,6 @@ const handleScroll = () =>{
 } 
 
 
-
-
-
-
 onMounted(() => {
   fetchImagePageData();
   window.addEventListener("scroll", handleScroll);
@@ -280,6 +283,11 @@ const downloadFile = (url) => {
 </script>
 
 <style lang="scss" scoped>
+
+.closeIcon{
+  color:#16181a
+}
+
 .custom-row{
   height: 45px;
   background-color: #f5f5f5;
@@ -288,6 +296,9 @@ const downloadFile = (url) => {
   display: flex;
   align-items: center;
   padding-left: 12px;
+  &:hover{
+    background-color: #E6EAF6;
+  }
 }
 
 .col-content{
@@ -370,6 +381,16 @@ const downloadFile = (url) => {
   color:#333
 }
 
+:deep(.el-popover__title){
+  padding:12px;
+  border-bottom: 1px solid #d9d9d9;
+}
+
+.popover-body{
+  padding:6px 24px 12px 24px;
+}
+
+
 html.dark{
   .text-style{color:#999};
   .custom-row{
@@ -388,9 +409,9 @@ html.dark{
     background-color: #222 !important;
   }
 
-
-
-
+  .closeIcon{
+    color:#ccc
+  }
 
 }
 
