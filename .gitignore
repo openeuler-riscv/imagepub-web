@@ -25,5 +25,3 @@ dist-ssr
 package-lock.json
 .vite
 .vscode
-/public/*         # 忽略 public 下所有文件
-!/public/404.html 
