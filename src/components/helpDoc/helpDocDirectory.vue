@@ -60,7 +60,7 @@ const handleDocItemClick = (item) => {
 
       // 滚动到目标元素
       element.scrollIntoView({ behavior: "smooth" });
-      console.log('elemtne' + element);
+      //console.log('elemtne' + element);
 
       // 等待滚动完成后再添加监听
       setTimeout(() => {
