@@ -1,0 +1,285 @@
+{
+  "name": "Pioneer",
+  "vendor": {
+    "name": "Milk-V",
+    "homepage": "https://milkv.io/"
+  },
+  "soc": {
+    "name": "SG2042",
+    "vendor": {
+      "name": "SOPHGO",
+      "homepage": "https://sophgo.com/"
+    }
+  },
+  "type": "mATX",
+  "pictures": [
+    "v2/resources/gallery/milkv/pioneer/milk-v-pioneer-board_png_gallery-lg.jpg",
+    "v2/resources/gallery/milkv/pioneer/milk-v-box-angle_png_gallery-lg.jpg"
+  ],
+  "hw_info": {
+    "ram": [
+      {
+        "type": "DDR4 DIMM x4",
+        "capacity": [
+          "NC"
+        ]
+      }
+    ],
+    "storage": [
+      {
+        "type": "NOR Flash",
+        "capacity": [
+          "NC"
+        ]
+      },
+      {
+        "type": "eMMC",
+        "capacity": [
+          "NC"
+        ]
+      },
+      {
+        "type": "microSD",
+        "revision": "SDXC 3.0"
+      },
+      {
+        "type": "M.2",
+        "revision": "M-Key, PCIe3.0x4",
+        "nums": 2
+      },
+      {
+        "type": "SATA",
+        "revision": "3.0@6Gbps",
+        "nums": 5
+      }
+    ],
+    "connectivity": [
+      {
+        "type": "USB-A",
+        "revision": "3.0",
+        "nums": 8
+      },
+      {
+        "type": "Ethernet",
+        "revision": "2.5GbE",
+        "nums": 2
+      },
+      {
+        "type": "HDMI",
+        "revision": "2.0"
+      },
+      {
+        "type": "MIPI-CSI",
+        "revision": "2-lanes",
+        "nums": 2
+      },
+      {
+        "type": "MIPI-CSI",
+        "revision": "4-lanes"
+      },
+      {
+        "type": "MIPI-DSI",
+        "revision": "4-lanes"
+      }
+    ],
+    "peripheral": []
+  },
+  "imagesuites": [
+    {
+      "id": "openeuler",
+      "name": "openEuler",
+      "releases": [
+        {
+          "id": "24.03sp1",
+          "name": "24.03-LTS-SP1",
+          "imagesuites": [
+            {
+              "id": "sg2042-official-linuxboot",
+              "name": "Headless Image",
+              "kernel": {
+                "type": "OLK",
+                "version": "6.6"
+              },
+              "isa": {
+                "march": [
+                  "M",
+                  "A",
+                  "F",
+                  "D",
+                  "C",
+                  "Zicsr",
+                  "Zicntr",
+                  "Ziccif",
+                  "Ziccrse",
+                  "Ziccamoa",
+                  "Za128rs",
+                  "Zicclsm"
+                ],
+                "mabi": "lp64d"
+              },
+              "loader": [
+                "none"
+              ],
+              "flavor": "Headless",
+              "revisions": [
+                {
+                  "date": "2025-01-02",
+                  "status": "Released",
+                  "changelog": "none\n",
+                  "files": [
+                    {
+                      "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS-SP1/embedded_img/riscv64/SG2042/openEuler-24.03-LTS-SP1-riscv64-sg2042.img.zip",
+                      "tags": [
+                        "system-image"
+                      ],
+                      "hash": {
+                        "sha256": "9a99c6a227eaf034f6cb0e44f342a5f3824d08c3f9fc4f58532f44e156f63f47"
+                      }
+                    },
+                    {
+                      "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS-SP1/embedded_img/riscv64/SG2042/sg2042_firmware_linuxboot.img.zip",
+                      "tags": [
+                        "firmware"
+                      ],
+                      "hash": {
+                        "sha256": "1d1e47ce2cbbeda528c4338030f914c4905af89fc939783e3ff80fefa935c57d"
+                      }
+                    }
+                  ],
+                  "docs": [
+                    "v2/resources/docs/milkv/pioneer-oerv-linuxboot.md"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "24.03",
+          "name": "24.03-LTS",
+          "imagesuites": [
+            {
+              "id": "sg2042-official-linuxboot",
+              "name": "Headless Image",
+              "kernel": {
+                "type": "OLK",
+                "version": "6.6"
+              },
+              "isa": {
+                "march": [
+                  "M",
+                  "A",
+                  "F",
+                  "D",
+                  "C",
+                  "Zicsr",
+                  "Zicntr",
+                  "Ziccif",
+                  "Ziccrse",
+                  "Ziccamoa",
+                  "Za128rs",
+                  "Zicclsm"
+                ],
+                "mabi": "lp64d"
+              },
+              "loader": [
+                "none"
+              ],
+              "flavor": "Headless",
+              "revisions": [
+                {
+                  "date": "2024-06-06",
+                  "status": "Released",
+                  "changelog": "none\n",
+                  "files": [
+                    {
+                      "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS/embedded_img/riscv64/SG2042/openEuler-24.03-LTS-riscv64-sg2042.img.zip",
+                      "tags": [
+                        "system-image"
+                      ],
+                      "hash": {
+                        "sha256": "9d23fbad04ebdccb216991995963f8021674d7c9f3a5b6f222f35da82244e228"
+                      }
+                    },
+                    {
+                      "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS/embedded_img/riscv64/SG2042/sg2042_firmware_linuxboot.img.zip",
+                      "tags": [
+                        "firmware"
+                      ],
+                      "hash": {
+                        "sha256": "1d1e47ce2cbbeda528c4338030f914c4905af89fc939783e3ff80fefa935c57d"
+                      }
+                    }
+                  ],
+                  "docs": [
+                    "v2/resources/docs/milkv/pioneer-oerv-linuxboot.md"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "sg2042-official-uefi",
+              "name": "Unified ISO Installer",
+              "kernel": {
+                "type": "OLK",
+                "version": "6.6"
+              },
+              "isa": {
+                "march": [
+                  "M",
+                  "A",
+                  "F",
+                  "D",
+                  "C",
+                  "Zicsr",
+                  "Zicntr",
+                  "Ziccif",
+                  "Ziccrse",
+                  "Ziccamoa",
+                  "Za128rs",
+                  "Zicclsm"
+                ],
+                "mabi": "lp64d"
+              },
+              "loader": [
+                "UEFI"
+              ],
+              "flavor": "Installer",
+              "revisions": [
+                {
+                  "date": "2024-06-06",
+                  "status": "Released",
+                  "changelog": "none\n",
+                  "files": [
+                    {
+                      "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS/embedded_img/riscv64/SG2042/sg2042_firmware_uefi.img.zip",
+                      "tags": [
+                        "firmware",
+                        "milkv/pioneer"
+                      ],
+                      "hash": {
+                        "sha256": "d7a936304bc01dfb8ccb47dc6df6527aecba4886940313355f68283dbc32fdf5"
+                      }
+                    },
+                    {
+                      "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS/ISO/riscv64/openEuler-24.03-LTS-riscv64-dvd.iso",
+                      "tags": [
+                        "os-installer"
+                      ],
+                      "hash": {
+                        "sha256": "f49a5da648c53af30aa1a5bcc784685d75baca08743c840889bff32655b6a4e1"
+                      }
+                    }
+                  ],
+                  "docs": [
+                    "v2/resources/docs/milkv/pioneer-oerv2403-uefi.md"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

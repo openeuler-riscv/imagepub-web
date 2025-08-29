@@ -1,0 +1,268 @@
+{
+  "name": "LicheePi 4A",
+  "vendor": {
+    "name": "Sipeed",
+    "homepage": "https://sipeed.com/"
+  },
+  "soc": {
+    "name": "TH1520",
+    "vendor": {
+      "name": "XUANTIE",
+      "homepage": "https://www.xrvm.cn"
+    }
+  },
+  "type": "SoM+Carrier",
+  "pictures": [
+    "v2/resources/gallery/sipeed/lpi4a/lpi4a.png"
+  ],
+  "hw_info": {
+    "ram": [
+      {
+        "type": "LPDDR4X",
+        "capacity": [
+          "8GB",
+          "16GB"
+        ]
+      }
+    ],
+    "storage": [
+      {
+        "type": "NOR Flash",
+        "capacity": [
+          "NC"
+        ]
+      },
+      {
+        "type": "eMMC",
+        "revision": "5.1",
+        "capacity": [
+          "NC",
+          "32GB",
+          "64GB",
+          "128GB"
+        ]
+      },
+      {
+        "type": "microSD",
+        "revision": "SDXC"
+      }
+    ],
+    "connectivity": [
+      {
+        "type": "USB-A",
+        "revision": "3.0",
+        "nums": 4
+      },
+      {
+        "type": "USB-C",
+        "revision": "2.0 OTG",
+        "nums": 1
+      },
+      {
+        "type": "Ethernet",
+        "revision": "1GbE",
+        "nums": 2
+      },
+      {
+        "type": "WiFi",
+        "revision": "802.11 b/g/n"
+      },
+      {
+        "type": "Bluetooth",
+        "revision": "4.0"
+      },
+      {
+        "type": "HDMI",
+        "revision": "2.0"
+      },
+      {
+        "type": "MIPI-CSI",
+        "revision": "2-lanes",
+        "nums": 2
+      },
+      {
+        "type": "MIPI-CSI",
+        "revision": "4-lanes"
+      },
+      {
+        "type": "MIPI-DSI",
+        "revision": "4-lanes"
+      }
+    ],
+    "peripheral": []
+  },
+  "imagesuites": [
+    {
+      "id": "openeuler",
+      "name": "openEuler",
+      "releases": [
+        {
+          "id": "24.03sp1",
+          "name": "24.03-LTS-SP1",
+          "imagesuites": [
+            {
+              "id": "lpi4a-official-uboot",
+              "name": "Headless Image",
+              "kernel": {
+                "type": "OLK",
+                "version": "6.6"
+              },
+              "isa": {
+                "march": [
+                  "M",
+                  "A",
+                  "F",
+                  "D",
+                  "C",
+                  "Zicsr",
+                  "Zicntr",
+                  "Ziccif",
+                  "Ziccrse",
+                  "Ziccamoa",
+                  "Za128rs",
+                  "Zicclsm"
+                ],
+                "mabi": "lp64d"
+              },
+              "loader": [
+                "none"
+              ],
+              "flavor": "Headless",
+              "revisions": [
+                {
+                  "date": "2025-01-02",
+                  "status": "Released",
+                  "changelog": "none\n",
+                  "files": [
+                    {
+                      "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS-SP1/embedded_img/riscv64/lpi4a/openEuler-24.03-LTS-SP1-riscv64-lpi4a-base-boot.ext4.zst",
+                      "tags": [
+                        "boot-image"
+                      ],
+                      "hash": {
+                        "sha256": "d6c2b735b4df5f5e33423ee41a739e9442118aaa0f0b83791d83b7017cb95ab8"
+                      }
+                    },
+                    {
+                      "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS-SP1/embedded_img/riscv64/lpi4a/openEuler-24.03-LTS-SP1-riscv64-lpi4a-base-root.ext4.zst",
+                      "tags": [
+                        "system-image"
+                      ],
+                      "hash": {
+                        "sha256": "fda5174503f4f5323c56575d651f4e14296f44683483cf6c887c0fce0f75b9f6"
+                      }
+                    },
+                    {
+                      "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS-SP1/embedded_img/riscv64/lpi4a/u-boot-with-spl-lpi4a-16g.bin",
+                      "tags": [
+                        "firmware"
+                      ],
+                      "hash": {
+                        "sha256": "39b05820158b04269b5ad4f704ba5610c5caed3e7496a25834a3304af2a1ba9c"
+                      }
+                    },
+                    {
+                      "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS-SP1/embedded_img/riscv64/lpi4a/u-boot-with-spl-lpi4a.bin",
+                      "tags": [
+                        "firmware"
+                      ],
+                      "hash": {
+                        "sha256": "b2732a56f2b5d5e642804e94a55754b6b6dae54d02ac5ca4249d1df59931e391"
+                      }
+                    }
+                  ],
+                  "docs": [
+                    "v2/resources/docs/sipeed/lpi4a-uboot-official-image.md"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "24.03",
+          "name": "24.03-LTS",
+          "imagesuites": [
+            {
+              "id": "lpi4a-official-uboot",
+              "name": "Headless Image",
+              "kernel": {
+                "type": "OLK",
+                "version": "6.6"
+              },
+              "isa": {
+                "march": [
+                  "M",
+                  "A",
+                  "F",
+                  "D",
+                  "C",
+                  "Zicsr",
+                  "Zicntr",
+                  "Ziccif",
+                  "Ziccrse",
+                  "Ziccamoa",
+                  "Za128rs",
+                  "Zicclsm"
+                ],
+                "mabi": "lp64d"
+              },
+              "loader": [
+                "none"
+              ],
+              "flavor": "Headless",
+              "revisions": [
+                {
+                  "date": "2024-06-06",
+                  "status": "Released",
+                  "changelog": "none\n",
+                  "files": [
+                    {
+                      "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS/embedded_img/riscv64/lpi4a/openEuler-24.03-LTS-riscv64-lpi4a-base-boot.ext4.zst",
+                      "tags": [
+                        "boot-image"
+                      ],
+                      "hash": {
+                        "sha256": "4a1d3e441c328443c79e79a00ddbbd649526c260aeadeb3b666f614cc82e6db8"
+                      }
+                    },
+                    {
+                      "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS/embedded_img/riscv64/lpi4a/openEuler-24.03-LTS-riscv64-lpi4a-base-root.ext4.zst",
+                      "tags": [
+                        "system-image"
+                      ],
+                      "hash": {
+                        "sha256": "54ebfeedef6dfc93e66198e2e8f8e03b65c71c1728bc9578173f5f67d3091074"
+                      }
+                    },
+                    {
+                      "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS/embedded_img/riscv64/lpi4a/u-boot-with-spl-lpi4a-16g.bin",
+                      "tags": [
+                        "firmware"
+                      ],
+                      "hash": {
+                        "sha256": "7c7ea37d12511a454c5e1c4beaaae81d9d1934004a667998ddb8723eecff1a13"
+                      }
+                    },
+                    {
+                      "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS/embedded_img/riscv64/lpi4a/u-boot-with-spl-lpi4a.bin",
+                      "tags": [
+                        "firmware"
+                      ],
+                      "hash": {
+                        "sha256": "7214f141ca4d3e88a8471fe2303d6722116102059d170186225f8dc02a7967a2"
+                      }
+                    }
+                  ],
+                  "docs": [
+                    "v2/resources/docs/sipeed/lpi4a-uboot-official-image.md"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

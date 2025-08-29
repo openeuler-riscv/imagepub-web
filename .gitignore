@@ -26,4 +26,4 @@ package-lock.json
 .vite
 .vscode
 
-public
+# public
