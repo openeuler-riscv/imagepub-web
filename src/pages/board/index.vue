@@ -32,7 +32,7 @@
                     v-if="boardDetail && boardDetail.imagesuites && !isFilter"
                     :title="release.name"
                     :description="getSuiteDescription(release)"
-                    :historyVersions="release.imagesuites?.map((suite,index) => ({isExpanded:false,version:suite.revisions,imagesuiteIndex:index})  || []) || []" 
+                    :historyVersions="release.imagesuites?.map((suite,index) => ({isExpanded:false,version:suite.revisions,imagesuiteIndex:suite.id,name:suite.name})  || []) || []" 
                     :open-image="openImage">
                 </BoardDescription>
 
@@ -40,7 +40,7 @@
                     v-if="isFilter"
                     :title="release.name"
                     :description="getSuiteDescription(release)"
-                    :historyVersions="filterimagesuites?.map((suite,index) => ({isExpanded:false,version:suite.revisions,imagesuiteIndex:index})  || []) || []" 
+                    :historyVersions="filterimagesuites?.map((suite,index) => ({isExpanded:false,version:suite.revisions,imagesuiteIndex:suite.id,name:suite.name})  || []) || []" 
                     :open-image="openImage">
                 </BoardDescription>
               </el-tab-pane>
@@ -51,7 +51,7 @@
     </div>
      <el-drawer
         v-model="drawerVisible"
-        title="筛选"
+        :title="t('selected')"
         placement="right"
         :modal="true"
       >
@@ -78,7 +78,6 @@
          <template #footer>
             <div style="flex: auto">
               <el-button color="#012fa6" class="drawer-footer-btn" @click="resetClick">{{t('reset')}}</el-button>
-              <!-- <el-button type="primary" class="drawer-footer-cnf" @click="confirmClick">{{t('confirm')}}</el-button> -->
             </div>
           </template>
       </el-drawer>

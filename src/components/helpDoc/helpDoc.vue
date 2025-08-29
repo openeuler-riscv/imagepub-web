@@ -257,7 +257,7 @@ onMounted(() => {
   flex: 1;
   overflow: auto;
   padding: 16px;
-  max-height: 90vh;
+  /* max-height: 90vh; */
   background: var(--theme-card);
   color: var(--theme-text);
   border-radius: 8px;

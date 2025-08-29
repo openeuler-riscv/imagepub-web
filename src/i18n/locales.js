@@ -43,7 +43,8 @@ const messages = {
         confirm:"确定",
         allversion:"全部版本",
         showall:"展示全部",
-        any:"任意"
+        any:"任意",
+        selected:"筛选"
 
     },
     en_US: {
@@ -90,7 +91,8 @@ const messages = {
         confirm:"确定",
          allversion:"All Versoins",
          showall:"All",
-         any:"Any"
+         any:"Any",
+        selected:"Selection"
     }
 };
 

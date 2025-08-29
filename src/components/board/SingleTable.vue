@@ -6,7 +6,17 @@
  
         <template #default="scope">
           <div class="cell-content">
-            {{props.title +' ' + scope.row.date }}
+             <div class="vs-title">
+                <div class="title-des">
+                  <img v-if="isDark"  src="@/assets/icons/board/versiondark.svg" style="margin-right:4px" />
+                  <img v-else src="@/assets/icons/board/version.svg" style="margin-right:4px"/>
+
+                  <span>{{t('version')}}</span>
+                </div>
+                
+                <span class="v-content">{{ scope.row.date }}</span>
+            </div>
+          
           </div>
         </template>
       </el-table-column>
@@ -31,6 +41,12 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { ElTable, ElTableColumn, ElPagination } from 'element-plus';
+import { useI18n } from "vue-i18n";
+
+
+
+
+const { t } = useI18n()
 
 
 const props = defineProps({
@@ -125,6 +141,31 @@ const handleCurrentChange = (val) => {
 
 :deep(.el-table td.el-table__cell){
     border-bottom: none;
+}
+
+.vs-title{
+  font-size: 14px;
+  color:#666;
+  width:100px;
+  display: flex;
+  align-items: center;
+  font-weight: 400;
+  width: 100%;
+}
+
+.title-des{
+  display: flex;
+  width:120px
+}
+
+.v-content{
+  color:#333;
+}
+
+html.dark{
+  .v-content{
+    color:#ccc;
+  }
 }
 
 </style>

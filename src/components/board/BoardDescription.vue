@@ -2,7 +2,7 @@
   <div class="component-container">
     <div v-if="childImageData && childImageData.length > 0" class="version-list">
         <div v-for="(v, index) in childImageData" :key="index" class="version-card" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
-          <div class="version-des">{{ props.title }}</div>
+          <div class="version-des">{{ v.name }}</div>
           <div class="vs-first" @click="handleActionClick(v.imagesuiteIndex,0)">
             <div class="vs-label">
               <div class="vs-title">
@@ -10,7 +10,7 @@
                 <img v-else src="@/assets/icons/board/version.svg" style="margin-right:4px"/>
                 <span>{{t('version')}}</span>
               </div>
-              <div class="version-number">{{  props.title + '  '+ v.version[0].date }}</div>
+              <div class="version-number">{{ v.version[0].date }}</div>
             </div>
             <div class="vs-label">
               <div class="vs-title">
@@ -71,7 +71,7 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  openImage: Function,
+  openImage: Function
 });
 
 
@@ -136,7 +136,7 @@ const handleActionClick = async (imageIndex,visionIndex) => {
 .vs-title{
   font-size: 14px;
   color:#666;
-  width:100px;
+  width:120px;
   display: flex;
   align-items: center;
   font-weight: 400;

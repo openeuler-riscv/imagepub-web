@@ -120,10 +120,7 @@ const getHighSpeedInterfaces = () =>
         ['USB-A', 'Ethernet', 'HDMI', 'MIPI-CSI', 'MIPI-DSI'].includes(item.type)
     ) || [];
 
-const getLowSpeedInterfaces = () =>
-    props.boardDetail.hw_info?.connectivity?.filter(item =>
-        ['USB-C', 'WiFi', 'Bluetooth'].includes(item.type)
-    ) || [];
+const getLowSpeedInterfaces = () => props.boardDetail.hw_info?.peripheral || []
 
 const changeMainImage = (index) => {
   currentImageSrc.value = props.boardDetail.pictures?.[index] || '';

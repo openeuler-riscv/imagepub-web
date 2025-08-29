@@ -7,7 +7,7 @@
             <el-row>
               <el-col :span="8" >
                   <el-row> <BoardInfoTitle :title="t('versionInfo')" /> </el-row>
-                  <el-row class="text-limit-16 text-style" style="font-size:15px;" > {{ currentVersionInfo?.version }}{{ currentVersionInfo?.date }}</el-row>
+                  <el-row class="text-limit-16 text-style" style="font-size:15px;" > {{ currentVersionInfo?.date }}</el-row>
               </el-col>
               <el-col :span="16"> 
                 <el-row ><BoardInfoTitle :title="t('changeLog')" /> </el-row> 
@@ -209,6 +209,8 @@ const fetchImagePageData = async () => {
     return;
   }
 
+  console.log(props.productUri)
+
   try {
     const response = await fetch(`/${props.productUri}`);
     if (!response.ok) throw new Error(`请求失败，状态码: ${response.status}`);
@@ -234,7 +236,7 @@ const processData = (data, targetVersion) => {
     return;
   }
 
-  const latestRevision = targetRelease?.imagesuites?.[props.imagesuiteIndex]?.revisions?.[route.query.revision]
+  const latestRevision = targetRelease?.imagesuites?.find(d=>d.id === props.imagesuiteIndex)?.revisions?.[route.query.revision]
     
   currentVersionInfo.value = {
     ...latestRevision,
