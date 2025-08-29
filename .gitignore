@@ -25,3 +25,8 @@ dist-ssr
 package-lock.json
 .vite
 .vscode
+
+# 自定义 public 目录规则
+/public/*               # 忽略 public 下所有内容
+!/public/404.html       # 保留 404.html 并提交
+/public/v2/             # 忽略 assets 文件夹
