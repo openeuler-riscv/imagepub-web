@@ -1,0 +1,188 @@
+[
+  {
+    "name": "F3",
+    "id": "f3",
+    "vendor": {
+      "name": "\u9999\u8549\u6d3e",
+      "id": "bananapi"
+    },
+    "soc": {
+      "name": "Key Stone K1",
+      "vendor": "\u8fdb\u8fed\u65f6\u7a7a"
+    },
+    "thumbnail": "v2/resources/gallery/bananapi/f3/f3-official.jpg",
+    "mark": [],
+    "available": true
+  },
+  {
+    "name": "Pioneer",
+    "id": "pioneer",
+    "vendor": {
+      "name": "\u7fa4\u82af\u95ea\u8000",
+      "id": "milkv"
+    },
+    "soc": {
+      "name": "SG2042",
+      "vendor": "\u7b97\u80fd"
+    },
+    "thumbnail": "v2/resources/gallery/milkv/pioneer/milk-v-pioneer-board_png_gallery-lg.jpg",
+    "mark": [
+      "OLK"
+    ],
+    "available": true
+  },
+  {
+    "name": "Megrez",
+    "id": "megrez",
+    "vendor": {
+      "name": "\u7fa4\u82af\u95ea\u8000",
+      "id": "milkv"
+    },
+    "soc": {
+      "name": "EIC7700X",
+      "vendor": "\u5955\u65af\u4f1f\u8ba1\u7b97"
+    },
+    "thumbnail": "v2/resources/gallery/milkv/megrez/megrez-view.webp",
+    "mark": [],
+    "available": false
+  },
+  {
+    "name": "Jupter",
+    "id": "jupter",
+    "vendor": {
+      "name": "\u7fa4\u82af\u95ea\u8000",
+      "id": "milkv"
+    },
+    "soc": {
+      "name": "Key Stone K1",
+      "vendor": "\u8fdb\u8fed\u65f6\u7a7a"
+    },
+    "thumbnail": "v2/resources/gallery/milkv/jupter/jupter-view.webp",
+    "mark": [],
+    "available": true
+  },
+  {
+    "name": "RV2",
+    "id": "rv2",
+    "vendor": {
+      "name": "\u9999\u6a59\u6d3e",
+      "id": "orangepi"
+    },
+    "soc": {
+      "name": "X1",
+      "vendor": "\u5f00\u82af\u5fae"
+    },
+    "thumbnail": "v2/resources/gallery/orangepi/rv2/rv2-view.webp",
+    "mark": [],
+    "available": false
+  },
+  {
+    "name": "qemu-system",
+    "id": "system",
+    "vendor": {
+      "name": "Qemu",
+      "id": "qemu"
+    },
+    "soc": {
+      "name": "virt",
+      "vendor": "Qemu"
+    },
+    "thumbnail": "v2/resources/gallery/qemu/Qemu_logo.svg",
+    "mark": [
+      "OLK"
+    ],
+    "available": true
+  },
+  {
+    "name": "LicheePi 4A",
+    "id": "licheepi_4a",
+    "vendor": {
+      "name": "\u77fd\u901f\u79d1\u6280",
+      "id": "sipeed"
+    },
+    "soc": {
+      "name": "TH1520",
+      "vendor": "\u7384\u94c1"
+    },
+    "thumbnail": "v2/resources/gallery/sipeed/lpi4a/lpi4a.png",
+    "mark": [
+      "OLK"
+    ],
+    "available": true
+  },
+  {
+    "name": "MUSE Pi",
+    "id": "muse_pi",
+    "vendor": {
+      "name": "\u8fdb\u8fed\u65f6\u7a7a",
+      "id": "spacemit"
+    },
+    "soc": {
+      "name": "Key Stone K1",
+      "vendor": "\u8fdb\u8fed\u65f6\u7a7a"
+    },
+    "thumbnail": "v2/resources/gallery/spacemit/muse-pi/musepi_front.webp",
+    "mark": [],
+    "available": true
+  },
+  {
+    "name": "MUSE Card",
+    "id": "muse_card",
+    "vendor": {
+      "name": "\u8fdb\u8fed\u65f6\u7a7a",
+      "id": "spacemit"
+    },
+    "soc": {
+      "name": "Key Stone K1",
+      "vendor": "\u8fdb\u8fed\u65f6\u7a7a"
+    },
+    "thumbnail": "v2/resources/gallery/spacemit/muse-card/muse_card_official.webp",
+    "mark": [],
+    "available": true
+  },
+  {
+    "name": "MUSE Box",
+    "id": "muse_box",
+    "vendor": {
+      "name": "\u8fdb\u8fed\u65f6\u7a7a",
+      "id": "spacemit"
+    },
+    "soc": {
+      "name": "Key Stone K1",
+      "vendor": "\u8fdb\u8fed\u65f6\u7a7a"
+    },
+    "thumbnail": "v2/resources/gallery/spacemit/muse-box/muse-box-view.webp",
+    "mark": [],
+    "available": true
+  },
+  {
+    "name": "MUSE Pi Pro",
+    "id": "muse_pi_pro",
+    "vendor": {
+      "name": "\u8fdb\u8fed\u65f6\u7a7a",
+      "id": "spacemit"
+    },
+    "soc": {
+      "name": "Key Stone K1",
+      "vendor": "\u8fdb\u8fed\u65f6\u7a7a"
+    },
+    "thumbnail": "v2/resources/gallery/spacemit/muse-pi-pro/musepipro_view.webp",
+    "mark": [],
+    "available": true
+  },
+  {
+    "name": "VisionFive 2",
+    "id": "visionfive2",
+    "vendor": {
+      "name": "\u8d5b\u6609",
+      "id": "starfive"
+    },
+    "soc": {
+      "name": "JH7110",
+      "vendor": "\u8d5b\u6609"
+    },
+    "thumbnail": "v2/resources/gallery/starfive/vf2/vf2.jpg",
+    "mark": [],
+    "available": false
+  }
+]

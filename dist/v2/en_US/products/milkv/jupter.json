@@ -1,0 +1,174 @@
+{
+  "name": "Jupter",
+  "vendor": {
+    "name": "Milk-V",
+    "homepage": "https://milkv.io/"
+  },
+  "soc": {
+    "name": "Key Stone K1",
+    "vendor": {
+      "name": "SpacemiT",
+      "homepage": "https://www.spacemit.com/"
+    }
+  },
+  "type": "mATX",
+  "pictures": [
+    "v2/resources/gallery/milkv/jupter/jupter-view.webp"
+  ],
+  "hw_info": {
+    "ram": [
+      {
+        "type": "LPDDR4X",
+        "capacity": [
+          "4GB",
+          "8GB",
+          "16GB"
+        ]
+      }
+    ],
+    "storage": [
+      {
+        "type": "NOR Flash",
+        "capacity": [
+          "8MB"
+        ]
+      },
+      {
+        "type": "eMMC",
+        "revision": "5.1",
+        "capacity": [
+          "NC"
+        ]
+      },
+      {
+        "type": "microSD",
+        "revision": "SDXC 3.0"
+      },
+      {
+        "type": "M.2",
+        "revision": "M-Key, PCIe2.0x2",
+        "nums": 1
+      }
+    ],
+    "connectivity": [
+      {
+        "type": "PCIe x8",
+        "revision": "PCIe2.1x2",
+        "nums": 1
+      },
+      {
+        "type": "USB-A",
+        "revision": "3.0",
+        "nums": 1
+      },
+      {
+        "type": "USB-A",
+        "revision": "2.0",
+        "nums": 1
+      },
+      {
+        "type": "USB-C",
+        "revision": "2.0 OTG",
+        "nums": 1
+      },
+      {
+        "type": "Ethernet",
+        "revision": "1GbE",
+        "nums": 2
+      },
+      {
+        "type": "F_PANEL USB",
+        "revision": "3.0",
+        "nums": 2
+      },
+      {
+        "type": "F_PANEL USB",
+        "revision": "2.0",
+        "nums": 2
+      },
+      {
+        "type": "HDMI",
+        "revision": "2.0",
+        "nums": 1
+      },
+      {
+        "type": "3.5mm Jack",
+        "revision": "4-rings"
+      }
+    ],
+    "peripheral": []
+  },
+  "imagesuites": [
+    {
+      "id": "openeuler",
+      "name": "openEuler",
+      "releases": [
+        {
+          "id": "24.03sp1",
+          "name": "24.03-LTS-SP1",
+          "imagesuites": [
+            {
+              "id": "spacemit-k1-uboot-bootstd",
+              "name": "Headless Image",
+              "kernel": {
+                "type": "Vendor",
+                "version": "6.6"
+              },
+              "isa": {
+                "march": [
+                  "M",
+                  "A",
+                  "F",
+                  "D",
+                  "C",
+                  "Zicsr",
+                  "Zicntr",
+                  "Ziccif",
+                  "Ziccrse",
+                  "Ziccamoa",
+                  "Za128rs",
+                  "Zicclsm"
+                ],
+                "mabi": "lp64d"
+              },
+              "loader": [
+                "DistroBoot"
+              ],
+              "flavor": "Headless",
+              "revisions": [
+                {
+                  "date": "2025-04-21",
+                  "status": "Released",
+                  "changelog": "none\n",
+                  "files": [
+                    {
+                      "url": "https://repo.tarsier-infra.isrc.ac.cn/openEuler-RISC-V/testing/spacemit_k1_20250421/openEuler-24.03-LTS-SP1-base-spacemit_k1-testing.img.zst",
+                      "tags": [
+                        "system"
+                      ],
+                      "hash": {
+                        "sha256": "a2fc71010758cc4bf6cf8112395c8236b9b15575aa5fb8dd92a5f7fda5e74fe8"
+                      }
+                    },
+                    {
+                      "url": "https://repo.tarsier-infra.isrc.ac.cn/openEuler-RISC-V/testing/spacemit_k1_20250421/spacemit_k1_fw.tar.zst",
+                      "tags": [
+                        "firmware"
+                      ],
+                      "hash": {
+                        "sha256": "6c94fe2d98570806137cc2f78f58729250b6321a1db8b390a047b0171e3fa155"
+                      }
+                    }
+                  ],
+                  "docs": [
+                    "v2/resources/docs/spacemit/k1-uboot-bootstd.md"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

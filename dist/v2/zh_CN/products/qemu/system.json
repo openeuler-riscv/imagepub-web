@@ -1,0 +1,174 @@
+{
+  "name": "qemu-system",
+  "vendor": {
+    "name": "Qemu",
+    "homepage": "https://www.qemu.org/"
+  },
+  "soc": {
+    "name": "virt",
+    "vendor": {
+      "name": "Qemu",
+      "homepage": "https://www.qemu.org/"
+    }
+  },
+  "type": "Emulated",
+  "pictures": [
+    "v2/resources/gallery/qemu/Qemu_logo.svg"
+  ],
+  "imagesuites": [
+    {
+      "id": "openeuler",
+      "name": "openEuler",
+      "releases": [
+        {
+          "id": "24.03sp1",
+          "name": "24.03-LTS-SP1",
+          "imagesuites": [
+            {
+              "id": "qemu-virt",
+              "name": "\u65e0\u684c\u9762\u955c\u50cf",
+              "kernel": {
+                "type": "OLK",
+                "version": "6.6"
+              },
+              "isa": {
+                "march": [
+                  "M",
+                  "A",
+                  "F",
+                  "D",
+                  "C",
+                  "Zicsr",
+                  "Zicntr",
+                  "Ziccif",
+                  "Ziccrse",
+                  "Ziccamoa",
+                  "Za128rs",
+                  "Zicclsm"
+                ],
+                "mabi": "lp64d"
+              },
+              "loader": [
+                "UEFI"
+              ],
+              "flavor": "\u65e0\u684c\u9762\u955c\u50cf",
+              "revisions": [
+                {
+                  "date": "2025-01-03",
+                  "status": "\u53d1\u5e03\u7248",
+                  "changelog": "none\n",
+                  "files": [
+                    {
+                      "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS-SP1/virtual_machine_img/riscv64/RISCV_VIRT_CODE.fd",
+                      "tags": [
+                        "firmware"
+                      ],
+                      "hash": {
+                        "sha256": "d9b1b138affbad8d7fe0fd9f0ee76d99d3d7c90eb28c2b278f4362c0fb621032"
+                      }
+                    },
+                    {
+                      "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS-SP1/virtual_machine_img/riscv64/RISCV_VIRT_VARS.fd",
+                      "tags": [
+                        "firmware"
+                      ],
+                      "hash": {
+                        "sha256": "ea8094e953b1215444bd001ee1cf22818f1f7f8abcb158e62180cbaa6c1f70af"
+                      }
+                    },
+                    {
+                      "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS-SP1/virtual_machine_img/riscv64/openEuler-24.03-LTS-SP1-riscv64.qcow2.xz",
+                      "tags": [
+                        "system-image"
+                      ],
+                      "hash": {
+                        "sha256": "7e86ff6afae945d38240ae7d23dd77a82bd4d71593bdcd9a3a4e124868945619"
+                      }
+                    }
+                  ],
+                  "docs": [
+                    "v2/resources/docs/qemu/qemu-system-fdt.md"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "24.03",
+          "name": "24.03-LTS",
+          "imagesuites": [
+            {
+              "id": "qemu-virt",
+              "name": "\u65e0\u684c\u9762\u955c\u50cf",
+              "kernel": {
+                "type": "OLK",
+                "version": "6.6"
+              },
+              "isa": {
+                "march": [
+                  "M",
+                  "A",
+                  "F",
+                  "D",
+                  "C",
+                  "Zicsr",
+                  "Zicntr",
+                  "Ziccif",
+                  "Ziccrse",
+                  "Ziccamoa",
+                  "Za128rs",
+                  "Zicclsm"
+                ],
+                "mabi": "lp64d"
+              },
+              "loader": [
+                "UEFI"
+              ],
+              "flavor": "\u65e0\u684c\u9762\u955c\u50cf",
+              "revisions": [
+                {
+                  "date": "2024-06-06",
+                  "status": "\u53d1\u5e03\u7248",
+                  "changelog": "none\n",
+                  "files": [
+                    {
+                      "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS/virtual_machine_img/riscv64/RISCV_VIRT_CODE.fd",
+                      "tags": [
+                        "firmware"
+                      ],
+                      "hash": {
+                        "sha256": "758ce83631eb93a7b19d5f2f9ac84f34f9f8854e71698e4a088920aa86f03fd5"
+                      }
+                    },
+                    {
+                      "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS/virtual_machine_img/riscv64/RISCV_VIRT_VARS.fd",
+                      "tags": [
+                        "firmware"
+                      ],
+                      "hash": {
+                        "sha256": "cbc804cabde37783e1d04ecf5c40df35faad1dc6114678e2c2c309a14b2fa568"
+                      }
+                    },
+                    {
+                      "url": "https://mirror.iscas.ac.cn/openeuler/openEuler-24.03-LTS/virtual_machine_img/riscv64/openEuler-24.03-LTS-riscv64.qcow2.xz",
+                      "tags": [
+                        "system-image"
+                      ],
+                      "hash": {
+                        "sha256": "aa08a2d8da3b0f3a369335be6e8bfda969e5e25dbe6ff9d76a10dd158138a509"
+                      }
+                    }
+                  ],
+                  "docs": [
+                    "v2/resources/docs/qemu/qemu-system-fdt.md"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
