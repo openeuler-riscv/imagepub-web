@@ -291,6 +291,8 @@ onUnmounted(() => {
 }
 
 .document-list-container {
+  position: sticky;
+  top:10px;
   background-color: var(--theme-card);
   border-radius: 10px;
   padding: 10px;
