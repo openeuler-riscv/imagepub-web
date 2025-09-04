@@ -25,3 +25,6 @@ dist-ssr
 package-lock.json
 .vite
 .vscode
+
+/public/*
+!/public/404.html
