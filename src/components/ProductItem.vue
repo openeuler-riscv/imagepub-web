@@ -44,7 +44,7 @@ const isKernel = computed(() => {
 import defaultImage from "../assets/images/product_default.png";
 const productImage = computed(() => {
   if (!props.info.thumbnail) return defaultImage;
-  return `/${props.info.thumbnail}`;
+  return `${import.meta.env.VITE_IMAGE_BASE_URL}${props.info.thumbnail}`;
 });
 
 const perProductStyle = computed(() => {
