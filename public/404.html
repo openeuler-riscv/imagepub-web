@@ -9,54 +9,150 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
         }
+
         body {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             background-color: #f5f7fa;
-            color: #333;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #1f2329;
+            transition: opacity 0.3s ease;
         }
+
         .container {
             text-align: center;
             padding: 2rem;
-            max-width: 600px;
+            max-width: 500px;
+            width: 90%;
         }
+
+        /* 加载动画 */
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #e0e6ed;
+            border-top-color: #1890ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 2rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         h1 {
-            font-size: 8rem;
-            font-weight: bold;
-            color: #012fa6;
+            font-size: 1.8rem;
             margin-bottom: 1rem;
-            opacity: 0.8;
+            color: #1f2329;
         }
+
         p {
-            font-size: 1.2rem;
+            color: #4e5969;
             margin-bottom: 2rem;
-            color: #666;
+            line-height: 1.6;
         }
-        a {
-            display: inline-block;
-            padding: 0.8rem 2rem;
-            background-color: #012fa6;
-            color: white;
-            text-decoration: none;
+
+        .path-info {
+            background-color: rgba(255, 255, 255, 0.8);
             border-radius: 4px;
-            transition: background-color 0.3s;
+            padding: 0.8rem 1.2rem;
+            font-family: monospace;
+            color: #86909c;
+            word-break: break-all;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
-        a:hover {
-            background-color: #3088e6;
+
+        .progress-bar {
+            height: 4px;
+            width: 100%;
+            background-color: #e0e6ed;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 1.5rem;
         }
+
+        .progress {
+            height: 100%;
+            width: 0%;
+            background-color: #1890ff;
+            transition: width 0.8s ease-in-out;
+        }
+
+        /* 淡入动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container > * {
+            animation: fadeIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .loader { animation-delay: 0.1s; }
+        h1 { animation-delay: 0.2s; }
+        p { animation-delay: 0.3s; }
+        .path-info { animation-delay: 0.4s; }
+        .progress-bar { animation-delay: 0.5s; }
     </style>
+
+    <script>
+
+         // 显示当前路径信息
+        const pathInfoEl = document.getElementById('pathInfo');
+        const currentPath = window.location.pathname + window.location.search;
+        pathInfoEl.textContent = `路径: ${currentPath}`;
+
+        // 进度条动画
+        const progressBar = document.getElementById('progressBar');
+        let progress = 0;
+        const progressInterval = setInterval(() => {
+            progress += 1;
+            progressBar.style.width = `${progress}%`;
+            
+            // 进度达到80%时暂停，等待跳转
+            if (progress >= 80) {
+                clearInterval(progressInterval);
+            }
+        }, 30);
+
+        // 捕获当前路径并跳转
+        function redirectToCorrectPath() {
+            const targetUrl = '/' + (currentPath ? `?redirect=${encodeURIComponent(currentPath)}` : '');
+            
+            // 跳转前完成进度条
+            progressBar.style.width = '100%';
+            
+            // 稍微延迟，让用户看到完整的进度动画
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 300);
+        }
+
+        // 启动重定向（给动画留一点时间展示）
+        setTimeout(redirectToCorrectPath, 800);
+    </script>
+
 </head>
 <body>
-    <div class="container">
-        <h1>404</h1>
-        <p>抱歉，您访问的页面不存在或已被移除</p>
-        <a href="/">返回首页</a>
+   <div class="container">
+        <div class="loader"></div>
+        <h1>正在为您导航到正确页面</h1>
+        <p>检测到您访问的页面需要重定向，我们正在处理中...</p>
+        <div class="path-info" id="pathInfo"></div>
+        <div class="progress-bar">
+            <div class="progress" id="progressBar"></div>
+        </div>
     </div>
+
 </body>
 </html>
     

@@ -17,11 +17,7 @@ const router = createRouter({
       path: "",
       name: "root",
       component: () => import("../pages/home/index.vue"),
-      props: route => ({ lang: getLang(route) }),
-      // redirect: (to) => {
-      //   const lang = getLang(to);
-      //   return { path: "/", query: { lang } };
-      // }
+      props: route => ({ lang: getLang(route) })
     },
     {
       path: "/board/:vendor/:product",

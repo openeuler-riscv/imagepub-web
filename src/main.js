@@ -35,6 +35,29 @@ function detectLang() {
   return 'zh_CN';
 }
 
+
+// 解析URL中的redirect参数
+function getRedirectPath() {
+    const searchParams = new URLSearchParams(window.location.search);
+    return searchParams.get('redirect');
+}
+
+// 初始化时检查是否有重定向需求
+const redirectPath = getRedirectPath();
+if (redirectPath) {
+    // 清除URL中的redirect参数（避免刷新后再次重定向）
+    history.replaceState(null, null, window.location.pathname);
+    
+    // 跳转到原路由（确保路由存在，否则会触发路由的404）
+    router.push(redirectPath).catch(err => {
+        // 若原路由不存在，跳转到首页或自定义404
+        if (err.name !== 'NavigationDuplicated') {
+            router.push('/');
+        }
+    });
+}
+
+
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
 
