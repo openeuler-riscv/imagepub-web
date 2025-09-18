@@ -257,11 +257,11 @@ onMounted(() => {
   flex: 1;
   overflow: auto;
   padding: 16px;
-  /* max-height: 90vh; */
   background: var(--theme-card);
   color: var(--theme-text);
   border-radius: 8px;
   transition: background 0.3s, color 0.3s;
+  font-family: 'Inter', sans-serif;
 }
 
 /* 板卡信息区 */

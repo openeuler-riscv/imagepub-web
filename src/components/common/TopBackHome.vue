@@ -5,11 +5,11 @@
         <div class="left-section">
           <CustomLogoIcon class="prefix-icon" dark @click="goHome" />
           <el-button v-if="isBoard" @click="goHome" :icon="Back"  round dark class="no-border-button">
-            <span style="font-size: 1.75rem; font-family: PingFang SC-Regular">{{ t('backToHome') }}</span>
+            <span style="font-size: 1.75rem;">{{ t('backToHome') }}</span>
           </el-button>
 
           <el-button v-if="!isBoard" @click="goBack" :icon="Back" round dark class="no-border-button">
-            <span style="font-size: 1.75rem; font-family: PingFang SC-Regular">{{ t('backToPreviousPage') }}</span>
+            <span style="font-size: 1.75rem; ">{{ t('backToPreviousPage') }}</span>
           </el-button>
         </div>
 
@@ -544,7 +544,6 @@ $border-color: #f1faff;
   }
 
   .search-input {
-    font-family: PingFang SC-Regular;
     color: $light-blue;
     width: 100%;
     border: none;
@@ -593,7 +592,6 @@ $border-color: #f1faff;
         background: none;
         border: none;
         cursor: pointer;
-        font-family: PingFang SC-Regular;
         white-space: nowrap;
         font-size: inherit;
 

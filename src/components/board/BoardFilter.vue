@@ -486,7 +486,6 @@ watch(()=>props.isFilter, (value) => {
 :deep(.el-checkbox-button__inner) {
   font-size: 15px;
   font-weight: 400;
-  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
   border-radius: 5px !important;
   color: var(--theme-text) !important;
   border: clamp(1px, 0.2vw, 1px) solid #ccc;

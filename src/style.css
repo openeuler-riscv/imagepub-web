@@ -5,8 +5,12 @@ html, body {
     /* background: var(--theme-bg); */
 }
 
+body {
+  font-family: 'Inter', sans-serif;
+}
+
 #app {
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-family: 'Inter', sans-serif;
     width: 100%;
     min-height: 100vh;
     background: linear-gradient(

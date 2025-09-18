@@ -209,8 +209,6 @@ const fetchImagePageData = async () => {
     return;
   }
 
-  console.log(props.productUri)
-
   try {
     const response = await fetch(`/${props.productUri}`);
     if (!response.ok) throw new Error(`请求失败，状态码: ${response.status}`);
@@ -243,8 +241,6 @@ const processData = (data, targetVersion) => {
     ...latestRevision,
     version: targetVersion, // 补充显示版本号
   };
-
-  console.log(targetRelease)
 
   mirrorList.value = latestRevision.files || [];
   markdownURL.value = latestRevision.docs?.[route.query.doc] || '';
