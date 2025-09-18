@@ -53,7 +53,26 @@ const router = createRouter({
   ]
 });
 
+
+
 router.beforeEach((to, from, next) => {
+
+  //const redirectPath = to.query.redirectPath;
+  
+  // if (redirectPath) {
+  //   // 复制查询参数并移除redirectPath
+  //   const query = { ...to.query };
+  //   delete query.redirectPath;
+    
+  //   // 跳转到原始请求的深层路由
+  //   return next({
+  //     path: '/' + redirectPath,
+  //     query,
+  //     hash: to.hash
+  //   });
+  // }
+
+
   if (!to.query.lang) {
     const lang = getLang(from);
     next({

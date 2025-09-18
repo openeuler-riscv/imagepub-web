@@ -6,11 +6,11 @@ html, body {
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'aliregular', sans-serif;
 }
 
 #app {
-    font-family: 'Inter', sans-serif;
+    font-family: 'aliregular', sans-serif;
     width: 100%;
     min-height: 100vh;
     background: linear-gradient(

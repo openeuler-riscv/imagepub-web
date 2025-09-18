@@ -261,7 +261,7 @@ onMounted(() => {
   color: var(--theme-text);
   border-radius: 8px;
   transition: background 0.3s, color 0.3s;
-  font-family: 'Inter', sans-serif;
+  font-family: 'aliregular', sans-serif;
 }
 
 /* 板卡信息区 */
