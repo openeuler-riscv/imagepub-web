@@ -56,32 +56,25 @@ const router = createRouter({
 
 
 router.beforeEach((to, from, next) => {
+  const { fallbackPath, ...query } = to.query;
+   if (fallbackPath) {
+    // 跳转到原始深层路由
+    next({ path: '/' + fallbackPath, query });
+  } 
 
-  //const redirectPath = to.query.redirectPath;
-  
-  // if (redirectPath) {
-  //   // 复制查询参数并移除redirectPath
-  //   const query = { ...to.query };
-  //   delete query.redirectPath;
-    
-  //   // 跳转到原始请求的深层路由
-  //   return next({
-  //     path: '/' + redirectPath,
-  //     query,
-  //     hash: to.hash
-  //   });
-  // }
-
-
-  if (!to.query.lang) {
+  else{
+    if (!to.query.lang) {
     const lang = getLang(from);
     next({
       ...to,
       query: { ...to.query, lang }
     });
-  } else {
-    next();
+    } else {
+      next();
+    }
   }
+
+  
 });
 
 export default router;
