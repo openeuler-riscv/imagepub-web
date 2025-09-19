@@ -5,7 +5,6 @@ const DEFAULT_LANG = 'zh_CN';
 
 // 获取语言函数：优先从路由参数获取，其次从Cookie获取，最后使用默认值
 function getLang(route) {
-  // console.log(route.query.lang || getCookie('lang') || DEFAULT_LANG)
   return route.query.lang || getCookie('lang') || DEFAULT_LANG;
 }
 

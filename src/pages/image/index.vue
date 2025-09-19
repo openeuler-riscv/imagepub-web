@@ -222,13 +222,13 @@ const fetchImagePageData = async () => {
 };
 
 const processData = (data, targetVersion) => {
-  const targetOs = data.imagesuites.find(os => os.name === props.version1);
+  const targetOs = data.imagesuites.find(os => os.id === props.version1);
   if (!targetOs) {
     ElMessage.error('未找到操作系统镜像');
     return;
   }
 
-  const targetRelease = targetOs.releases.find(release => release.name === targetVersion);
+  const targetRelease = targetOs.releases.find(release => release.id === targetVersion);
   if (!targetRelease) {
     ElMessage.error(`未找到版本 ${targetVersion}`);
     return;

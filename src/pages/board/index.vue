@@ -26,7 +26,7 @@
                   v-for="(release, releaseIndex) in getReleases(osItem)"
                   :key="releaseIndex"
                   :label="release.name"
-                  :name="release.name"
+                  :name="release.id"
               >
                 <BoardDescription
                     v-if="boardDetail && boardDetail.imagesuites && !isFilter"
@@ -185,11 +185,12 @@ const fiterTargetSuits = (filter,originSuits) => {
 
 
 
+
 // 接收子组件的事件，更新父组件状态
 const handleFilter = (newState) => {
   isFilter.value = newState.isFilter
-  const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
-  const currentImagesuites = currentOs?.releases?.find(release => release.name === activeTab2.value)?.imagesuites;
+  const currentOs = boardDetail.value.imagesuites?.find(os => os.id === activeTab1.value);
+  const currentImagesuites = currentOs?.releases?.find(release => release.id === activeTab2.value)?.imagesuites;
   filterimagesuites.value = fiterTargetSuits(newState.filters,currentImagesuites)
 };
 
@@ -230,10 +231,6 @@ const resetClick = () =>{
   isFilter.value = false
 }
 
-const confirmClick = () =>{
-  drawerVisible.value = false
-}
-
 const props = defineProps({
   productUri: {
     type: String,
@@ -269,7 +266,7 @@ const openImage = async (imageIndex,visionIndex) => {
 // 动态获取一级Tab列表
 const osList = computed(() =>
     boardDetail.value.imagesuites?.map(osItem => ({
-      name: osItem.name,
+      name: osItem.id,
       releases: osItem.releases
     })) || []
 );
@@ -280,8 +277,8 @@ const getReleases = (osItem) => {
 } 
 
 const getKernelOptions = ()=>{
-  const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
-  const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
+  const currentOs = boardDetail.value.imagesuites?.find(os => os.id === activeTab1.value);
+  const currentRelease = currentOs?.releases?.find(release => release.id === activeTab2.value);
   if (!currentRelease?.imagesuites) return [];
   return currentRelease.imagesuites
       .filter(suite => suite.kernel?.type)
@@ -290,8 +287,8 @@ const getKernelOptions = ()=>{
 
 /* 返回当前镜像suits */
 const suitesForSelect = ()=>{
-  const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
-  const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
+  const currentOs = boardDetail.value.imagesuites?.find(os => os.id === activeTab1.value);
+  const currentRelease = currentOs?.releases?.find(release => release.id === activeTab2.value);
   if (!currentRelease?.imagesuites) return [];
   return currentRelease.imagesuites?.map(s=>({
     id:s?.id,
@@ -309,16 +306,16 @@ const suitesForSelect = ()=>{
 
 
 const getSuiteDescription = () => {
-  const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
-  const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
+  const currentOs = boardDetail.value.imagesuites?.find(os => os.id === activeTab1.value);
+  const currentRelease = currentOs?.releases?.find(release => release.id === activeTab2.value);
 
   return currentRelease?.imagesuites?.[0]?.description || '';
 };
 
 /* 搜索参数检索功能 */
 const getKernelVersions = () => {
-  const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
-  const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
+  const currentOs = boardDetail.value.imagesuites?.find(os => os.id === activeTab1.value);
+  const currentRelease = currentOs?.releases?.find(release => release.id === activeTab2.value);
   if (!currentRelease?.imagesuites) return [];
   
   return currentRelease.imagesuites
@@ -329,8 +326,8 @@ const getKernelVersions = () => {
 
 
 const getIsaMabi = () => {
-  const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
-  const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
+  const currentOs = boardDetail.value.imagesuites?.find(os => os.id === activeTab1.value);
+  const currentRelease = currentOs?.releases?.find(release => release.id === activeTab2.value);
   if (!currentRelease?.imagesuites) return [];
 
   return currentRelease.imagesuites.flatMap((suite, suiteIndex) => {
@@ -344,8 +341,8 @@ const getIsaMabi = () => {
 }
 
 const getIsaMarch = () => {
-  const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
-  const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
+  const currentOs = boardDetail.value.imagesuites?.find(os => os.id === activeTab1.value);
+  const currentRelease = currentOs?.releases?.find(release => release.id === activeTab2.value);
   if (!currentRelease?.imagesuites) return [];
 
   return currentRelease.imagesuites.flatMap((suite, suiteIndex) => {
@@ -359,8 +356,8 @@ const getIsaMarch = () => {
 };
 
 const getUserspaces = () => {
-  const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
-  const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
+  const currentOs = boardDetail.value.imagesuites?.find(os => os.id === activeTab1.value);
+  const currentRelease = currentOs?.releases?.find(release => release.id === activeTab2.value);
   if (!currentRelease?.imagesuites) return [];
 
 
@@ -376,8 +373,8 @@ const getUserspaces = () => {
 };
 
 const getInstallerTypes = () => {
-  const currentOs = boardDetail.value.imagesuites?.find(os => os.name === activeTab1.value);
-  const currentRelease = currentOs?.releases?.find(release => release.name === activeTab2.value);
+  const currentOs = boardDetail.value.imagesuites?.find(os => os.id === activeTab1.value);
+  const currentRelease = currentOs?.releases?.find(release => release.id === activeTab2.value);
   if (!currentRelease?.imagesuites) return [];
 
   return [...new Set(
@@ -424,7 +421,7 @@ const fetchBoardDetail = async () => {
         activeTab1.value = osList.value[0].name; // 一级Tab初始化
         const firstRelease = osList.value[0].releases[0];
         if (firstRelease) {
-          activeTab2.value = firstRelease.name; // 二级Tab初始化
+          activeTab2.value = firstRelease.id; // 二级Tab初始化
         }
       }
     });
