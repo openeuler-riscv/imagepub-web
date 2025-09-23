@@ -33,11 +33,11 @@
                 <el-checkbox-button
                     v-for="it in filterkernelOptions"
                     :key="it"
-                    :value="it"
-
+                    :value="it.version"
+                    :disabled="it.disabled"
                     v-else
                 >
-                  {{ it }}
+                  {{ it.version }}
                 </el-checkbox-button>
 
               </el-checkbox-group>
@@ -68,10 +68,11 @@
                   <el-checkbox-button
                       v-else
                       v-for="it in filterkernelVersions"
-                      :key="it"
-                      :value="it"
+                      :key="it.version"
+                      :value="it.version"
+                      :disabled="it.disabled"
                   >
-                    {{ it }}
+                    {{ it.version }}
                   </el-checkbox-button>
                 </el-checkbox-group>
                </div>
@@ -110,9 +111,10 @@
                     v-else
                     v-for="it in filterisaMabi"
                     :key="it"
-                    :value="it"
+                    :value="it.profile"
+                    :disabled="it.disabled"
                 >
-                  {{ it }}
+                  {{ it.profile }}
                 </el-checkbox-button>
               </el-checkbox-group>
              </div>
@@ -142,10 +144,11 @@
                  <el-checkbox-button
                     v-else
                     v-for="it in filterisaMarch"
-                    :key="it"
-                    :value="it"
+                    :key="it.profile"
+                    :value="it.profile"
+                    :disabled="it.disabled"
                 >
-                  {{ it }}
+                  {{ it.profile }}
                 </el-checkbox-button>
               </el-checkbox-group>
             </div>
@@ -157,6 +160,7 @@
     <!-- 其余过滤项保持原来的循环逻辑 -->
     <div v-if="!filterBtn"  class="filter-row" v-for="(filter, key) in otherFilters" :key="key">
       <BoardInfoTitle :title="filter.label" />
+
       <div :style="{ display: 'flex', flexDirection: 'column',position:'relative',bottom:'12px',height:'32px' }">
         <div class="filter-item">
            <div style="display:flex;flex-wrap:wrap;">
@@ -200,6 +204,8 @@
                 v-for="item in filter.options"
                 :key="item.id || item"
                 :value="item.profile || item.flavor || item"
+                :disabled="item.disabled"
+                
             >
               {{ item.profile || item.flavor || item }}
             </el-checkbox-button>
@@ -217,7 +223,6 @@ import { useI18n } from "vue-i18n";
 import { defineProps, defineEmits,ref,watch } from 'vue';
 import BoardInfoTitle from "./BoardInfoTitle.vue";
 const { t } = useI18n();
-
 
 const props = defineProps({
   filters: {
@@ -251,14 +256,14 @@ const props = defineProps({
   otherFilters: {
     type: Object,
     default: () => ({
-      // isa: { label: 'ISA 基线', options: [] },
-      flavor: { label: '预装列表', options: [] },
-      installer: { label: '引导器', options: [] }
+      flavor: { label: '', options: [] },
+      installer: { label: '', options: [] }
     })
   },
   suitesForSelect:{},
   isFilter:Boolean
 });
+
 
 const filterBtn = ref(false)
 const filterkernelOptions = ref([])
@@ -266,9 +271,11 @@ const filterkernelVersions = ref([])
 const filterisaMabi = ref([])
 const filterisaMarch = ref([])
 const filterotherFilters = ref({
-  flavor: { label: '预装列表', options: [] },
-  installer: { label: '引导器', options: [] }
+  flavor: { label: t('preInstalledList'), options: [] },
+  installer: { label:t('bootLoader'), options: [] }
 })
+
+
 /* 当前在哪个suits集合筛选 */
 const currentSuits = ref([])
 
@@ -293,9 +300,8 @@ const updateCheckState = (key,kind) => {
                       : props.otherFilters[key]?.options?.map(v => v.profile || v.flavor || v) || [];
                   
   const checkedCount = filter.selected.length;
-  // filter.checkAll = checkedCount === allItems.length;
+  
   filter.checkAll = filter.selected.length > 0 ? false:true
-  //filter.isIndeterminate = checkedCount > 0 && checkedCount < allItems.length;
 
   filter.isIndeterminate = checkedCount > 0 && checkedCount < allItems.length ? false :true
 
@@ -304,7 +310,6 @@ const updateCheckState = (key,kind) => {
   const tagFilter = temp.flavor.checkAll && temp.installer.checkAll && temp.isaMabi.checkAll &&  temp.isaMarch.checkAll && temp.kernel.checkAll &&temp.kernels.checkAll
 
   emit('toggle-filter', {filters:props.filters,isFilter: tagFilter ?false:true } );
-
   if(!tagFilter){
     /* 单项点击 */
     if(kind ==2){
@@ -319,20 +324,71 @@ const updateCheckState = (key,kind) => {
           currentSuits.value = selectedSuits.value
         }
         /* 更新、筛选每个选择模块的按钮 */
-
-        /*  */
         
           selectedSuits.value = filter.selected.length>0? currentSuits.value?.filter(c=>hasCommonElements(filter.selected,c[key])):currentSuits.value
 
-          filterkernelOptions.value = mergeArrayValues(selectedSuits.value, 'kernel')
-          filterkernelVersions.value = mergeArrayValues(selectedSuits.value, 'kernels')
-          filterisaMabi.value = mergeArrayValues(selectedSuits.value, 'isaMabi')
-          filterisaMarch.value = mergeArrayValues(selectedSuits.value, 'isaMarch')
-          filterotherFilters.value.flavor.options = mergeArrayValues(selectedSuits.value, 'flavor')
-          filterotherFilters.value.installer.options = mergeArrayValues(selectedSuits.value, 'installer')
-        
+          
+          
+          filterkernelOptions.value = [...props.kernelOptions].map(it=>{
+            const currentOption =  mergeArrayValues(selectedSuits.value, 'kernel')
+            if(currentOption && currentOption.length>0){
+              it.disabled = currentOption.includes(it.version)? false:true
+            }
+            return it
+          })
 
-        
+          filterkernelVersions.value = [...props.kernelVersions].map(it=>{
+            const currentOption =  mergeArrayValues(selectedSuits.value, 'kernels')
+            if(currentOption && currentOption.length>0){
+              it.disabled = currentOption.includes(it.version)? false:true
+            }
+            return it
+          })
+
+          filterisaMabi.value = [...props.isaMabi].map(it=>{
+            const currentOption =  mergeArrayValues(selectedSuits.value, 'isaMabi')
+            if(currentOption && currentOption.length>0){
+              it.disabled = currentOption.includes(it.profile)? false:true
+            }
+            return it
+          })
+
+
+          filterisaMarch.value = [...props.isaMarch].map(it=>{
+            const currentOption =  mergeArrayValues(selectedSuits.value, 'isaMarch')
+            if(currentOption && currentOption.length>0){
+              it.disabled = currentOption.includes(it.profile)? false:true
+            }
+            return it
+          })
+
+
+           filterotherFilters.value.flavor.options = [...props.otherFilters['flavor']?.options].map(it=>{
+            const currentOption =  mergeArrayValues(selectedSuits.value, 'flavor')
+            if(currentOption && currentOption.length>0){
+              it.disabled = currentOption.includes(it.flavor)? false:true
+            }
+            return it
+          })
+
+          filterotherFilters.value.installer.options =  [...props.otherFilters['installer']?.options].map(it=>{
+            const currentOption =  mergeArrayValues(selectedSuits.value, 'installer')
+            if(currentOption && currentOption.length>0){
+              it.disabled = currentOption.includes(it.profile)? false:true
+            }
+            return it
+          })
+
+
+
+          
+
+
+
+
+   
+          // filterotherFilters.value.flavor.options = mergeArrayValues(selectedSuits.value, 'flavor')
+          // filterotherFilters.value.installer.options = mergeArrayValues(selectedSuits.value, 'installer')
       }  
     }
     else{
@@ -340,33 +396,34 @@ const updateCheckState = (key,kind) => {
          Object.keys(temp)?.filter(a=>temp[a].checkAll)?.map(b=>{
           switch(b) {
             case 'kernel':
-              filterkernelOptions.value =  props.kernelOptions.map(v => v.version)
+              //filterkernelOptions.value =  props.kernelOptions.map(v => v.version)
+              filterkernelOptions.value =  [...props.kernelOptions]
               break; 
             case 'kernels':
-              filterkernelVersions.value = props.kernelVersions.map(v => v.version)
+              //filterkernelVersions.value = props.kernelVersions.map(v => v.version)
+              filterkernelVersions.value = [...props.kernelVersions]
               break;
             case 'isaMabi': 
-              filterisaMabi.value = props.isaMabi.map(v => v.profile)
+              //filterisaMabi.value = props.isaMabi.map(v => v.profile)
+              filterisaMabi.value = [...props.isaMabi]
               break; 
             case 'isaMarch':
-              filterisaMarch.value = props.isaMarch.map(v => v.profile)
+              //filterisaMarch.value = props.isaMarch.map(v => v.profile)
+              filterisaMarch.value = [...props.isaMarch]
               break;
             case 'flavor':
-              filterotherFilters.value.flavor.options = props.otherFilters[b]?.options?.map(v => v.profile || v.flavor || v)
+              //filterotherFilters.value.flavor.options = props.otherFilters[b]?.options?.map(v => v.profile || v.flavor || v)
+              filterotherFilters.value.flavor.options = [...props.otherFilters[b]?.options]
               break; 
             case 'installer':
-              filterotherFilters.value.installer.options = props.otherFilters[b]?.options?.map(v => v.profile || v.flavor || v) 
+              //filterotherFilters.value.installer.options = props.otherFilters[b]?.options?.map(v => v.profile || v.flavor || v) 
+              filterotherFilters.value.installer.options = [...props.otherFilters[b]?.options]
               break;
             
             default:
               
           }
          })
-        /*1、点击任意应该出现当前所有选项，但是存在其他选项的限制，因此要判断当前放开所有的选择里面，是否有其他选择限制不显示的suits  */
-
-        /* 若无其他选项限制，则放开所有选项 */
-
-        /* 若有其他选择限制，找到被限制的suits，在当前要放开的选项中过滤掉仅该suits独有的选项 */
     }
   }
   /* 所有都是全选 */
@@ -386,9 +443,8 @@ const updateCheckState = (key,kind) => {
 
 /* 数组去重 */
 const mergeArrayValues = (arr, key) => {
-  // 创建Set用于去重
   const valueSet = new Set();
-  
+
   // 遍历数组中的每个对象
   arr.forEach(obj => {
     // 检查对象是否存在且包含指定key，且对应的值是数组
@@ -399,7 +455,7 @@ const mergeArrayValues = (arr, key) => {
       });
     }
   });
-  
+
   // 将Set转换为数组并返回
   return Array.from(valueSet);
 }
@@ -429,8 +485,6 @@ const handleFilterCheckAll = (key) => {
     allOptions = props.otherFilters[key].options.map(v => v.profile || v.flavor || v);
   }
   
-  //filter.selected = filter.checkAll ? allOptions : [];
-  //filter.selected = filter.checkAll ? []:allOptions;\
   filter.selected=[]
   updateCheckState(key,1);
 };
@@ -536,6 +590,22 @@ watch(()=>props.isFilter, (value) => {
 }
 
 
+/* 禁用状态 - 移除边框并添加禁用效果 */
+:deep(.el-checkbox-button.is-disabled .el-checkbox-button__inner) {
+  border: none !important; /* 移除边框 */
+  background-color: #f5f7fa; /* 浅灰色背景 */
+  color: #c0c4cc; /* 文字变灰 */
+  cursor: not-allowed;
+  opacity: 0.8; /* 稍微透明 */
+}
+
+/* 禁用且选中状态 - 保持背景但无边框 */
+:deep(.el-checkbox-button.is-disabled.is-checked .el-checkbox-button__inner) {
+  background-color: #e6f7ff; /* 淡蓝色背景 */
+  color: #8cc5ff; /* 文字颜色 */
+}
+
+
 @media screen and (max-width: 900px) {
   .filters {
     padding: 0 2vw;
@@ -601,8 +671,8 @@ watch(()=>props.isFilter, (value) => {
   }
 
   :deep(.el-checkbox-button__inner:hover) {
-    background-color: #012fa6 !important;
-    border: 1px solid #012fa6 !important
+    background-color: #012fa6 ;
+    border: 1px solid #012fa6;
   }
 
   :deep(.el-checkbox-button.is-checked .el-checkbox-button__inner){
@@ -610,6 +680,20 @@ watch(()=>props.isFilter, (value) => {
     color: #fff !important;
     border:clamp(1px, 0.2vw, 2px) solid #012fa6 !important;
     background-color: #012fa6 !important;
+  }
+
+   .el-checkbox-button.is-disabled .el-checkbox-button__inner {
+    background-color: transparent !important;
+    color: #6b7280 !important;
+    border: none !important;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  
+  /* 深色模式下禁用且选中状态 */
+  .el-checkbox-button.is-disabled.is-checked .el-checkbox-button__inner {
+    background-color: rgba(22, 93, 255, 0.2) !important;
+    color: #8da4f1 !important;
   }
 
   

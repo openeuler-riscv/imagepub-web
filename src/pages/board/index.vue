@@ -118,7 +118,6 @@ const filterosList = ref([])
 const { t } = useI18n();
 const isDataLoaded = ref(false);
 const boardDetail = ref({});
-const boardImageData = ref({});
 const isFilter = ref(false)
 const filterimagesuites = ref([])
 const filters = ref({
@@ -201,15 +200,11 @@ const fiterTargetSuits = (filter,originSuits) => {
 }
 
 
-
-
-
 // 接收子组件的事件，更新父组件状态
 const handleFilter = (newState) => {
   isFilter.value = newState.isFilter
   filterimagesuites.value = fiterTargetSuits(newState.filters,allImageSuites)
   const tempList  = JSON.parse(JSON.stringify(osList.value))
-  console.log(tempList,osList.value)
   filterosList.value = tempList.filter(list=>filterimagesuites.value.some(it=>it.parentSuite === list.name))?.map(sec=>{
        
       sec.releases = sec.releases.filter(i=>filterimagesuites.value.some(it=>it.parentRelease === i.id))?.map(k=>{
@@ -256,7 +251,6 @@ const resetClick = () =>{
     }
   }
 
-  console.log(filterosList.value,osList.value,isFilter.value)
 
   filterosList.value = []
   isFilter.value = false
@@ -311,23 +305,21 @@ const getReleases = (osItem) => {
 
 const getKernelOptions = ()=>{
   const currentOs = boardDetail.value.imagesuites?.find(os => os.id === activeTab1.value);
-  // const currentRelease = currentOs?.releases?.find(release => release.id === activeTab2.value);
-  // if (!currentRelease?.imagesuites) return [];
 
   let AllRelease = []
   currentOs?.releases.forEach(it=>AllRelease.push(...it.imagesuites))
   if (!AllRelease?.length) return [];
 
+ 
+
   return AllRelease
       .filter(suite => suite.kernel?.type)
-      .flatMap(suite => [{ version: suite.kernel.type }]).filter((item, index, self) => self.findIndex(el => el.version === item.version) === index);
+      .flatMap(suite => [{ version: suite.kernel.type,disabled:false }]).filter((item, index, self) => self.findIndex(el => el.version === item.version) === index);
 };
 
 /* 返回当前镜像suits */
 const suitesForSelect = ()=>{
   const currentOs = boardDetail.value.imagesuites?.find(os => os.id === activeTab1.value);
-  // const currentRelease = currentOs?.releases?.find(release => release.id === activeTab2.value);
-  // if (!currentRelease?.imagesuites) return [];
    let AllRelease = []
   currentOs?.releases.forEach(it=>AllRelease.push(...it.imagesuites))
   if (!AllRelease?.length) return [];
@@ -339,7 +331,7 @@ const suitesForSelect = ()=>{
     isaMarch:[...s.isa.march],
     kernel:[s.kernel.type],
     kernels:[s.kernel.version],
-    installer:[...s.loader]
+    installer:[...s.loader],
 
   }))
 }
@@ -363,10 +355,9 @@ const getKernelVersions = () => {
 
    return AllRelease
       .filter(suite => suite.kernel?.version)
-       .flatMap(suite => [{ version: suite.kernel.version }]).filter((item, index, self) => self.findIndex(el => el.version === item.version) === index)
+       .flatMap(suite => [{ version: suite.kernel.version,disabled:false }]).filter((item, index, self) => self.findIndex(el => el.version === item.version) === index)
  
 };
-
 
 
 const getIsaMabi = () => {
@@ -382,7 +373,8 @@ const getIsaMabi = () => {
     if (!isa || !isa.mabi) return [];
     return {
       id: `${suiteIndex}-${0}`,
-      profile: isa.mabi
+      profile: isa.mabi,
+      disabled:false
     }
   }).filter((item, index, self) => self.findIndex(el => el.profile === item.profile) === index);
 }
@@ -398,7 +390,8 @@ const getIsaMarch = () => {
     if (!isa || !isa.march) return [];
     return isa.march.map((march, index) => ({
       id: `${suiteIndex}-${index}`,
-      profile: march
+      profile: march,
+      disabled:false
     }));
   }).filter((item, index, self) => self.findIndex(el => el.profile === item.profile) === index);
 };
@@ -411,10 +404,9 @@ const getUserspaces = () => {
   currentOs?.releases.forEach(it=>AllRelease.push(...it.imagesuites))
   if (!AllRelease?.length) return [];
 
-
     return [...new Set(
       AllRelease.map(s => s.flavor).filter(Boolean)
-  )].filter((item, index, self) => self.findIndex(el => el === item) === index);
+  )].filter((item, index, self) => self.findIndex(el => el === item) === index)?.map(it=>({flavor:it,disabled:false}));
 
 
 };
@@ -429,7 +421,7 @@ const getInstallerTypes = () => {
 
   return [...new Set(
       AllRelease.map(s => s.loader?.[0]).filter(Boolean)
-  )].filter((item, index, self) => self.findIndex(el => el === item) === index);
+  )].filter((item, index, self) => self.findIndex(el => el === item) === index)?.map(it=>({profile:it,disabled:false}));
 };
 
 
@@ -504,8 +496,6 @@ onMounted(async () => {
   
 });
 
-
-console.log(osList.value)
 
 </script>
 

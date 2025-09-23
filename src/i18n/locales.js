@@ -44,7 +44,9 @@ const messages = {
         allversion:"全部版本",
         showall:"展示全部",
         any:"任意",
-        selected:"筛选"
+        selected:"筛选",
+        flavor:'预装列表',
+        loader:'引导器'
 
     },
     en_US: {
@@ -88,11 +90,13 @@ const messages = {
         isaMarch: "isaMarch:",
         isaMabi: "isaMabi:",
         reset:"Reset",
-        confirm:"确定",
-         allversion:"All Versoins",
-         showall:"All",
-         any:"Any",
-        selected:"Selection"
+        confirm:"Confirm",
+        allversion:"All Versoins",
+        showall:"All",
+        any:"Any",
+        selected:"Selection",
+        flavor:'Flavor',
+        loader:'Loader'
     }
 };
 
