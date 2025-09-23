@@ -20,6 +20,7 @@
               :key="osIndex"
               :label="osItem.name"
               :name="osItem.name"
+              v-if="!isFilter"
           >
             <el-tabs v-model="activeTab2" class="sub-tabs dark" type="border-card">
               <el-tab-pane
@@ -29,23 +30,38 @@
                   :name="release.id"
               >
                 <BoardDescription
-                    v-if="boardDetail && boardDetail.imagesuites && !isFilter"
                     :title="release.name"
                     :description="getSuiteDescription(release)"
                     :historyVersions="release.imagesuites?.map((suite,index) => ({isExpanded:false,version:suite.revisions,imagesuiteIndex:suite.id,name:suite.name})  || []) || []" 
                     :open-image="openImage">
                 </BoardDescription>
-
-                 <BoardDescription
-                    v-if="isFilter"
+              </el-tab-pane>
+            </el-tabs>
+          </el-tab-pane>
+          <el-tab-pane
+              v-for="(osItem, osfilerIndex) in filterosList"
+              :key="osfilerIndex"
+              :label="osItem.name"
+              :name="osItem.name"
+              v-else
+          >
+            <el-tabs v-model="activeTab2" class="sub-tabs dark" type="border-card">
+              <el-tab-pane
+                  v-for="(release, releaseIndex) in getReleases(osItem)"
+                  :key="releaseIndex"
+                  :label="release.name"
+                  :name="release.id"
+              >
+                <BoardDescription
                     :title="release.name"
                     :description="getSuiteDescription(release)"
-                    :historyVersions="filterimagesuites?.map((suite,index) => ({isExpanded:false,version:suite.revisions,imagesuiteIndex:suite.id,name:suite.name})  || []) || []" 
+                    :historyVersions="release.imagesuites?.map((suite,index) => ({isExpanded:false,version:suite.revisions,imagesuiteIndex:suite.id,name:suite.name})  || []) || []" 
                     :open-image="openImage">
                 </BoardDescription>
               </el-tab-pane>
             </el-tabs>
           </el-tab-pane>
+         
         </el-tabs>
       </div>
     </div>
@@ -61,14 +77,14 @@
             :isFilter="isFilter"
              @toggle-filter="handleFilter"
             :filters="filters"
-            :kernelVersions="getKernelVersions(release)"
-            :kernelOptions="getKernelOptions(release)"
+            :kernelVersions="getKernelVersions()"
+            :kernelOptions="getKernelOptions()"
             :suitesForSelect = "suitesForSelect()"
-            :isaMabi = "getIsaMabi(release)"
-            :isaMarch = "getIsaMarch(release)"
+            :isaMabi = "getIsaMabi()"
+            :isaMarch = "getIsaMarch()"
             :otherFilters="{
-            flavor: { label: t('preInstalledList'), options: getUserspaces(release) },
-            installer: { label: t('bootLoader'), options: getInstallerTypes(release) }
+            flavor: { label: t('preInstalledList'), options: getUserspaces() },
+            installer: { label: t('bootLoader'), options: getInstallerTypes() }
           }"
         ></BoardFilter>
 
@@ -97,7 +113,8 @@ import { useI18n } from "vue-i18n";
 import { languageFetch } from "@/utils/languageFetch";
 import CustomArrowIcon from '@/components/icon/CustomArrowIcon.vue'
 
-
+const allImageSuites = ref([]);
+const filterosList = ref([])
 const { t } = useI18n();
 const isDataLoaded = ref(false);
 const boardDetail = ref({});
@@ -147,7 +164,7 @@ const drawerVisible = ref(false);
 
 /* 过滤功能 */
 const fiterTargetSuits = (filter,originSuits) => {
-  const resusltSuits = originSuits?.filter(a=>{
+  const resusltSuits = originSuits.value?.filter(a=>{
     if(filter.flavor.selected.length>0 && a.flavor){
       return filter.flavor.selected.includes(a?.flavor)
     }
@@ -186,12 +203,22 @@ const fiterTargetSuits = (filter,originSuits) => {
 
 
 
+
 // 接收子组件的事件，更新父组件状态
 const handleFilter = (newState) => {
   isFilter.value = newState.isFilter
-  const currentOs = boardDetail.value.imagesuites?.find(os => os.id === activeTab1.value);
-  const currentImagesuites = currentOs?.releases?.find(release => release.id === activeTab2.value)?.imagesuites;
-  filterimagesuites.value = fiterTargetSuits(newState.filters,currentImagesuites)
+  filterimagesuites.value = fiterTargetSuits(newState.filters,allImageSuites)
+  const tempList  = JSON.parse(JSON.stringify(osList.value))
+  console.log(tempList,osList.value)
+  filterosList.value = tempList.filter(list=>filterimagesuites.value.some(it=>it.parentSuite === list.name))?.map(sec=>{
+       
+      sec.releases = sec.releases.filter(i=>filterimagesuites.value.some(it=>it.parentRelease === i.id))?.map(k=>{
+        k.imagesuites = k.imagesuites.filter(n=>filterimagesuites.value.some(it=>it.id === n.id))
+        return k
+      })
+
+      return sec
+  })
 };
 
 const resetClick = () =>{
@@ -228,6 +255,10 @@ const resetClick = () =>{
       isIndeterminate: ref(false),
     }
   }
+
+  console.log(filterosList.value,osList.value,isFilter.value)
+
+  filterosList.value = []
   isFilter.value = false
 }
 
@@ -271,6 +302,8 @@ const osList = computed(() =>
     })) || []
 );
 
+
+
 // 辅助函数：获取对应OS的releases列表
 const getReleases = (osItem) => {
   return osItem.releases || [];
@@ -278,9 +311,14 @@ const getReleases = (osItem) => {
 
 const getKernelOptions = ()=>{
   const currentOs = boardDetail.value.imagesuites?.find(os => os.id === activeTab1.value);
-  const currentRelease = currentOs?.releases?.find(release => release.id === activeTab2.value);
-  if (!currentRelease?.imagesuites) return [];
-  return currentRelease.imagesuites
+  // const currentRelease = currentOs?.releases?.find(release => release.id === activeTab2.value);
+  // if (!currentRelease?.imagesuites) return [];
+
+  let AllRelease = []
+  currentOs?.releases.forEach(it=>AllRelease.push(...it.imagesuites))
+  if (!AllRelease?.length) return [];
+
+  return AllRelease
       .filter(suite => suite.kernel?.type)
       .flatMap(suite => [{ version: suite.kernel.type }]).filter((item, index, self) => self.findIndex(el => el.version === item.version) === index);
 };
@@ -288,9 +326,13 @@ const getKernelOptions = ()=>{
 /* 返回当前镜像suits */
 const suitesForSelect = ()=>{
   const currentOs = boardDetail.value.imagesuites?.find(os => os.id === activeTab1.value);
-  const currentRelease = currentOs?.releases?.find(release => release.id === activeTab2.value);
-  if (!currentRelease?.imagesuites) return [];
-  return currentRelease.imagesuites?.map(s=>({
+  // const currentRelease = currentOs?.releases?.find(release => release.id === activeTab2.value);
+  // if (!currentRelease?.imagesuites) return [];
+   let AllRelease = []
+  currentOs?.releases.forEach(it=>AllRelease.push(...it.imagesuites))
+  if (!AllRelease?.length) return [];
+
+  return AllRelease?.map(s=>({
     id:s?.id,
     flavor:[s.flavor],
     isaMabi:[s.isa.mabi],
@@ -303,10 +345,9 @@ const suitesForSelect = ()=>{
 }
 
 
-
-
 const getSuiteDescription = () => {
   const currentOs = boardDetail.value.imagesuites?.find(os => os.id === activeTab1.value);
+
   const currentRelease = currentOs?.releases?.find(release => release.id === activeTab2.value);
 
   return currentRelease?.imagesuites?.[0]?.description || '';
@@ -315,22 +356,28 @@ const getSuiteDescription = () => {
 /* 搜索参数检索功能 */
 const getKernelVersions = () => {
   const currentOs = boardDetail.value.imagesuites?.find(os => os.id === activeTab1.value);
-  const currentRelease = currentOs?.releases?.find(release => release.id === activeTab2.value);
-  if (!currentRelease?.imagesuites) return [];
   
-  return currentRelease.imagesuites
+  let AllRelease = []
+  currentOs?.releases.forEach(it=>AllRelease.push(...it.imagesuites))
+  if (!AllRelease?.length) return [];
+
+   return AllRelease
       .filter(suite => suite.kernel?.version)
-      .flatMap(suite => [{ version: suite.kernel.version }]).filter((item, index, self) => self.findIndex(el => el.version === item.version) === index)
+       .flatMap(suite => [{ version: suite.kernel.version }]).filter((item, index, self) => self.findIndex(el => el.version === item.version) === index)
+ 
 };
 
 
 
 const getIsaMabi = () => {
   const currentOs = boardDetail.value.imagesuites?.find(os => os.id === activeTab1.value);
-  const currentRelease = currentOs?.releases?.find(release => release.id === activeTab2.value);
-  if (!currentRelease?.imagesuites) return [];
 
-  return currentRelease.imagesuites.flatMap((suite, suiteIndex) => {
+   let AllRelease = []
+  currentOs?.releases.forEach(it=>AllRelease.push(...it.imagesuites))
+  if (!AllRelease?.length) return [];
+
+
+  return AllRelease.flatMap((suite, suiteIndex) => {
     const isa = suite.isa;
     if (!isa || !isa.mabi) return [];
     return {
@@ -342,10 +389,11 @@ const getIsaMabi = () => {
 
 const getIsaMarch = () => {
   const currentOs = boardDetail.value.imagesuites?.find(os => os.id === activeTab1.value);
-  const currentRelease = currentOs?.releases?.find(release => release.id === activeTab2.value);
-  if (!currentRelease?.imagesuites) return [];
+  let AllRelease = []
+  currentOs?.releases.forEach(it=>AllRelease.push(...it.imagesuites))
+  if (!AllRelease?.length) return [];
 
-  return currentRelease.imagesuites.flatMap((suite, suiteIndex) => {
+  return AllRelease.flatMap((suite, suiteIndex) => {
     const isa = suite.isa;
     if (!isa || !isa.march) return [];
     return isa.march.map((march, index) => ({
@@ -357,28 +405,30 @@ const getIsaMarch = () => {
 
 const getUserspaces = () => {
   const currentOs = boardDetail.value.imagesuites?.find(os => os.id === activeTab1.value);
-  const currentRelease = currentOs?.releases?.find(release => release.id === activeTab2.value);
-  if (!currentRelease?.imagesuites) return [];
 
 
-    return currentRelease.imagesuites.flatMap((suite, index) => {
-    const userSpaceList = suite.flavor;
-    if (!userSpaceList) return [];
+  let AllRelease = []
+  currentOs?.releases.forEach(it=>AllRelease.push(...it.imagesuites))
+  if (!AllRelease?.length) return [];
 
-      return Array.isArray(userSpaceList)
-          ? userSpaceList.map((space, spaceIndex) => ({ id: `${index}-${spaceIndex}`, flavor: space })).filter((item, index, self) => self.findIndex(el => el.flavor === item.flavor) === index)
-          : [{ id: `${index}-0`, flavor: userSpaceList }];
-    });
+
+    return [...new Set(
+      AllRelease.map(s => s.flavor).filter(Boolean)
+  )].filter((item, index, self) => self.findIndex(el => el === item) === index);
+
 
 };
 
 const getInstallerTypes = () => {
   const currentOs = boardDetail.value.imagesuites?.find(os => os.id === activeTab1.value);
-  const currentRelease = currentOs?.releases?.find(release => release.id === activeTab2.value);
-  if (!currentRelease?.imagesuites) return [];
+
+  let AllRelease = []
+  currentOs?.releases.forEach(it=>AllRelease.push(...it.imagesuites))
+  if (!AllRelease?.length) return [];
+
 
   return [...new Set(
-      currentRelease.imagesuites.map(s => s.loader?.[0]).filter(Boolean)
+      AllRelease.map(s => s.loader?.[0]).filter(Boolean)
   )].filter((item, index, self) => self.findIndex(el => el === item) === index);
 };
 
@@ -394,7 +444,6 @@ watch([activeTab1, activeTab2], ([newTab1, newTab2]) => {
     });
   }
 });
-
 
 
 // 保持原有数据加载逻辑，仅调整初始化Tab赋值
@@ -424,6 +473,16 @@ const fetchBoardDetail = async () => {
           activeTab2.value = firstRelease.id; // 二级Tab初始化
         }
       }
+      data.imagesuites.forEach(suite => {
+      suite.releases.forEach(release => {
+        release.imagesuites.forEach(imgSuite => {
+          imgSuite.parentSuite = suite.id;
+          imgSuite.parentRelease = release.id;
+          allImageSuites.value.push(imgSuite);
+        });
+      });
+    });
+
     });
 
     // 可以在需要的地方再次调用 request.notify() 来通知所有订阅者
@@ -436,9 +495,18 @@ const fetchBoardDetail = async () => {
   }
 };
 
+
+
 onMounted(async () => {
   await fetchBoardDetail();
+  // 初始化
+  // 收集所有第三层imagesuites对象
+  
 });
+
+
+console.log(osList.value)
+
 </script>
 
 <style scoped>
