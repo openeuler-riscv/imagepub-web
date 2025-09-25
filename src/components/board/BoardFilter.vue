@@ -157,64 +157,83 @@
       </el-container>
     </div>
 
-    <!-- 其余过滤项保持原来的循环逻辑 -->
-    <div v-if="!filterBtn"  class="filter-row" v-for="(filter, key) in otherFilters" :key="key">
-      <BoardInfoTitle :title="filter.label" />
-
+    <!-- flavor -->
+    <div class="filter-row" >
+      <BoardInfoTitle :title="t('preInstalledList')" />
       <div :style="{ display: 'flex', flexDirection: 'column',position:'relative',bottom:'12px',height:'32px' }">
         <div class="filter-item">
            <div style="display:flex;flex-wrap:wrap;">
             <el-checkbox-button
-              v-model="filters[key].checkAll"
-              :indeterminate="filters[key].isIndeterminate"
-              @change="handleFilterCheckAll(key)"
+              v-model="filters.flavor.checkAll"
+              :indeterminate="filters.flavor.isIndeterminate"
+              @change="handleFilterCheckAll('flavor')"
               style="margin-right: 10px;height:32px"
           >
             {{ t('any') }}
           </el-checkbox-button>
-          <el-checkbox-group v-model="filters[key].selected" @change="handleFilterChange(key)">
+          <el-checkbox-group v-model="filters.flavor.selected" @change="handleFilterChange('flavor')">
             <el-checkbox-button
-                v-for="item in filter.options"
+               v-if="!filterBtn"
+                v-for="item in flavor"
                 :key="item.id || item"
-                :value="item.profile || item.flavor || item"
+                :value="item.flavor "
             >
-              {{ item.profile || item.flavor || item }}
+              {{item.flavor }}
             </el-checkbox-button>
+             <el-checkbox-button
+                v-else
+                v-for="it in filterflavor"
+                :key="it.id || item"
+                :value="it.flavor "
+                 :disabled="it.disabled"
+            >
+              {{ it.flavor }}
+                </el-checkbox-button>
           </el-checkbox-group>
         </div>
         </div>      
       </div>
     </div>
 
-     <div v-else  class="filter-row" v-for="(filter, k) in filterotherFilters" :key="k">
-      <BoardInfoTitle :title="filter.label" />
+
+      <!-- installer -->
+     <div  class="filter-row">
+      <BoardInfoTitle :title="t('bootLoader')" />
       <div :style="{ display: 'flex', flexDirection: 'column',position:'relative',bottom:'12px',height:'32px' }">
         <div class="filter-item">
            <div style="display:flex;flex-wrap:wrap;">
             <el-checkbox-button
-              v-model="filters[k].checkAll"
-              :indeterminate="filters[k].isIndeterminate"
-              @change="handleFilterCheckAll(k)"
+              v-model="filters.installer.checkAll"
+              :indeterminate="filters.installer.isIndeterminate"
+              @change="handleFilterCheckAll('installer')"
               style="margin-right: 10px;height:32px"
           >
             {{ t('any') }}
           </el-checkbox-button>
-          <el-checkbox-group v-model="filters[k].selected" @change="handleFilterChange(k)">
+          <el-checkbox-group v-model="filters.installer.selected" @change="handleFilterChange('installer')">
             <el-checkbox-button
-                v-for="item in filter.options"
-                :key="item.id || item"
-                :value="item.profile || item.flavor || item"
-                :disabled="item.disabled"
-                
+                v-if="!filterBtn" 
+                v-for="item in installer"
+                :key="item"
+                :value="item.profile || item"
             >
-              {{ item.profile || item.flavor || item }}
+              {{ item.profile || item }}
             </el-checkbox-button>
+
+            <el-checkbox-button
+                v-else
+                v-for="it in filterinstaller"
+                :key="it"
+                :value="it.profile || it "
+                 :disabled="it.disabled"
+            >
+              {{ it.profile }}
+                </el-checkbox-button>
           </el-checkbox-group>
         </div>
         </div>      
       </div>
     </div>
-
   </div>
 </template>
 
@@ -222,7 +241,7 @@
 import { useI18n } from "vue-i18n";
 import { defineProps, defineEmits,ref,watch } from 'vue';
 import BoardInfoTitle from "./BoardInfoTitle.vue";
-const { t } = useI18n();
+const { t,locale } = useI18n();
 
 const props = defineProps({
   filters: {
@@ -253,27 +272,29 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  otherFilters: {
-    type: Object,
-    default: () => ({
-      flavor: { label: '', options: [] },
-      installer: { label: '', options: [] }
-    })
+  
+  flavor: {
+    type: Array,
+    default: () => []
   },
+
+  installer: {
+    type: Array,
+    default: () => []
+  },
+  
   suitesForSelect:{},
   isFilter:Boolean
 });
-
 
 const filterBtn = ref(false)
 const filterkernelOptions = ref([])
 const filterkernelVersions = ref([])
 const filterisaMabi = ref([])
 const filterisaMarch = ref([])
-const filterotherFilters = ref({
-  flavor: { label: t('preInstalledList'), options: [] },
-  installer: { label:t('bootLoader'), options: [] }
-})
+const filterflavor = ref([])
+const filterinstaller = ref([])
+
 
 
 /* 当前在哪个suits集合筛选 */
@@ -297,6 +318,10 @@ const updateCheckState = (key,kind) => {
                   ? props.isaMabi.map(v => v.profile)
                   : key === 'isaMarch'
                       ? props.isaMarch.map(v => v.profile)
+                        : key === 'flavor'
+                        ? props.flavor.map(v=>v.flavor)
+                       : key === 'installer'?
+                        props.installer.map(v=>v.profile)
                       : props.otherFilters[key]?.options?.map(v => v.profile || v.flavor || v) || [];
                   
   const checkedCount = filter.selected.length;
@@ -327,8 +352,6 @@ const updateCheckState = (key,kind) => {
         
           selectedSuits.value = filter.selected.length>0? currentSuits.value?.filter(c=>hasCommonElements(filter.selected,c[key])):currentSuits.value
 
-          
-          
           filterkernelOptions.value = [...props.kernelOptions].map(it=>{
             const currentOption =  mergeArrayValues(selectedSuits.value, 'kernel')
             if(currentOption && currentOption.length>0){
@@ -361,17 +384,18 @@ const updateCheckState = (key,kind) => {
             }
             return it
           })
-
-
-           filterotherFilters.value.flavor.options = [...props.otherFilters['flavor']?.options].map(it=>{
+          filterflavor.value = [...props.flavor].map(it=>{
             const currentOption =  mergeArrayValues(selectedSuits.value, 'flavor')
+           
             if(currentOption && currentOption.length>0){
               it.disabled = currentOption.includes(it.flavor)? false:true
             }
+             console.log(currentOption,it)
             return it
           })
 
-          filterotherFilters.value.installer.options =  [...props.otherFilters['installer']?.options].map(it=>{
+
+          filterinstaller.value =  [...props.installer].map(it=>{
             const currentOption =  mergeArrayValues(selectedSuits.value, 'installer')
             if(currentOption && currentOption.length>0){
               it.disabled = currentOption.includes(it.profile)? false:true
@@ -379,16 +403,6 @@ const updateCheckState = (key,kind) => {
             return it
           })
 
-
-
-          
-
-
-
-
-   
-          // filterotherFilters.value.flavor.options = mergeArrayValues(selectedSuits.value, 'flavor')
-          // filterotherFilters.value.installer.options = mergeArrayValues(selectedSuits.value, 'installer')
       }  
     }
     else{
@@ -413,11 +427,13 @@ const updateCheckState = (key,kind) => {
               break;
             case 'flavor':
               //filterotherFilters.value.flavor.options = props.otherFilters[b]?.options?.map(v => v.profile || v.flavor || v)
-              filterotherFilters.value.flavor.options = [...props.otherFilters[b]?.options]
+              //filterotherFilters.value.flavor.options = [...props.otherFilters[b]?.options]
+              filterflavor.value = [...props.flavor]
               break; 
             case 'installer':
               //filterotherFilters.value.installer.options = props.otherFilters[b]?.options?.map(v => v.profile || v.flavor || v) 
-              filterotherFilters.value.installer.options = [...props.otherFilters[b]?.options]
+              //filterotherFilters.value.installer.options = [...props.otherFilters[b]?.options]
+               filterinstaller.value = [...props.installer]
               break;
             
             default:
@@ -435,8 +451,10 @@ const updateCheckState = (key,kind) => {
     filterkernelVersions.value = []
     filterisaMabi.value = []
     filterisaMarch.value =[]
-    filterotherFilters.value.flavor.options = [] 
-    filterotherFilters.value.installer.options = [] 
+    filterflavor.value = []
+    filterinstaller.value = []
+    // filterotherFilters.value.flavor.options = [] 
+    // filterotherFilters.value.installer.options = [] 
   
   }
 };
@@ -481,9 +499,18 @@ const handleFilterCheckAll = (key) => {
     allOptions = props.isaMabi.map(v => v.profile);
   } else if (key === 'isaMarch') {
     allOptions = props.isaMarch.map(v => v.profile);
-  }else {
-    allOptions = props.otherFilters[key].options.map(v => v.profile || v.flavor || v);
   }
+  else if(key === 'flavor'){
+    allOptions = props.flavor.map(v => v.flavor);
+  }
+  else if(key === 'installer'){
+      allOptions = props.flavor.map(v => v.profile);
+  }
+  
+  
+  // else {
+  //   allOptions = props.otherFilters[key].options.map(v => v.profile || v.flavor || v);
+  // }
   
   filter.selected=[]
   updateCheckState(key,1);
@@ -503,8 +530,10 @@ watch(()=>props.isFilter, (value) => {
     filterkernelVersions.value = []
     filterisaMabi.value = []
     filterisaMarch.value =[]
-    filterotherFilters.value.flavor.options = [] 
-    filterotherFilters.value.installer.options = [] 
+    filterflavor.value = []
+    filterinstaller.value = []
+    // filterotherFilters.value.flavor.options = [] 
+    // filterotherFilters.value.installer.options = [] 
   }
 },{immediate:true,deep:true});
 

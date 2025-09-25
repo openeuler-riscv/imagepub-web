@@ -82,6 +82,8 @@
             :suitesForSelect = "suitesForSelect()"
             :isaMabi = "getIsaMabi()"
             :isaMarch = "getIsaMarch()"
+            :flavor = "getUserspaces()"
+            :installer=" getInstallerTypes()"
             :otherFilters="{
             flavor: { label: t('preInstalledList'), options: getUserspaces() },
             installer: { label: t('bootLoader'), options: getInstallerTypes() }
