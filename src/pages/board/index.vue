@@ -84,10 +84,7 @@
             :isaMarch = "getIsaMarch()"
             :flavor = "getUserspaces()"
             :installer=" getInstallerTypes()"
-            :otherFilters="{
-            flavor: { label: t('preInstalledList'), options: getUserspaces() },
-            installer: { label: t('bootLoader'), options: getInstallerTypes() }
-          }"
+           
         ></BoardFilter>
 
         </div>
@@ -122,6 +119,9 @@ const isDataLoaded = ref(false);
 const boardDetail = ref({});
 const isFilter = ref(false)
 const filterimagesuites = ref([])
+
+
+/* 筛选项定义 */
 const filters = ref({
   kernel: {
     selected: ref([]),
@@ -165,14 +165,26 @@ const drawerVisible = ref(false);
 
 /* 过滤功能 */
 const fiterTargetSuits = (filter,originSuits) => {
+
   const resusltSuits = originSuits.value?.filter(a=>{
     if(filter.flavor.selected.length>0 && a.flavor){
-      return filter.flavor.selected.includes(a?.flavor)
+
+      const allOption = getUserspaces()
+      const  allSelected = []
+      filter.flavor.selected?.forEach(i=>{
+        allSelected.push(allOption?.find(it=>it.id ===i)?.flavor)
+      })
+      return allSelected.includes(a?.flavor)
     }
     else return a
   }).filter(b=>{
     if(filter.installer.selected.length>0 && b.loader.length>0){
-      return filter.installer.selected.includes(b?.loader?.[0])
+       const allOption = getInstallerTypes()
+       const  allSelected = []
+      filter.installer.selected?.forEach(i=>{
+        allSelected.push(allOption?.find(it=>it.id ===i)?.profile)
+      })
+      return allSelected.includes(b?.loader?.[0])
     }
     else return b
   }).filter(c=>{
@@ -400,15 +412,13 @@ const getIsaMarch = () => {
 
 const getUserspaces = () => {
   const currentOs = boardDetail.value.imagesuites?.find(os => os.id === activeTab1.value);
-
-
   let AllRelease = []
   currentOs?.releases.forEach(it=>AllRelease.push(...it.imagesuites))
   if (!AllRelease?.length) return [];
 
     return [...new Set(
       AllRelease.map(s => s.flavor).filter(Boolean)
-  )].filter((item, index, self) => self.findIndex(el => el === item) === index)?.map(it=>({flavor:it,disabled:false}));
+  )].filter((item, index, self) => self.findIndex(el => el === item) === index)?.map((it,index)=>({flavor:it,disabled:false,id:index+1}));
 
 
 };
@@ -423,7 +433,7 @@ const getInstallerTypes = () => {
 
   return [...new Set(
       AllRelease.map(s => s.loader?.[0]).filter(Boolean)
-  )].filter((item, index, self) => self.findIndex(el => el === item) === index)?.map(it=>({profile:it,disabled:false}));
+  )].filter((item, index, self) => self.findIndex(el => el === item) === index)?.map((it,index)=>({profile:it,disabled:false,id:index+1}));
 };
 
 

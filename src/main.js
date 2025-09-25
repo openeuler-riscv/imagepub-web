@@ -40,11 +40,6 @@ if (redirectPath) {
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
 
-if (process.env.NODE_ENV !== 'development') {
-    console.log = function() {};
-}
-
-
 const app = createApp(App)
 app.use(router)
 app.use(i18n)

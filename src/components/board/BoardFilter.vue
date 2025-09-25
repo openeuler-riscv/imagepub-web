@@ -23,8 +23,6 @@
                     v-for="item in kernelOptions"
                     :key="item"
                     :value="item.version"
-
-                   
                 >
                   {{ item.version }}
                 </el-checkbox-button>
@@ -176,15 +174,15 @@
                v-if="!filterBtn"
                 v-for="item in flavor"
                 :key="item.id || item"
-                :value="item.flavor "
+                :value="item.id"
             >
               {{item.flavor }}
             </el-checkbox-button>
              <el-checkbox-button
                 v-else
                 v-for="it in filterflavor"
-                :key="it.id || item"
-                :value="it.flavor "
+                :key="it.id || it"
+                :value="it.id "
                  :disabled="it.disabled"
             >
               {{ it.flavor }}
@@ -215,7 +213,7 @@
                 v-if="!filterBtn" 
                 v-for="item in installer"
                 :key="item"
-                :value="item.profile || item"
+                :value="item.id"
             >
               {{ item.profile || item }}
             </el-checkbox-button>
@@ -224,7 +222,7 @@
                 v-else
                 v-for="it in filterinstaller"
                 :key="it"
-                :value="it.profile || it "
+                :value="it.id"
                  :disabled="it.disabled"
             >
               {{ it.profile }}
@@ -296,7 +294,6 @@ const filterflavor = ref([])
 const filterinstaller = ref([])
 
 
-
 /* 当前在哪个suits集合筛选 */
 const currentSuits = ref([])
 
@@ -320,9 +317,8 @@ const updateCheckState = (key,kind) => {
                       ? props.isaMarch.map(v => v.profile)
                         : key === 'flavor'
                         ? props.flavor.map(v=>v.flavor)
-                       : key === 'installer'?
+                       :
                         props.installer.map(v=>v.profile)
-                      : props.otherFilters[key]?.options?.map(v => v.profile || v.flavor || v) || [];
                   
   const checkedCount = filter.selected.length;
   
@@ -349,8 +345,19 @@ const updateCheckState = (key,kind) => {
           currentSuits.value = selectedSuits.value
         }
         /* 更新、筛选每个选择模块的按钮 */
-        
-          selectedSuits.value = filter.selected.length>0? currentSuits.value?.filter(c=>hasCommonElements(filter.selected,c[key])):currentSuits.value
+          if(key== 'flavor' || key== 'installer'){
+            const allOption = key== 'flavor'? props.flavor :props.installer
+
+            const allSelected = []
+            filter.selected?.forEach(i=>{
+              allSelected.push(key== 'flavor'? allOption?.find(it=>it.id ===i)?.flavor : allOption?.find(it=>it.id ===i)?.profile)
+            })
+            selectedSuits.value = filter.selected.length>0? currentSuits.value?.filter(c=>hasCommonElements(allSelected,c[key])):currentSuits.value
+          }
+          else{
+             selectedSuits.value = filter.selected.length>0? currentSuits.value?.filter(c=>hasCommonElements(filter.selected,c[key])):currentSuits.value
+          }
+
 
           filterkernelOptions.value = [...props.kernelOptions].map(it=>{
             const currentOption =  mergeArrayValues(selectedSuits.value, 'kernel')
@@ -384,13 +391,13 @@ const updateCheckState = (key,kind) => {
             }
             return it
           })
+
           filterflavor.value = [...props.flavor].map(it=>{
             const currentOption =  mergeArrayValues(selectedSuits.value, 'flavor')
            
             if(currentOption && currentOption.length>0){
               it.disabled = currentOption.includes(it.flavor)? false:true
             }
-             console.log(currentOption,it)
             return it
           })
 
@@ -410,29 +417,21 @@ const updateCheckState = (key,kind) => {
          Object.keys(temp)?.filter(a=>temp[a].checkAll)?.map(b=>{
           switch(b) {
             case 'kernel':
-              //filterkernelOptions.value =  props.kernelOptions.map(v => v.version)
               filterkernelOptions.value =  [...props.kernelOptions]
               break; 
             case 'kernels':
-              //filterkernelVersions.value = props.kernelVersions.map(v => v.version)
               filterkernelVersions.value = [...props.kernelVersions]
               break;
             case 'isaMabi': 
-              //filterisaMabi.value = props.isaMabi.map(v => v.profile)
               filterisaMabi.value = [...props.isaMabi]
               break; 
             case 'isaMarch':
-              //filterisaMarch.value = props.isaMarch.map(v => v.profile)
               filterisaMarch.value = [...props.isaMarch]
               break;
             case 'flavor':
-              //filterotherFilters.value.flavor.options = props.otherFilters[b]?.options?.map(v => v.profile || v.flavor || v)
-              //filterotherFilters.value.flavor.options = [...props.otherFilters[b]?.options]
               filterflavor.value = [...props.flavor]
               break; 
             case 'installer':
-              //filterotherFilters.value.installer.options = props.otherFilters[b]?.options?.map(v => v.profile || v.flavor || v) 
-              //filterotherFilters.value.installer.options = [...props.otherFilters[b]?.options]
                filterinstaller.value = [...props.installer]
               break;
             
@@ -453,9 +452,6 @@ const updateCheckState = (key,kind) => {
     filterisaMarch.value =[]
     filterflavor.value = []
     filterinstaller.value = []
-    // filterotherFilters.value.flavor.options = [] 
-    // filterotherFilters.value.installer.options = [] 
-  
   }
 };
 
@@ -481,6 +477,7 @@ const mergeArrayValues = (arr, key) => {
 /* 判断两个数组相同元素 */
 const hasCommonElements = (arr1, arr2) =>{
   // 将其中一个数组转换为Set以提高查找效率
+
   const set = new Set(arr1);
   // 检查arr2中是否有元素存在于Set中
   return arr2.some(item => set.has(item));
@@ -508,10 +505,6 @@ const handleFilterCheckAll = (key) => {
   }
   
   
-  // else {
-  //   allOptions = props.otherFilters[key].options.map(v => v.profile || v.flavor || v);
-  // }
-  
   filter.selected=[]
   updateCheckState(key,1);
 };
@@ -532,9 +525,31 @@ watch(()=>props.isFilter, (value) => {
     filterisaMarch.value =[]
     filterflavor.value = []
     filterinstaller.value = []
-    // filterotherFilters.value.flavor.options = [] 
-    // filterotherFilters.value.installer.options = [] 
+
   }
+},{immediate:true,deep:true});
+
+
+watch(()=>[props.flavor, locale.value], (value) => {
+
+  if(filterBtn.value && filterflavor.value.length>0){
+    filterflavor.value = filterflavor.value.map((it,index)=>{
+    return {...it,flavor:props.flavor[index].flavor}
+  })
+  }
+  
+},{immediate:true,deep:true});
+
+
+watch(()=>[props.installer,locale.value], (value) => {
+
+  if(filterBtn.value && filterinstaller.value.length>0){
+    filterinstaller.value = filterinstaller.value.map((it,index)=>{
+      return {...it,profile:props.installer[index].profile}
+    })
+  }
+
+   
 },{immediate:true,deep:true});
 
 
