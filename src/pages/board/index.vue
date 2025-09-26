@@ -266,8 +266,7 @@ const resetClick = () =>{
       isIndeterminate: ref(false),
     }
   }
-
-
+  activeTab2.value = osList.value?.[0].releases?.[0]?.id
   filterosList.value = []
   isFilter.value = false
 }
@@ -461,7 +460,7 @@ const fetchBoardDetail = async () => {
       // 初始化Tab：自动选择第一个可用的一级和二级Tab
       if (osList.value.length) {
         activeTab1.value = osList.value[0].name; // 一级Tab初始化
-        
+
         /* 筛选过程中切换语言 */
         if(isFilter.value && filterosList.value.length>0 && filterosList.value?.[0].releases?.length >0){
           activeTab2.value = filterosList.value?.[0].releases?.[0].id
