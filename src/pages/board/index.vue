@@ -25,7 +25,7 @@
             <el-tabs v-model="activeTab2" class="sub-tabs dark" type="border-card">
               <el-tab-pane
                   v-for="(release, releaseIndex) in getReleases(osItem)"
-                  :key="releaseIndex"
+                  :key="locale"
                   :label="release.name"
                   :name="release.id"
               >
@@ -40,7 +40,7 @@
           </el-tab-pane>
           <el-tab-pane
               v-for="(osItem, osfilerIndex) in filterosList"
-              :key="osfilerIndex"
+              :key="locale"
               :label="osItem.name"
               :name="osItem.name"
               v-else
@@ -48,7 +48,7 @@
             <el-tabs v-model="activeTab2" class="sub-tabs dark" type="border-card">
               <el-tab-pane
                   v-for="(release, releaseIndex) in getReleases(osItem)"
-                  :key="releaseIndex"
+                  :key="release.id"
                   :label="release.name"
                   :name="release.id"
               >
@@ -114,7 +114,7 @@ import CustomArrowIcon from '@/components/icon/CustomArrowIcon.vue'
 
 const allImageSuites = ref([]);
 const filterosList = ref([])
-const { t } = useI18n();
+const { t,locale } = useI18n();
 const isDataLoaded = ref(false);
 const boardDetail = ref({});
 const isFilter = ref(false)
@@ -220,15 +220,17 @@ const handleFilter = (newState) => {
   filterimagesuites.value = fiterTargetSuits(newState.filters,allImageSuites)
   const tempList  = JSON.parse(JSON.stringify(osList.value))
   filterosList.value = tempList.filter(list=>filterimagesuites.value.some(it=>it.parentSuite === list.name))?.map(sec=>{
-       
       sec.releases = sec.releases.filter(i=>filterimagesuites.value.some(it=>it.parentRelease === i.id))?.map(k=>{
         k.imagesuites = k.imagesuites.filter(n=>filterimagesuites.value.some(it=>it.id === n.id))
         return k
       })
-
       return sec
   })
+  if(isFilter.value && filterosList.value.length>0 && filterosList.value?.[0].releases?.length >0){
+    activeTab2.value = filterosList.value?.[0].releases?.[0].id
+  }
 };
+
 
 const resetClick = () =>{
   filters.value = {
@@ -437,19 +439,6 @@ const getInstallerTypes = () => {
 };
 
 
-// 监听Tab变化，更新相关数据（可选：用于数据联动）
-watch([activeTab1, activeTab2], ([newTab1, newTab2]) => {
-  if (newTab1 && newTab2) {
-    // 示例：Tab切换时重置过滤条件
-    Object.keys(filters.value).forEach(key => {
-      filters.value[key].selected = [];
-      filters.value[key].checkAll = true;
-      filters.value[key].isIndeterminate = false;
-    });
-  }
-});
-
-
 // 保持原有数据加载逻辑，仅调整初始化Tab赋值
 const fetchBoardDetail = async () => {
   try {
@@ -472,10 +461,20 @@ const fetchBoardDetail = async () => {
       // 初始化Tab：自动选择第一个可用的一级和二级Tab
       if (osList.value.length) {
         activeTab1.value = osList.value[0].name; // 一级Tab初始化
-        const firstRelease = osList.value[0].releases[0];
-        if (firstRelease) {
-          activeTab2.value = firstRelease.id; // 二级Tab初始化
+        
+        /* 筛选过程中切换语言 */
+        if(isFilter.value && filterosList.value.length>0 && filterosList.value?.[0].releases?.length >0){
+          activeTab2.value = filterosList.value?.[0].releases?.[0].id
         }
+        /* 正常初始化 */
+        else {
+           const firstRelease = osList.value[0].releases[0];
+            if (firstRelease) {
+              activeTab2.value = firstRelease.id; // 二级Tab初始化
+            }
+        }
+
+       
       }
       data.imagesuites.forEach(suite => {
       suite.releases.forEach(release => {

@@ -530,18 +530,18 @@ watch(()=>props.isFilter, (value) => {
 },{immediate:true,deep:true});
 
 
-watch(()=>[props.flavor, locale.value], (value) => {
-
+watch(()=>[props.flavor], (value) => {
+  
   if(filterBtn.value && filterflavor.value.length>0){
     filterflavor.value = filterflavor.value.map((it,index)=>{
-    return {...it,flavor:props.flavor[index].flavor}
-  })
+      return {...it,flavor:props.flavor[index].flavor}
+    })
   }
   
 },{immediate:true,deep:true});
 
 
-watch(()=>[props.installer,locale.value], (value) => {
+watch(()=>[props.installer], (value) => {
 
   if(filterBtn.value && filterinstaller.value.length>0){
     filterinstaller.value = filterinstaller.value.map((it,index)=>{
