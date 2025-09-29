@@ -340,21 +340,6 @@ const handleSuggestionClick = item => {
   showSuggestions.value = false;
 };
 
-const handleMenuClick = (menuId, event) => {
-  event.stopPropagation();
-  showOptions.value[menuId] = !showOptions.value[menuId];
-  Object.keys(showOptions.value).forEach(key => {
-    if (Number(key) !== menuId) {
-      showOptions.value[key] = false;
-    }
-  });
-};
-
-const handleOptionSelect = (menuId, option, event) => {
-  event.stopPropagation();
-  selectedOptions.value[menuId] = option;
-  showOptions.value[menuId] = false;
-};
 
 const scrollToTop = () => {
   window.scrollTo({
@@ -373,11 +358,6 @@ const closeSearchSuggestions = e => {
   }
 };
 
-const handleResetOption = (menuId, event) => {
-  event.stopPropagation();
-  delete selectedOptions.value[menuId];
-  showOptions.value[menuId] = false;
-};
 
 const viewportWidth = ref(0);
 const isdummy = ref(false);

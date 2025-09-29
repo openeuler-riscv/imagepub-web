@@ -120,6 +120,8 @@ const boardDetail = ref({});
 const isFilter = ref(false)
 const filterimagesuites = ref([])
 
+const originalISAData = ref([])
+
 
 /* 筛选项定义 */
 const filters = ref({
@@ -400,7 +402,28 @@ const getIsaMarch = () => {
   currentOs?.releases.forEach(it=>AllRelease.push(...it.imagesuites))
   if (!AllRelease?.length) return [];
 
-  return AllRelease.flatMap((suite, suiteIndex) => {
+
+  // 创建extension元素到索引的映射表，用于快速查找
+  const extensionIndexMap = {};
+  originalISAData.value.forEach((item, index) => {
+    extensionIndexMap[item] = index;
+  });
+
+
+
+  //按照extension的顺序排序原数据
+  const sortedData = (data)=>{
+      return [...data].sort((a, b) => {
+      // 获取两个对象profile在extension中的索引
+      const indexA = extensionIndexMap[a.profile];
+      const indexB = extensionIndexMap[b.profile];
+      // 按索引值从小到大排序
+      return indexA - indexB;
+    });
+  } 
+
+
+  const Isa = AllRelease.flatMap((suite, suiteIndex) => {
     const isa = suite.isa;
     if (!isa || !isa.march) return [];
     return isa.march.map((march, index) => ({
@@ -409,7 +432,17 @@ const getIsaMarch = () => {
       disabled:false
     }));
   }).filter((item, index, self) => self.findIndex(el => el.profile === item.profile) === index);
+
+  return sortedData(Isa)
 };
+
+
+
+
+
+
+
+
 
 const getUserspaces = () => {
   const currentOs = boardDetail.value.imagesuites?.find(os => os.id === activeTab1.value);
@@ -498,11 +531,42 @@ const fetchBoardDetail = async () => {
 };
 
 
+const fetchISAData = async() =>{
+    try {
+
+    const uri = `/v2/resources/riscv64_isa_extensions.json`;
+    // 创建一个请求实例，保存在变量中以便后续可以多次调用
+    const request = languageFetch(uri);
+
+    // 第一次订阅处理响应
+    request.then(async (response) => {
+      if (!response.ok) {
+        ElMessage.error(`请求失败，状态码: ${response.status}`);
+        return;
+      }
+      const data = await response.json();
+
+      originalISAData.value = data.extension
+    });
+
+    // 可以在需要的地方再次调用 request.notify() 来通知所有订阅者
+    // 或者添加新的订阅者
+    // 示例：request.then((response) => { /* 另一个处理函数 */ });
+  } catch (error) {
+    ElMessage.error('获取板子详情失败：' + error.message);
+  } finally {
+    isDataLoaded.value = true;
+  }
+
+}
+
+
 
 onMounted(async () => {
   await fetchBoardDetail();
   // 初始化
   // 收集所有第三层imagesuites对象
+  await fetchISAData()
   
 });
 
