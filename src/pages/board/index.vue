@@ -412,29 +412,127 @@ const getIsaMarch = () => {
 
 
   //按照extension的顺序排序原数据
-  const sortedData = (data)=>{
-      return [...data].sort((a, b) => {
-      // 获取两个对象profile在extension中的索引
-      const indexA = extensionIndexMap[a.profile];
-      const indexB = extensionIndexMap[b.profile];
-      // 按索引值从小到大排序
-      return indexA - indexB;
-    });
+  // const sortedData = (data)=>{
+  //     return [...data].sort((a, b) => {
+  //     // 获取两个对象profile在extension中的索引
+  //     const indexA = extensionIndexMap[a.profile];
+  //     const indexB = extensionIndexMap[b.profile];
+  //     // 按索引值从小到大排序
+  //     return indexA - indexB;
+  //   });
+  //} 
+
+
+
+  // const Isa = AllRelease.flatMap((suite, suiteIndex) => {
+  //   const isa = suite.isa;
+  //   if (!isa || !isa.march) return [];
+  //   return isa.march.map((march, index) => ({
+  //     id: `${suiteIndex}-${index}`,
+  //     profile: march,
+  //     disabled:false
+  //   }));
+  // }).filter((item, index, self) => self.findIndex(el => el.profile === item.profile) === index);
+
+
+  //return sortedData(Isa)
+
+     const sortedData2 = (data)=>{
+        return [...data].sort((a, b) => {
+        // 获取两个对象profile在extension中的索引
+        const indexA = extensionIndexMap[a];
+        const indexB = extensionIndexMap[b];
+        // 按索引值从小到大排序
+        return indexA - indexB;
+      });
   } 
 
 
-  const Isa = AllRelease.flatMap((suite, suiteIndex) => {
+
+  const Isa2 = AllRelease.flatMap((suite, suiteIndex) => {
     const isa = suite.isa;
     if (!isa || !isa.march) return [];
-    return isa.march.map((march, index) => ({
-      id: `${suiteIndex}-${index}`,
+    return isa.march.map((march, index) => march);
+  }).filter((item, index, self) => self.findIndex(el => el === item) === index);
+
+  const elementVectors = getElementVectors(Isa2,AllRelease)
+
+  const groups = groupByContinuousSameVector(Isa2, elementVectors)
+
+  return sortedData2(groups).map((march, index) => ({
+      id: `${index}`,
       profile: march,
       disabled:false
-    }));
-  }).filter((item, index, self) => self.findIndex(el => el.profile === item.profile) === index);
+    }))
 
-  return sortedData(Isa)
-};
+
+}
+  
+  
+
+
+/**
+ * 为每个元素生成"存在向量"
+ * 向量格式：[是否在被筛选项1中存在, 是否在被筛选项2中存在, ...]
+ * @param {string[]} elements - 去重后的元素列表
+ * @returns {Object} 键为元素，值为对应的存在向量
+ */
+
+const getElementVectors = (elements,filteredItems) =>{
+  const vectors = {}
+  
+  elements.forEach(element => {
+    vectors[element] = filteredItems.flatMap(item => item.isa.march.includes(element))
+  })
+  
+  return vectors
+}
+
+
+
+/**
+ * 将连续且具有相同"存在向量"的元素合并为一组
+ * @param {string[]} elements - 元素列表
+ * @param {Object} vectors - 元素向量映射
+ * @returns {string[]} 分组后的结果
+ */
+const groupByContinuousSameVector = (elements, vectors)=> {
+  if (elements.length === 0) return []
+  
+  const result = []
+  let currentGroup = [elements[0]]
+  let currentVector = vectors[elements[0]]
+  
+  // 从第二个元素开始遍历
+  for (let i = 1; i < elements.length; i++) {
+
+
+        const currentElement = elements[i]
+        const elementVector = vectors[currentElement]
+        
+        // 比较当前元素向量与当前组向量是否完全相同
+        const isSameVector = elementVector.every((val, index) => val === currentVector[index])
+        
+        if (isSameVector&&currentElement.length==1 ) {
+          // 向量相同，加入当前组
+          currentGroup.push(currentElement)
+        } else {
+
+          // 向量不同，结束当前组并开始新组
+          result.push(currentGroup.join('')) // 直接拼接元素（无论长度）
+          currentGroup = [currentElement]
+          currentVector = elementVector
+        }
+    }
+   
+
+  
+  
+  // 添加最后一组
+  result.push(currentGroup.join(''))
+  
+  return result
+}
 
 
 
