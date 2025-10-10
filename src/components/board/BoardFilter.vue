@@ -354,6 +354,8 @@ const updateCheckState = (key,kind) => {
             })
             selectedSuits.value = filter.selected.length>0? currentSuits.value?.filter(c=>hasCommonElements(allSelected,c[key])):currentSuits.value
           }
+
+
           else{
              selectedSuits.value = filter.selected.length>0? currentSuits.value?.filter(c=>hasCommonElements(filter.selected,c[key])):currentSuits.value
           }
@@ -385,9 +387,16 @@ const updateCheckState = (key,kind) => {
 
 
           filterisaMarch.value = [...props.isaMarch].map(it=>{
+
             const currentOption =  mergeArrayValues(selectedSuits.value, 'isaMarch')
             if(currentOption && currentOption.length>0){
-              it.disabled = currentOption.includes(it.profile)? false:true
+              if(isAllUpperCase(it.profile)){
+                it.disabled = currentOption.some(item => it.profile.includes(item))?false:true
+              }
+              else{
+                 it.disabled = currentOption.includes(it.profile)? false:true
+              }
+             
             }
             return it
           })
@@ -458,7 +467,6 @@ const updateCheckState = (key,kind) => {
 /* 数组去重 */
 const mergeArrayValues = (arr, key) => {
   const valueSet = new Set();
-
   // 遍历数组中的每个对象
   arr.forEach(obj => {
     // 检查对象是否存在且包含指定key，且对应的值是数组
@@ -474,13 +482,52 @@ const mergeArrayValues = (arr, key) => {
   return Array.from(valueSet);
 }
 
+
+/**
+ * 判断字符串是否全为大写字母
+ * @param {string} str - 待检测的字符串
+ * @returns {boolean} 全为大写字母返回true，否则返回false
+ */
+const isAllUpperCase = (str)=> {
+  // 正则表达式说明：
+  // ^ 表示字符串开始
+  // [A-Z] 匹配任意大写字母（A到Z）
+  // + 表示匹配1次或多次（确保字符串非空）
+  // $ 表示字符串结束
+  return /^[A-Z]+$/.test(str);
+}
+
+
+const hasUpperCaseElementContaining = (targetSet, checkArray) =>{
+  // 目标数组为空时，直接返回false（无元素可匹配）
+  if (!Array.isArray(checkArray) || checkArray.length === 0) return false;
+
+  // 遍历Set中的所有元素
+  for (const element of targetSet) {
+    // 1. 先判断元素是否为全大写字母
+    if (isAllUpperCase(element)) {
+      // 2. 检查该元素是否包含目标数组中的任意一个大写字母
+      const hasMatch = checkArray.some(letter => {
+        // 确保数组元素是字符串（避免非字符串类型导致的错误）
+        return typeof letter === 'string' && element.includes(letter);
+      });
+      // 只要找到一个符合条件的元素，立即返回true
+      if (hasMatch) return true;
+    }
+  }
+
+  // 遍历完所有元素都不符合条件，返回false
+  return false;
+}
+
+
 /* 判断两个数组相同元素 */
 const hasCommonElements = (arr1, arr2) =>{
   // 将其中一个数组转换为Set以提高查找效率
-
+ 
   const set = new Set(arr1);
   // 检查arr2中是否有元素存在于Set中
-  return arr2.some(item => set.has(item));
+  return arr2.some(item => set.has(item)) || hasUpperCaseElementContaining(set,arr2);
 }
 
 
