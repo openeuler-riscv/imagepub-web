@@ -12,6 +12,8 @@ body {
 #app {
     font-family: 'aliregular', sans-serif;
     width: 100%;
+    min-width: 960px;
+    overflow: auto;
     min-height: 100vh;
     background: linear-gradient(
             to right top,
@@ -29,5 +31,8 @@ body {
             #ffffff 50%
     );
 }
+
+
+
 
 

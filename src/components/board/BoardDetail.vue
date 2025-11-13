@@ -4,7 +4,7 @@
       <div class="board-info">
         <div class="board-image-container">
           <div class="board-image">
-            <el-image :src="getImageSrc(currentImageSrc)" style="width: 32vh; height: 42vh;border-radius:8px" />
+            <el-image :src="getImageSrc(currentImageSrc)" style="width: auto; height: 42vh;border-radius:8px" />
           </div>
           <div class="thumbnail-container">
             <el-image
@@ -36,14 +36,14 @@
           </div>
           <div class="info-item">
             <BoardInfoTitle :title="t('ramConfig')" />
-            <el-row class="text-style">{{ getRamConfig() }}</el-row>
+            <el-row  class="text-style">{{ getRamConfig() }}</el-row>
           </div>
           <div class="info-item">
             <el-row>
             <el-col :span="8">
             <BoardInfoTitle :title="t('storageInterface')" />
-            <el-row>
-              <el-col v-for="(item, index) in getStorageInterfaces()" :key="index" :span="24">
+            <el-row >
+              <el-col style="padding-left: 20px" v-for="(item, index) in getStorageInterfaces()" :key="index" :span="24">
                 <li>{{ item.type }}, {{ item.capacity || t('notConfigured') }}</li>
               </el-col>
             </el-row>
@@ -51,7 +51,7 @@
           <el-col :span="8">
             <BoardInfoTitle :title="t('highSpeedInterface')" />
             <el-row>
-              <el-col v-for="(item, index) in getHighSpeedInterfaces()" :key="index" :span="24">
+              <el-col style="padding-left:20px" v-for="(item, index) in getHighSpeedInterfaces()" :key="index" :span="24">
                  <li>{{ item.type }} {{ item.nums ? `x${item.nums}` : "" }}</li>
               </el-col>
             </el-row>
@@ -59,7 +59,7 @@
           <el-col :span="8">
             <BoardInfoTitle :title="t('lowSpeedInterface')" />
             <el-row>
-              <el-col v-for="(item, index) in getLowSpeedInterfaces()" :key="index" :span="24">
+              <el-col style="padding-left:20px" v-for="(item, index) in getLowSpeedInterfaces()" :key="index" :span="24">
                 <li>{{ item.type }} {{ item.nums ? `x${item.nums}` : "" }}</li>
               </el-col>
             </el-row>

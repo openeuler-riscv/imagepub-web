@@ -714,9 +714,9 @@ watch(()=>[props.installer], (value) => {
   }
 
   :deep(.el-checkbox-button) {
-    margin: 0 !important;
+    /* margin: 0 !important; */
     flex: 0 1 auto;
-    min-width: calc(50% - 8px);
+    /* min-width: calc(50% - 8px); */
     max-width: none;
     box-sizing: border-box;
     display: flex !important;

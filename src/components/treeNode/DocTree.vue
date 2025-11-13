@@ -44,6 +44,7 @@ const filteredItems = computed(() => {
   return filterItemsByQuery(props.items, searchQuery.value.toLowerCase());
 });
 
+
 const filterItemsByQuery = (items, query) => {
   if (!items) return [];
   return items

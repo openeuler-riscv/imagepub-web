@@ -34,6 +34,7 @@
         </div>
       </div>
       <div v-html="parsedMarkdown"></div>
+
       源文件：{{ markdownURL }}
     </div>
   </div>
@@ -53,6 +54,7 @@ import helpDocDirectory from "@/components/helpDoc/helpDocDirectory.vue";
 import BoardInfoTitle from "@/components/board/BoardInfoTitle.vue";
 import { useI18n } from 'vue-i18n';
 import { useRoute,useRouter } from 'vue-router'
+
 
 const router = useRouter()
 const route = useRoute()
@@ -159,6 +161,7 @@ const parseMarkdown = () => {
 
     const htmlContent = marked(markdownContent.value);
     parsedMarkdown.value = DOMPurify.sanitize(htmlContent);
+    console.log(parsedMarkdown)
   }
 };
 
@@ -389,24 +392,20 @@ onMounted(() => {
   }
 }
 
-/* Markdown 内容区域的代码块适配暗黑模式 */
-.markdown-body :deep(pre) {
-  background-color: var(--theme-code-bg) !important;
-  color: var(--theme-code-text) !important;
-}
 
-.markdown-body :deep(code) {
-  background-color: var(--theme-code-bg) !important; /* Ensure inline code also has dark background if needed */
+
+/* .markdown-body :deep(code) {
+  background-color: var(--theme-code-bg) !important; 
   color: var(--theme-code-text) !important;
-}
+} */
 
 /* Adjust specific highlight.js elements if necessary */
-.markdown-body :deep(.hljs) {
+/* .markdown-body :deep(.hljs) {
   background: var(--theme-code-bg) !important;
   color: var(--theme-code-text) !important;
-}
+} */
 
-.markdown-body :deep(.hljs-addition),
+/* .markdown-body :deep(.hljs-addition),
 .markdown-body :deep(.hljs-deletion),
 .markdown-body :deep(.hljs-doctag),
 .markdown-body :deep(.hljs-meta),
@@ -415,8 +414,8 @@ onMounted(() => {
 .markdown-body :deep(.hljs-selector-id),
 .markdown-body :deep(.hljs-selector-pseudo),
 .markdown-body :deep(.hljs-string) {
-    color: var(--theme-text-secondary) !important; /* Example: adjust string color */
-}
+    color: var(--theme-text-secondary) !important; 
+} */
 
 /* You might need to add more rules here for other highlight.js token types
    based on the specific highlighting theme and desired appearance. */

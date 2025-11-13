@@ -121,7 +121,22 @@
   width: 100%;
 }
 
+.custom-drawer {
+    width: 40%  /* !important 确保覆盖默认样式 */
+  }
+
+
+@media (max-width: 1279px) {
+  .custom-drawer {
+    width: 50% !important;  /* !important 确保覆盖默认样式 */
+  }
+}
+
 @media screen and (max-width: 768px) {
+   .custom-drawer {
+      width: 100% !important;  /* !important 确保覆盖默认样式 */
+    }
+
   .el-image {
     width: 100%;
     height: 100%;

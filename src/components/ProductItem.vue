@@ -1,7 +1,7 @@
 <template>
   <div class="product-item" @click="handleClick" :style="perProductStyle">
     <div class="product-item-img">
-      <img :src="productImage" alt="product image" width="100%" height="100%" />
+      <img :src="productImage" alt="product image"  height="100%" width="auto" style="max-width: 100%;" />
       <div class="product-item-tag" v-if="isKernel">内核同源</div>
     </div>
     <div class="product-item-info">

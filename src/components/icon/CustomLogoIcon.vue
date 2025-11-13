@@ -1,6 +1,6 @@
 <template>
   <img v-if="!isDark" src="../../assets/logo/Frame1@3x.svg" alt="search icon"
-       style="width: 160px;height: 100px;margin: 10px"
+       style="margin: 8px"
   />
    <img v-else src="@/assets/logo/logoDark.svg" alt="OERC Logo" />
 </template>

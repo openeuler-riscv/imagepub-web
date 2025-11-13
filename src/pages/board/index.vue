@@ -68,6 +68,7 @@
      <el-drawer
         v-model="drawerVisible"
         :title="t('selected')"
+        class="custom-drawer"
         placement="right"
         :modal="true"
       >

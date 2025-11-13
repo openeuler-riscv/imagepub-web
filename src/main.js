@@ -8,6 +8,9 @@ import './styles/variables.css'
 import './styles/theme.css'
 import { createPinia } from 'pinia';
 
+
+
+
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
@@ -49,6 +52,13 @@ app.use(ElementPlus)
 // 现在可以安全地用 store
 const darkModeStore = useDarkModeStore()
 darkModeStore.initTheme()   // 这一步必须在 app.mount 之前
+
+
+
+
+
+
+
 
 app.mount('#app')
 

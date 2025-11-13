@@ -465,8 +465,14 @@ $border-color: #f1faff;
 
 /* 移动端适配样式 */
 @media screen and (max-width: 1068px) {
+  #searchDetail{
+    height: 56px !important;
+  }
+  img{
+    height: 45px;
+  }
   .top-bar-container {
-    width: 95%;
+    width: 90%;
     height: auto;
     padding: 10px 0;
     margin-top: 1vh;
@@ -479,9 +485,9 @@ $border-color: #f1faff;
   }
 
   .input-wrapper {
-    flex-direction: column;
+    //flex-direction: column;
     gap: 12px;
-    padding: 8px;
+    /* padding: 8px; */
   }
 
   .left-section {
@@ -497,7 +503,7 @@ $border-color: #f1faff;
     padding: 8px 15px;
 
     span {
-      font-size: 1rem !important;
+      font-size: 1.2rem !important;
     }
   }
 }
