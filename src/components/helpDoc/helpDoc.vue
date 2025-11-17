@@ -52,7 +52,8 @@ import helpDocDirectory from "@/components/helpDoc/helpDocDirectory.vue";
 import BoardInfoTitle from "@/components/board/BoardInfoTitle.vue";
 import { useI18n } from 'vue-i18n';
 import { useRoute,useRouter } from 'vue-router'
-
+import hljs from "highlight.js";
+import "highlight.js/styles/github.css";
 
 const router = useRouter()
 const route = useRoute()
