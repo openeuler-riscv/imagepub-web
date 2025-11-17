@@ -160,7 +160,6 @@ const parseMarkdown = () => {
 
     const htmlContent = marked(markdownContent.value);
     parsedMarkdown.value = DOMPurify.sanitize(htmlContent);
-    console.log(parsedMarkdown)
   }
 };
 
