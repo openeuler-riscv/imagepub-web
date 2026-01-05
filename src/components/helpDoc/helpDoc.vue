@@ -34,8 +34,6 @@
         </div>
       </div>
       <div v-html="parsedMarkdown"></div>
-
-      源文件：{{ markdownURL }}
     </div>
   </div>
 </template>
@@ -109,7 +107,7 @@ renderer.image = function (href, title, text) {
     return `<span>[无效的图片链接]</span>`;
   }
 
-  const newHref = path.join(baseUrl.value, imageHref);
+  const newHref = path.join(path.dirname(`/${currMarkdownURL.value}`), imageHref);
   return `<img src="${newHref}" alt="${text}" ${title ? `title="${title}"` : ""}>`;
 };
 
@@ -150,6 +148,7 @@ const props = defineProps({
 const markdownContent = ref("");
 const docContent = ref([])
 const parsedMarkdown = ref("");
+const currMarkdownURL = ref("");
 
 const parseMarkdown = () => {
   if (markdownContent.value) {
@@ -165,6 +164,7 @@ const parseMarkdown = () => {
 
 /* 切换相关文件显示 */
 const changeMarkdown = (index) =>{
+  currMarkdownURL.value = props.docList[index];
   fetchData(props.docList[index])
   const currentQuery = { ...route.query,doc:index }
    router.push({
@@ -201,6 +201,7 @@ const fetchAllMdFiles = async (arr) => {
 
 onMounted(() => {
   baseUrl.value = path.dirname(`/${props.markdownURL}`);
+  currMarkdownURL.value = props.markdownURL;
   fetchData(props.markdownURL);
   fetchAllMdFiles(props.docList)
 });
