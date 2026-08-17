@@ -83,7 +83,6 @@ import DarkModeButton from "@/components/common/DarkModeButton.vue";
 import { useRouter, useRoute } from "vue-router";
 import { useI18n } from 'vue-i18n';
 import { setCookie } from '@/utils/cookie';
-import { defineEmits } from 'vue';
 import {useDarkModeStore} from "@/store/darkMode.js";
 import ZH from '@/components/icon/CustomZH.vue'
 import EN from '@/components/icon/CustomEN.vue'

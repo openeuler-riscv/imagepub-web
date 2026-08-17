@@ -237,7 +237,7 @@
 
 <script setup>
 import { useI18n } from "vue-i18n";
-import { defineProps, defineEmits,ref,watch } from 'vue';
+import { ref,watch } from 'vue';
 import BoardInfoTitle from "./BoardInfoTitle.vue";
 const { t,locale } = useI18n();
 
