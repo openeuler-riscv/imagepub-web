@@ -18,48 +18,47 @@
         <div class="image-list">
           <BoardInfoTitle :title="t('imageFile')" />  
             <div v-if=" mirrorList.length > 0">
-             <el-row 
-                  v-for="(item, index) in mirrorList" 
-                  :key="item.id" 
+              <a
+                v-for="item in mirrorList"
+                :key="item.id"
+                :href="item.url"
+                class="file-link"
+                @click.prevent
+              >
+                <el-row
                   :gutter="10"
                   class="custom-row"
                 >
-                  <!-- 每行包含的列（可根据需要调整） -->
                   <el-col :span="2">
                     <div class="col-content" style="min-width:80px;display:block">{{ item.tags[0] }}</div>
                   </el-col>
                   <el-col :span="17">
                     <div class="col-content">{{ item.url.split('/').pop() }}</div>
                   </el-col>
-                   <el-col :span="3">
+                  <el-col :span="3">
                     <div class="col-content">
-                        <span class="text-content">{{ Object.keys(item.hash)?.[0] }}</span>
-                        <el-tooltip
-                         placement="top"
-                          width="150"
-                          trigger="hover"
-                          popper-style="border-radius: 12px;font-size:14px"
-                          :content="Object.values(item.hash)?.[0]"
-                        >
-                          
-                            <el-icon class="info-icon">
-                              <WarningFilled style="color:#999" />
-                            </el-icon>
-                        
-                        </el-tooltip>  
-                        
-                     
+                      <span class="text-content">{{ Object.keys(item.hash)?.[0] }}</span>
+                      <el-tooltip
+                        placement="top"
+                        width="150"
+                        trigger="hover"
+                        popper-style="border-radius: 12px;font-size:14px"
+                        :content="Object.values(item.hash)?.[0]"
+                      >
+                        <el-icon class="info-icon">
+                          <WarningFilled style="color:#999" />
+                        </el-icon>
+                      </el-tooltip>
                     </div>
                   </el-col>
-                   <el-col :span="2">
-                    <div class="col-content"><el-button @click="downloadFile(item.url)" size="small" class="no-border">
+                  <el-col :span="2">
+                    <div class="col-content"><el-button @click.prevent.stop="downloadFile(item.url)" size="small" class="no-border">
                       <img v-if="!isDark" src="@/assets/icons/board/download.svg" width="18" height="18" />
-                       <img v-else src="@/assets/icons/board/downloadDark.svg" width="18" height="18" />
+                      <img v-else src="@/assets/icons/board/downloadDark.svg" width="18" height="18" />
                     </el-button></div>
                   </el-col>
-                  
                 </el-row>
-          
+              </a>
             </div>
         </div>
       </div>
@@ -92,14 +91,18 @@
 
     <template #default>
         <el-icon :size="18" class="closeIcon" style="position: absolute;right: 12px;top: 10px;}"><Close /></el-icon>
-        <div  @click.stop="handlepopClick" class="popover-body" v-if=" mirrorList.length > 0">
-             <el-row 
-                  v-for="(item, index) in mirrorList" 
-                  :key="item.id" 
+         <div  @click.stop="handlepopClick" class="popover-body" v-if=" mirrorList.length > 0">
+              <a
+                v-for="item in mirrorList"
+                :key="item.id"
+                :href="item.url"
+                class="file-link"
+                @click.prevent
+              >
+                <el-row
                   :gutter="10"
                   class="custom-row"
                 >
-                  <!-- 每行包含的列（可根据需要调整） -->
                   <el-col :span="5">
                     <div class="col-content">{{ item.tags[0] }}</div>
                   </el-col>
@@ -107,15 +110,14 @@
                     <div class="col-content" style="max-width:300px;display:block">{{ item.url.split('/').pop() }}</div>
                   </el-col>
 
-                   <el-col :span="2">
-                    <div class="col-content"><el-button @click.stop="downloadFile(item.url)" size="small" class="no-border">
+                  <el-col :span="2">
+                    <div class="col-content"><el-button @click.prevent.stop="downloadFile(item.url)" size="small" class="no-border">
                       <img v-if="!isDark" src="@/assets/icons/board/download.svg" width="18" height="18" />
-                       <img v-else src="@/assets/icons/board/downloadDark.svg" width="18" height="18" />
+                      <img v-else src="@/assets/icons/board/downloadDark.svg" width="18" height="18" />
                     </el-button></div>
                   </el-col>
-                  
                 </el-row>
-          
+              </a>
             </div>
       </template>
     
@@ -287,6 +289,12 @@ const downloadFile = (url) => {
 
 .closeIcon{
   color:#16181a
+}
+
+.file-link{
+  display: block;
+  color: inherit;
+  text-decoration: none;
 }
 
 .custom-row{
